@@ -1,0 +1,19 @@
+Weapon:
+  Diamond: 100
+  Iron: 85
+  Gold: 70
+  Stone: 65
+  Wood: 50
+  Normal: 25
+Enchant:
+  Sharpness: 14
+Natural:
+  FireTick: 25
+  Void: 1000
+  Contact: 50
+  Drowning: 75
+  Poison: 40
+  Fall: 200
+  Wither: 75
+Mobs:
+  Multiplier: 10

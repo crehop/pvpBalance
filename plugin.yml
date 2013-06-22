@@ -1,0 +1,10 @@
+name: PVPBalance
+main: PvpBalance.Main
+version: 1.2
+description: >
+            The Best plugin EVER!
+commands:
+    PVPDebug:
+    PVPVer:
+    PVPInfo:
+    polish:

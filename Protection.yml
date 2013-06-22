@@ -1,0 +1,32 @@
+Epic:
+  Helmet: 470
+  Chest: 750
+  Leggings: 658
+  Boots: 376
+Diamond:
+  Helmet: 315
+  Chest: 504
+  Leggings: 441
+  Boots: 252
+Iron:
+  Helmet: 109
+  Chest: 304
+  Leggings: 266
+  Boots: 152
+Gold:
+  Helmet: 105
+  Chest: 168
+  Leggings: 147
+  Boots: 84
+Chain:
+  Helmet: 105
+  Chest: 168
+  Leggings: 147
+  Boots: 84
+Leather:
+  Helmet: 62
+  Chest: 94
+  Leggings: 84
+  Boots: 52
+Enchant:
+  Protection: 47
