@@ -1,37 +1,21 @@
 package PvpBalance;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
-import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.P;
 
 import SaveLoad.LoadSave;
@@ -145,7 +129,6 @@ public class Main extends JavaPlugin{
 					    			Effects.bleed(all);
 					    		}
 					    		//PVP ABILITIES ====================================================================================
-					    		//SUPERSAIEN
 							
 					    }catch (IllegalArgumentException e1) {
 							e1.printStackTrace();
@@ -160,7 +143,7 @@ public class Main extends JavaPlugin{
 		    }
 		    if(everyOther == 1){
 		    	everyOther = 2;
-	    		//PROJECTILE EFFECTS =================================================================================
+	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers()){
 		    		try{
 		    			ArmorEffects.checkForGlowTick(all);
@@ -201,8 +184,8 @@ public class Main extends JavaPlugin{
 	 	logger.info(pdfFile.getName() + " Has Been Enabled!!");
  	}
  	
-	private void copy(InputStream in, File file){
-	     
+	/*private void copy(InputStream in, File file)
+	{ 
 		try
 	     {
 	         OutputStream out = new FileOutputStream(file);
@@ -219,7 +202,8 @@ public class Main extends JavaPlugin{
 	     {
 	         e.printStackTrace();
 	     }
-	 }
+	}*/
+ 	
 	public static String getParticleName(){
 		return name;
 	}
@@ -237,7 +221,7 @@ public class Main extends JavaPlugin{
 	}
 	public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args){
 		Player player = (Player) sender;
-		Location location = player.getLocation();
+		//Location location = player.getLocation();
 		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin")){
 			if(debug == false){
 				debug = true;
@@ -271,7 +255,7 @@ public class Main extends JavaPlugin{
 			player.sendMessage(ChatColor.GREEN + "IS DEAD T/F : " + PVPPlayer.isDead);
 			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + PVPPlayer.isInCombat);
 			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + PVPPlayer.canRegen);
-			if(this.pvpstats.contains(player)){
+			if(pvpstats.contains(player)){
 				pvpstats.remove(player);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPINFO again to Enable");
 			}

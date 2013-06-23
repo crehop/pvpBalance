@@ -1,13 +1,8 @@
 package PvpBalance;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.inventory.ItemStack;
 
 
 public class PVPPlayer {
@@ -19,7 +14,7 @@ public class PVPPlayer {
 	private int hitCoolDown;
 	private int combatCoolDown;
 	private int hunger;
-	private int hungerMax = 20;
+	//private int hungerMax = 20;
 	private int armorEventLastTick;
 	boolean isInCombat;
 	boolean isDead;
@@ -238,7 +233,8 @@ public class PVPPlayer {
 	
 	public void setProperHealth()
 	{
-		if(this.isDead == false){
+		if(this.isDead == false)
+		{
 			int realHealth = health/(maxHealth/20);
 			if(realHealth <= 1){
 				realHealth = 1;
