@@ -120,11 +120,11 @@ public class Damage {
 				//leather helm
 				case 298: 
 					ItemStack helmet = player.getInventory().getHelmet();
-					if(helmet.hasItemMeta() == true && helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(helmet != null && helmet.hasItemMeta() == true && helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(helmet);
 						armor += 75;
 					}
-					if(helmet.hasItemMeta() == true){
+					if(helmet != null && helmet.hasItemMeta() == true){
 						ItemMeta metah = helmet.getItemMeta();
 						LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 						if(meta.getColor().toString().contains("A06540")){
@@ -143,11 +143,11 @@ public class Damage {
 				//leather chest
 				case 299: 
 					ItemStack chestplate = player.getInventory().getChestplate();
-					if(chestplate.hasItemMeta() == true && chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(chestplate != null && chestplate.hasItemMeta() == true && chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(chestplate);
 						armor += 75;
 					}
-					if(chestplate.hasItemMeta() == true){
+					if(chestplate != null && chestplate.hasItemMeta() == true){
 						ItemMeta metah2 = chestplate.getItemMeta();
 						LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
 						if(meta2.getColor().toString().contains("A06540")){
@@ -165,11 +165,11 @@ public class Damage {
 				//leather leggings
 				case 300:
 					ItemStack leggings = player.getInventory().getLeggings();
-					if(leggings.hasItemMeta() == true && leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(leggings != null && leggings.hasItemMeta() == true && leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(leggings);
 						armor += 75;
 					}
-					if(leggings.hasItemMeta() == true){
+					if(leggings != null && leggings.hasItemMeta() == true){
 						ItemMeta metah3 = leggings.getItemMeta();
 						LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
 						if(meta3.getColor().toString().contains("A06540")){
@@ -187,11 +187,11 @@ public class Damage {
 				//leather boots
 				case 301: 
 					ItemStack boots = player.getInventory().getBoots();
-					if(boots.hasItemMeta() == true && boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(boots != null && boots.hasItemMeta() == true && boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(boots);
 						armor += 75;
 					}
-					if(boots.hasItemMeta() == true){
+					if(boots != null && boots.hasItemMeta() == true){
 						ItemMeta metah4 = boots.getItemMeta();
 						LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
 						if(meta4.getColor().toString().contains("A06540")){

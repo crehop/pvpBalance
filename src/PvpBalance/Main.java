@@ -146,7 +146,7 @@ public class Main extends JavaPlugin{
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers()){
 		    		try{
-		    			ArmorEffects.checkForGlowTick(all);
+		    			//ArmorEffects.checkForGlowTick(all);
 		
 		    		}catch (IllegalArgumentException e1) {
 							e1.printStackTrace();
