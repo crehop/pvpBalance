@@ -240,7 +240,7 @@ public class Main extends JavaPlugin{
 		if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin")){
 			Bukkit.broadcastMessage("VERSION .05 BETA");
 		}
-		if(commandLabel.equalsIgnoreCase("polish") && player.hasPermission("particles.admin")){
+		if(commandLabel.equalsIgnoreCase("polish")){
 			ArmorEffects.polish(player);
 		}
 		if(commandLabel.equalsIgnoreCase("pvpinfo")){

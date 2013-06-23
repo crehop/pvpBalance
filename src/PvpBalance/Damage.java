@@ -124,8 +124,8 @@ public class Damage {
 					ItemStack helmet = player.getInventory().getHelmet();
 					if(helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(helmet);
+						armor += 75;
 					}
-
 					ItemMeta metah = helmet.getItemMeta();
 					LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 					if(meta.getColor().toString().contains("A06540")){
@@ -141,10 +141,10 @@ public class Damage {
 					ItemStack chestplate = player.getInventory().getChestplate();
 					if(chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(chestplate);
+						armor += 75;
 					}
 					ItemMeta metah2 = chestplate.getItemMeta();
 					LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
-					Bukkit.broadcastMessage(meta2.getDisplayName());
 					if(meta2.getColor().toString().contains("A06540")){
 						armor += LoadSave.Lchest;
 					}
@@ -158,10 +158,10 @@ public class Damage {
 					ItemStack leggings = player.getInventory().getLeggings();
 					if(leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(leggings);
+						armor += 75;
 					}
 					ItemMeta metah3 = leggings.getItemMeta();
 					LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
-					Bukkit.broadcastMessage(meta3.getDisplayName());
 					if(meta3.getColor().toString().contains("A06540")){
 						armor += LoadSave.Lleggings;
 					}
@@ -175,10 +175,10 @@ public class Damage {
 					ItemStack boots = player.getInventory().getBoots();
 					if(boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(boots);
+						armor += 75;
 					}
 					ItemMeta metah4 = boots.getItemMeta();
 					LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
-					Bukkit.broadcastMessage(meta4.getDisplayName());
 					if(meta4.getColor().toString().contains("A06540")){
 						armor += LoadSave.Lboots;
 					}
