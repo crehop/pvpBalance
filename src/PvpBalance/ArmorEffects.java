@@ -98,13 +98,13 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = true;
 					}*/
 				}
-				if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+				if(pvpPlayer.colorUpHelmet == true)
 				{
 					red += 9;
 					blue += 9;
 					green += 9;
 				}
-				else if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+				else if(pvpPlayer.colorUpHelmet == false)
 				{
 					red -= 9;
 					blue -= 9;
@@ -189,13 +189,13 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = true;
 					}*/
 				}
-				if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+				if(pvpPlayer.colorUpHelmet == true)
 				{
 					red += 10;
 					green += 18;
 					blue += 5;
 				}
-				else if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+				else if(pvpPlayer.colorUpHelmet == false)
 				{
 					red -= 10;
 					green -= 18;
@@ -280,13 +280,13 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = true;
 					}*/
 				}
-			if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+			if(pvpPlayer.colorUpHelmet == true)
 			{
 				red += 13;
 				blue += 0;
 				green += 0;
 			}
-			else if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+			else if(pvpPlayer.colorUpHelmet == false)
 			{
 				red -= 13;
 				blue -= 0;
@@ -371,13 +371,13 @@ public class ArmorEffects
 					pvpPlayer.colorUpBoots = true;
 				}*/
 			}
-			if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+			if(pvpPlayer.colorUpHelmet == true)
 			{
 				red += 12;
 				green += 15;
 				blue += 0;
 			}
-			else if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+			else if(pvpPlayer.colorUpHelmet == false)
 			{
 				red -= 12;
 				green -= 15;
