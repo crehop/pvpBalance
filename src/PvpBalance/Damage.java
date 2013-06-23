@@ -1,7 +1,5 @@
 package PvpBalance;
 import java.util.Random;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -122,31 +120,42 @@ public class Damage {
 				//leather helm
 				case 298: 
 					ItemStack helmet = player.getInventory().getHelmet();
-					if(helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(helmet.hasItemMeta() == true && helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(helmet);
 						armor += 75;
 					}
-					ItemMeta metah = helmet.getItemMeta();
-					LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-					if(meta.getColor().toString().contains("A06540")){
-						armor += LoadSave.Lhelmet;
+					if(helmet.hasItemMeta() == true){
+						ItemMeta metah = helmet.getItemMeta();
+						LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+						if(meta.getColor().toString().contains("A06540")){
+							armor += LoadSave.Lhelmet;
+						}
+						else{
+							armor += LoadSave.Ehelmet;
+						}
 					}
 					else{
 						armor += LoadSave.Ehelmet;
 					}
+
 				break;
 				
 				//leather chest
 				case 299: 
 					ItemStack chestplate = player.getInventory().getChestplate();
-					if(chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(chestplate.hasItemMeta() == true && chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(chestplate);
 						armor += 75;
 					}
-					ItemMeta metah2 = chestplate.getItemMeta();
-					LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
-					if(meta2.getColor().toString().contains("A06540")){
-						armor += LoadSave.Lchest;
+					if(chestplate.hasItemMeta() == true){
+						ItemMeta metah2 = chestplate.getItemMeta();
+						LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
+						if(meta2.getColor().toString().contains("A06540")){
+							armor += LoadSave.Lchest;
+						}
+						else{
+							armor += LoadSave.Echest;
+						}
 					}
 					else{
 						armor += LoadSave.Echest;
@@ -156,14 +165,19 @@ public class Damage {
 				//leather leggings
 				case 300:
 					ItemStack leggings = player.getInventory().getLeggings();
-					if(leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(leggings.hasItemMeta() == true && leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(leggings);
 						armor += 75;
 					}
-					ItemMeta metah3 = leggings.getItemMeta();
-					LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
-					if(meta3.getColor().toString().contains("A06540")){
-						armor += LoadSave.Lleggings;
+					if(leggings.hasItemMeta() == true){
+						ItemMeta metah3 = leggings.getItemMeta();
+						LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
+						if(meta3.getColor().toString().contains("A06540")){
+							armor += LoadSave.Lleggings;
+						}
+						else{
+							armor += LoadSave.Eleggings;
+						}
 					}
 					else{
 						armor += LoadSave.Eleggings;
@@ -173,18 +187,21 @@ public class Damage {
 				//leather boots
 				case 301: 
 					ItemStack boots = player.getInventory().getBoots();
-					if(boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(boots.hasItemMeta() == true && boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
 						Fade.setBaseColor(boots);
 						armor += 75;
 					}
-					ItemMeta metah4 = boots.getItemMeta();
-					LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
-					if(meta4.getColor().toString().contains("A06540")){
-						armor += LoadSave.Lboots;
+					if(boots.hasItemMeta() == true){
+						ItemMeta metah4 = boots.getItemMeta();
+						LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
+						if(meta4.getColor().toString().contains("A06540")){
+							armor += LoadSave.Lboots;
+						}
 					}
 					else{
 						armor += LoadSave.Eboots;
 					}
+					
 				break;
 			}
 			
