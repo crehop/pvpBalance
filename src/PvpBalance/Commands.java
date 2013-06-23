@@ -10,34 +10,44 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 
-public class Commands {
-	public static PVPPlayer getPVPPlayer(Player player){
-		PVPPlayer PVPPlayer = null;
-		for(PVPPlayer check : Main.PVP){
-			if(check.getPlayer() == player){
-				PVPPlayer = check.getPVPPlayer();
-				return PVPPlayer;
+public class Commands
+{
+	public static PVPPlayer getPVPPlayer(Player player)
+	{
+		PVPPlayer pvpPlayer = null;
+		for(PVPPlayer check : Main.PVP)
+		{
+			if(check.getPlayer() == player)
+			{
+				pvpPlayer = check;
+				return pvpPlayer;
 			}
 		}
-		if(PVPPlayer == null){
-			PVPPlayer = new PVPPlayer(player);
-			Main.PVP.add(PVPPlayer);
+		if(pvpPlayer == null)
+		{
+			pvpPlayer = new PVPPlayer(player);
+			Main.PVP.add(pvpPlayer);
 		}
-		return PVPPlayer;
+		return pvpPlayer;
 		
 	}
-	public static Vector getTargetVector(Location shooter, Location target){
+	public static Vector getTargetVector(Location shooter, Location target)
+	{
 		Location first_location = shooter.add(0, 1, 0);
 		Location second_location = target.add(0, 1, 0);
 		Vector vector = second_location.toVector().subtract(first_location.toVector());
 		return vector;
 		
 	}
-    public static Entity getTarget(Player player) {
+	
+    public static Entity getTarget(Player player)
+    {
         List<Entity> nearbyE = player.getNearbyEntities(20, 20, 20);
         ArrayList<Player> nearPlayers = new ArrayList<Player>();
-        for (Entity e : nearbyE) {
-            if (e instanceof Player) {
+        for (Entity e : nearbyE)
+        {
+            if (e instanceof Player)
+            {
                 nearPlayers.add((Player) e);
             }
         }
@@ -47,33 +57,37 @@ public class Commands {
         Location loc;
         int bx, by, bz;
         double ex, ey, ez;
-        while (bItr.hasNext()) {
+        while (bItr.hasNext())
+        {
  
             block = bItr.next();
             bx = block.getX();
             by = block.getY();
             bz = block.getZ();
-            for (Player e : nearPlayers) {
+            for (Player e : nearPlayers)
+            {
                 loc = e.getLocation();
                 ex = loc.getX();
                 ey = loc.getY();
                 ez = loc.getZ();
-                if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5)) {
+                if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5))
+                {
                     target = (Entity)e;
                     break;
  
                 }
             }
             if(target == null){
-                for (Entity e : nearbyE) {
+                for (Entity e : nearbyE)
+                {
                     loc = e.getLocation();
                     ex = loc.getX();
                     ey = loc.getY();
                     ez = loc.getZ();
-                    if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5)) {
+                    if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5))
+                    {
                         target = e;
                         break;
-     
                     }
                 }
             	
@@ -82,6 +96,5 @@ public class Commands {
  
         }
         return target;
- 
     }
 }

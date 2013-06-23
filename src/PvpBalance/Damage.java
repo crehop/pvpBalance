@@ -1,5 +1,5 @@
 package PvpBalance;
-import java.util.Random;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -10,29 +10,37 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import SaveLoad.LoadSave;
 
 //Handles damage control
-public class Damage {
+public class Damage
+{
 	
 	public static LoadSave LoadSave;
 	//ADDED++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	public static int calcDamage(Player player){
-		Random rand = new Random();
+	public static int calcDamage(Player player)
+	{
+		//Random rand = new Random();
 		int damage = 25;
-		if(player.getItemInHand().getType() == Material.DIAMOND_SWORD  || player.getItemInHand().getType() == Material.DIAMOND_AXE || player.getItemInHand().getType() == Material.DIAMOND_HOE){
+		if(player.getItemInHand().getType() == Material.DIAMOND_SWORD  || player.getItemInHand().getType() == Material.DIAMOND_AXE || player.getItemInHand().getType() == Material.DIAMOND_HOE)
+		{
 			damage += LoadSave.Diamond;
 		}
-		else if(player.getItemInHand().getType() == Material.IRON_SWORD || player.getItemInHand().getType() == Material.IRON_AXE || player.getItemInHand().getType() == Material.IRON_HOE){
+		else if(player.getItemInHand().getType() == Material.IRON_SWORD || player.getItemInHand().getType() == Material.IRON_AXE || player.getItemInHand().getType() == Material.IRON_HOE)
+		{
 			damage += LoadSave.Iron;
 		}
-		else if(player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.GOLD_AXE || player.getItemInHand().getType() == Material.GOLD_HOE){
+		else if(player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.GOLD_AXE || player.getItemInHand().getType() == Material.GOLD_HOE)
+		{
 			damage += LoadSave.Gold;
 		}
-		else if(player.getItemInHand().getType() == Material.STONE_SWORD || player.getItemInHand().getType() == Material.STONE_AXE || player.getItemInHand().getType() == Material.STONE_HOE){
+		else if(player.getItemInHand().getType() == Material.STONE_SWORD || player.getItemInHand().getType() == Material.STONE_AXE || player.getItemInHand().getType() == Material.STONE_HOE)
+		{
 			damage += LoadSave.Stone;
 		}
-		else if(player.getItemInHand().getType() == Material.WOOD_SWORD || player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.WOOD_HOE){
+		else if(player.getItemInHand().getType() == Material.WOOD_SWORD || player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.WOOD_HOE)
+		{
 			damage += LoadSave.Wood;
 		}
-		else if(player.getItemInHand().getType() == Material.BOW){
+		else if(player.getItemInHand().getType() == Material.BOW)
+		{
 			damage += 100;
 			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * LoadSave.Sharpness;
 		}
@@ -41,14 +49,17 @@ public class Damage {
 		
 	//END ADDED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	}
-	public static int calcArmor(Player player){
-		PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
+	public static int calcArmor(Player player)
+	{
+		PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
 		int armor = 500;
-		for(ItemStack i:player.getInventory().getArmorContents()){
+		for(ItemStack i:player.getInventory().getArmorContents())
+		{
 			int check = i.getTypeId();
 			int protection = i.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) * LoadSave.protect;
 			armor += protection;
-			switch(check){
+			switch(check)
+			{
 				//DIAMOND =======================
 				//diamond helm
 				case 310: 
@@ -120,21 +131,26 @@ public class Damage {
 				//leather helm
 				case 298: 
 					ItemStack helmet = player.getInventory().getHelmet();
-					if(helmet != null && helmet.hasItemMeta() == true && helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(helmet != null && helmet.hasItemMeta() == true && helmet.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR))
+					{
 						Fade.setBaseColor(helmet);
 						armor += 75;
 					}
-					if(helmet != null && helmet.hasItemMeta() == true){
+					if(helmet != null && helmet.hasItemMeta() == true)
+					{
 						ItemMeta metah = helmet.getItemMeta();
 						LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-						if(meta.getColor().toString().contains("A06540")){
+						if(meta.getColor().toString().contains("A06540"))
+						{
 							armor += LoadSave.Lhelmet;
 						}
-						else{
+						else
+						{
 							armor += LoadSave.Ehelmet;
 						}
 					}
-					else{
+					else
+					{
 						armor += LoadSave.Ehelmet;
 					}
 
@@ -143,21 +159,26 @@ public class Damage {
 				//leather chest
 				case 299: 
 					ItemStack chestplate = player.getInventory().getChestplate();
-					if(chestplate != null && chestplate.hasItemMeta() == true && chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(chestplate != null && chestplate.hasItemMeta() == true && chestplate.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR))
+					{
 						Fade.setBaseColor(chestplate);
 						armor += 75;
 					}
-					if(chestplate != null && chestplate.hasItemMeta() == true){
+					if(chestplate != null && chestplate.hasItemMeta() == true)
+					{
 						ItemMeta metah2 = chestplate.getItemMeta();
 						LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
-						if(meta2.getColor().toString().contains("A06540")){
+						if(meta2.getColor().toString().contains("A06540"))
+						{
 							armor += LoadSave.Lchest;
 						}
-						else{
+						else
+						{
 							armor += LoadSave.Echest;
 						}
 					}
-					else{
+					else
+					{
 						armor += LoadSave.Echest;
 					}
 				break;
@@ -165,21 +186,26 @@ public class Damage {
 				//leather leggings
 				case 300:
 					ItemStack leggings = player.getInventory().getLeggings();
-					if(leggings != null && leggings.hasItemMeta() == true && leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(leggings != null && leggings.hasItemMeta() == true && leggings.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR))
+					{
 						Fade.setBaseColor(leggings);
 						armor += 75;
 					}
-					if(leggings != null && leggings.hasItemMeta() == true){
+					if(leggings != null && leggings.hasItemMeta() == true)
+					{
 						ItemMeta metah3 = leggings.getItemMeta();
 						LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
-						if(meta3.getColor().toString().contains("A06540")){
+						if(meta3.getColor().toString().contains("A06540"))
+						{
 							armor += LoadSave.Lleggings;
 						}
-						else{
+						else
+						{
 							armor += LoadSave.Eleggings;
 						}
 					}
-					else{
+					else
+					{
 						armor += LoadSave.Eleggings;
 					}
 				break;
@@ -187,18 +213,22 @@ public class Damage {
 				//leather boots
 				case 301: 
 					ItemStack boots = player.getInventory().getBoots();
-					if(boots != null && boots.hasItemMeta() == true && boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR)){
+					if(boots != null && boots.hasItemMeta() == true && boots.getItemMeta().getLore().get(0).toString().contains(ArmorEffects.CODE_ARMOR))
+					{
 						Fade.setBaseColor(boots);
 						armor += 75;
 					}
-					if(boots != null && boots.hasItemMeta() == true){
+					if(boots != null && boots.hasItemMeta() == true)
+					{
 						ItemMeta metah4 = boots.getItemMeta();
 						LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
-						if(meta4.getColor().toString().contains("A06540")){
+						if(meta4.getColor().toString().contains("A06540"))
+						{
 							armor += LoadSave.Lboots;
 						}
 					}
-					else{
+					else
+					{
 						armor += LoadSave.Eboots;
 					}
 					
@@ -206,7 +236,7 @@ public class Damage {
 			}
 			
 		}
-		PVPPlayer.setMaxHealth(armor);	
+		pvpPlayer.setMaxHealth(armor);	
 		return armor;
 	}
 }

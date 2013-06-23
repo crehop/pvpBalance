@@ -12,22 +12,28 @@ public class Fade {
 	public static final Color VERITE = Color.fromRGB(127, 204, 25);
 	public static final Color PRIZED = Color.fromRGB(255, 255, 255);
 	
-	public static int type(ItemStack item){
-		ItemMeta iMeta = item.getItemMeta();
-		LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
-		if(iMeta.getDisplayName().contains("Cursed")){
+	public static int type(ItemStack item)
+	{
+		ItemMeta itemMeta = item.getItemMeta();
+		//LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
+		if(itemMeta.getDisplayName().contains("Cursed"))
+		{
 			return 1;
 		}
-		else if(iMeta.getDisplayName().contains("Mithril")){
+		else if(itemMeta.getDisplayName().contains("Mithril"))
+		{
 			return 2;
 		}
-		else if(iMeta.getDisplayName().contains("Flame")){
+		else if(itemMeta.getDisplayName().contains("Flame"))
+		{
 			return 3;
 		}
-		else if(iMeta.getDisplayName().contains("Verite")){
+		else if(itemMeta.getDisplayName().contains("Verite"))
+		{
 			return 4;
 		}
-		else{
+		else
+		{
 			return 5;
 		} 
 		
@@ -35,19 +41,23 @@ public class Fade {
 	public static void setBaseColor(ItemStack item){
 		ItemMeta iMeta = item.getItemMeta();
 		LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
-		if(iMeta.getDisplayName().contains("Cursed")){
+		if(iMeta.getDisplayName().contains("Cursed"))
+		{
 				leatherMeta.setColor(CURSED);
 				item.setItemMeta(iMeta);
 		}
-		if(iMeta.getDisplayName().contains("Mithril")){
+		if(iMeta.getDisplayName().contains("Mithril"))
+		{
 			leatherMeta.setColor(MITHRIL);
 			item.setItemMeta(iMeta);
 		}
-		if(iMeta.getDisplayName().contains("Flame")){
+		if(iMeta.getDisplayName().contains("Flame"))
+		{
 			leatherMeta.setColor(FLAME);
 			item.setItemMeta(iMeta);
 		}
-		if(iMeta.getDisplayName().contains("Verite")){
+		if(iMeta.getDisplayName().contains("Verite"))
+		{
 			leatherMeta.setColor(VERITE);
 			item.setItemMeta(iMeta);
 		}

@@ -11,315 +11,397 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-public class ArmorEffects {
+public class ArmorEffects
+{
 	public static final String CODE_PAPER = "32156";
 	public static final String CODE_ARMOR = "32188";
-	public static void checkForGlowTick(Player player){
-		for(ItemStack item:player.getInventory().getArmorContents()){
-			if(item != null && item.hasItemMeta() == true && item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301){
-				PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
-				ItemMeta metah = item.getItemMeta();
-				LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR)){
-					if(!meta.getColor().toString().contains("A06540")){
-						if(item.getTypeId() == 298){
-							glow(item,PVPPlayer);
-						}
-						if(item.getTypeId() == 299){
-							glow(item,PVPPlayer);
-						}
-						if(item.getTypeId() == 300){
-							glow(item,PVPPlayer);
-						}
-						if(item.getTypeId() == 301){
-							glow(item,PVPPlayer);
+	
+	public static void checkForGlowTick(Player player)
+	{
+		for(ItemStack item:player.getInventory().getArmorContents())
+		{
+			if(item != null && item.hasItemMeta() == true && item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301)
+			{
+				PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
+				LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
+				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR))
+				{
+					if(!meta.getColor().toString().contains("A06540"))
+					{
+						switch(item.getTypeId())
+						{
+						case 298:
+						case 299:
+						case 300:
+						case 301:
+							glow(item,pvpPlayer);
+							break;
 						}
 					}
 				}
 			}
 		}
 	}
-	public static void glow(ItemStack i, PVPPlayer pvpPlayer){
-		if(i.hasItemMeta() == true){
-			ItemMeta metah = i.getItemMeta();
+	
+	public static void glow(ItemStack item, PVPPlayer pvpPlayer)
+	{
+		if(item.hasItemMeta() == true)
+		{
+			ItemMeta metah = item.getItemMeta();
 			LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 			int blue = meta.getColor().getBlue();
 			int red = meta.getColor().getRed();
 			int green = meta.getColor().getGreen();
-			if(Fade.type(i) == 1){
-				if(blue >= 100 || red >= 100 || green >= 100){
-					if(i.getType() == Material.LEATHER_HELMET){
+			if(Fade.type(item) == 1)
+			{
+				if(blue >= 100 || red >= 100 || green >= 100)
+				{
+					if(item.getType() == Material.LEATHER_HELMET)
+					{
 						pvpPlayer.colorUpHelmet = false;
 					}
-					if(i.getType() == Material.LEATHER_CHESTPLATE){
+					if(item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						pvpPlayer.colorUpChest = false;
 					}
-					if(i.getType() == Material.LEATHER_LEGGINGS){
+					if(item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						pvpPlayer.colorUpLeggings = false;
 					}
-					if(i.getType() == Material.LEATHER_BOOTS){
+					if(item.getType() == Material.LEATHER_BOOTS)
+					{
 						pvpPlayer.colorUpBoots = false;
 					}
 				}
-				if(blue <= 11 || red <= 11 || green <= 11){
-					if(i.getType() == Material.LEATHER_HELMET){
+				if(blue <= 11 || red <= 11 || green <= 11)
+				{
+					if(item.getType() == Material.LEATHER_HELMET)
+					{
 						pvpPlayer.colorUpHelmet = true;
 					}
-					if(i.getType() == Material.LEATHER_CHESTPLATE){
+					if(item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						pvpPlayer.colorUpChest = true;
 					}
-					if(i.getType() == Material.LEATHER_LEGGINGS){
+					if(item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						pvpPlayer.colorUpLeggings = true;
 					}
-					if(i.getType() == Material.LEATHER_BOOTS){
+					if(item.getType() == Material.LEATHER_BOOTS)
+					{
 						pvpPlayer.colorUpBoots = true;
 					}
 				}
-				if(pvpPlayer.colorUpHelmet == true && i.getType() == Material.LEATHER_HELMET){
+				if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+				{
 					red += 5;
 					blue += 5;
 					green += 5;
 				}
-				if(pvpPlayer.colorUpHelmet == false && i.getType() == Material.LEATHER_HELMET){
+				if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+				{
 					red -= 5;
 					blue -= 5;
 					green -= 5;
 				}
-				if(pvpPlayer.colorUpChest == true && i.getType() == Material.LEATHER_CHESTPLATE){
+				if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
+				{
 					red += 5;
 					blue += 5;
 					green += 5;
 				}
-				if(pvpPlayer.colorUpChest == false && i.getType() == Material.LEATHER_CHESTPLATE){
+				if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
+				{
 					red -= 5;
 					blue -= 5;
 					green -= 5;
 				}
-				if(pvpPlayer.colorUpLeggings == true && i.getType() == Material.LEATHER_LEGGINGS){
+				if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
+				{
 					red += 5;
 					blue += 5;
 					green += 5;
 				}
-				if(pvpPlayer.colorUpLeggings == false && i.getType() == Material.LEATHER_LEGGINGS){
+				if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
+				{
 					red -= 5;
 					blue -= 5;
 					green -= 5;
 				}
-				if(pvpPlayer.colorUpBoots == true && i.getType() == Material.LEATHER_BOOTS){
+				if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
+				{
 					red += 5;
 					blue += 5;
 					green += 5;
 				}
-				if(pvpPlayer.colorUpBoots == false && i.getType() == Material.LEATHER_BOOTS){
+				if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
+				{
 					red -= 5;
 					blue -= 5;
 					green -= 5;
 				}
-				if(Fade.type(i) == 2){
-					if(blue >= 240){
-						if(i.getType() == Material.LEATHER_HELMET){
+				if(Fade.type(item) == 2)
+				{
+					if(blue >= 240)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = false;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = false;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = false;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = false;
 						}
 					}
-					if(red <= 6){
-						if(i.getType() == Material.LEATHER_HELMET){
+					if(red <= 6)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = true;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = true;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = true;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = true;
 						}
 					}
-					if(pvpPlayer.colorUpHelmet == true && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+					{
 						red += 7;
 						blue += 7;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpHelmet == false && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+					{
 						red -= 7;
 						blue -= 7;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpChest == true && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red += 7;
 						blue += 7;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpChest == false && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red -= 7;
 						blue -= 7;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpLeggings == true && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red += 7;
 						blue += 7;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpLeggings == false && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red -= 7;
 						blue -= 7;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpBoots == true && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red += 7;
 						blue += 7;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpBoots == false && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red -= 7;
 						blue -= 7;
 						green -= 7;
 					}
 				}
-				if(Fade.type(i) == 3){
-					if(red >= 204 || blue > 240){
-						if(i.getType() == Material.LEATHER_HELMET){
+				if(Fade.type(item) == 3)
+				{
+					if(red >= 204 || blue > 240)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = false;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = false;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = false;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = false;
 						}
 					}
-					if(red <= 111){
-						if(i.getType() == Material.LEATHER_HELMET){
+					if(red <= 111)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = true;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = true;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = true;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = true;
 						}
 					}
-					if(pvpPlayer.colorUpHelmet == true && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+					{
 						red += 5;
 						blue += 3;
 						green += 3;
 					}
-					if(pvpPlayer.colorUpHelmet == false && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+					{
 						red -= 5;
 						blue -= 3;
 						green -= 3;
 					}
-					if(pvpPlayer.colorUpChest == true && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red += 5;
 						blue += 3;
 						green += 3;
 					}
-					if(pvpPlayer.colorUpChest == false && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red -= 5;
 						blue -= 3;
 						green -= 3;
 					}
-					if(pvpPlayer.colorUpLeggings == true && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red += 5;
 						blue += 3;
 						green += 3;
 					}
-					if(pvpPlayer.colorUpLeggings == false && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red -= 5;
 						blue -= 3;
 						green -= 3;
 					}
-					if(pvpPlayer.colorUpBoots == true && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red += 10;
 						blue += 7;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpBoots == false && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red -= 5;
 						blue -= 3;
 						green -= 3;
 					}
 				}
-				if(Fade.type(i) == 4){
-					if(green >= 240 || blue > 240){
-						if(i.getType() == Material.LEATHER_HELMET){
+				if(Fade.type(item) == 4)
+				{
+					if(green >= 240 || blue > 240)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = false;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = false;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = false;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = false;
 						}
 					}
-					if(red <= 15 || blue <= 5){
-						if(i.getType() == Material.LEATHER_HELMET){
+					if(red <= 15 || blue <= 5)
+					{
+						if(item.getType() == Material.LEATHER_HELMET)
+						{
 							pvpPlayer.colorUpHelmet = true;
 						}
-						if(i.getType() == Material.LEATHER_CHESTPLATE){
+						if(item.getType() == Material.LEATHER_CHESTPLATE)
+						{
 							pvpPlayer.colorUpChest = true;
 						}
-						if(i.getType() == Material.LEATHER_LEGGINGS){
+						if(item.getType() == Material.LEATHER_LEGGINGS)
+						{
 							pvpPlayer.colorUpLeggings = true;
 						}
-						if(i.getType() == Material.LEATHER_BOOTS){
+						if(item.getType() == Material.LEATHER_BOOTS)
+						{
 							pvpPlayer.colorUpBoots = true;
 						}
 					}
-					if(pvpPlayer.colorUpHelmet == true && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == true && item.getType() == Material.LEATHER_HELMET)
+					{
 						red += 6;
 						blue += 1;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpHelmet == false && i.getType() == Material.LEATHER_HELMET){
+					if(pvpPlayer.colorUpHelmet == false && item.getType() == Material.LEATHER_HELMET)
+					{
 						red -= 6;
 						blue -= 1;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpChest == true && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red += 6;
 						blue += 1;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpChest == false && i.getType() == Material.LEATHER_CHESTPLATE){
+					if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
+					{
 						red -= 6;
 						blue -= 1;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpLeggings == true && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red += 6;
 						blue += 1;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpLeggings == false && i.getType() == Material.LEATHER_LEGGINGS){
+					if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
+					{
 						red -= 6;
 						blue -= 1;
 						green -= 7;
 					}
-					if(pvpPlayer.colorUpBoots == true && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red += 6;
 						blue += 1;
 						green += 7;
 					}
-					if(pvpPlayer.colorUpBoots == false && i.getType() == Material.LEATHER_BOOTS){
+					if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
+					{
 						red -= 12;
 						blue -= 1;
 						green -= 15;
@@ -330,57 +412,72 @@ public class ArmorEffects {
 				meta.getColor().setRed(red);
 				Color color = Color.fromRGB(red, green, blue);
 				meta.setColor(color);
-				i.setItemMeta(meta);	
+				item.setItemMeta(meta);	
 			}
 		}
 		
 	}
-	public static void polish(Player player){
+	public static void polish(Player player)
+	{
 		boolean hasCloth = false;
 		boolean alreadyRemoved = false;
 		boolean correctItemInHand = false;
 		ItemStack item = null;
-		if(player.getItemInHand() != null){
+		if(player.getItemInHand() != null)
+		{
 			item = player.getItemInHand();
-			if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_LEGGINGS){
+			if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_LEGGINGS)
+			{
 				correctItemInHand = true;
 			}
-			if(player.getInventory().contains(Material.PAPER) && item != null){
-				for(ItemStack i: player.getInventory()){
-						try{
+			if(player.getInventory().contains(Material.PAPER) && item != null)
+			{
+				for(ItemStack i: player.getInventory())
+				{
+						try
+						{
 							ItemMeta itemMeta = null;
 							if(i != null){
-								if(i.hasItemMeta()){
+								if(i.hasItemMeta())
+								{
 									itemMeta = i.getItemMeta();
 								}
-								if(i.hasItemMeta() && itemMeta.hasLore() && correctItemInHand == true){
-									if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
-										if(i.getAmount() > 1 && alreadyRemoved == false){
+								if(i.hasItemMeta() && itemMeta.hasLore() && correctItemInHand == true)
+								{
+									if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
+									{
+										if(i.getAmount() > 1 && alreadyRemoved == false)
+										{
 											alreadyRemoved = true;
 											hasCloth = true;
 											i.setAmount(i.getAmount() - 1);
 										}
-										else if(alreadyRemoved == false){
+										else if(alreadyRemoved == false)
+										{
 											alreadyRemoved = true;
 											hasCloth = true;
 											player.getInventory().removeItem(i);
 										}
 									}
-									if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true){
+									if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+									{
 										ItemMeta metah = item.getItemMeta();
 										LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-										if(!meta.getColor().toString().contains("A06540")){
+										if(!meta.getColor().toString().contains("A06540"))
+										{
 											List<String> lore = new ArrayList<String>();
 											lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
 											meta.setLore(lore);
 											item.setItemMeta(meta);
-											if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255){
+											if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+											{
 												meta.setColor(Color.fromRGB(254, 255, 255));
 												item.setItemMeta(meta);
 												item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 											}
 										}
-										else{
+										else
+										{
 											player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
 													
 										}	
@@ -388,13 +485,15 @@ public class ArmorEffects {
 								}
 							}
 						}
-						catch (NullPointerException e1) {
+						catch (NullPointerException e1)
+						{
 								e1.printStackTrace();
 						} 
 				}
 			}
 		}
-		if(player.isOp() && hasCloth == false){
+		if(player.isOp() && hasCloth == false)
+		{
 			ItemStack i = new ItemStack(Material.PAPER);
 			ItemMeta imeta = i.getItemMeta();
 			List<String> lore = new ArrayList<String>();
@@ -406,13 +505,16 @@ public class ArmorEffects {
 			player.getInventory().addItem(i);
 			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided please try again.");
 		}
-		if(correctItemInHand == false && hasCloth == true){
+		if(correctItemInHand == false && hasCloth == true)
+		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You sre not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 		}
-		if(hasCloth == false){
+		if(hasCloth == false)
+		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 		}
-		if(correctItemInHand == false && hasCloth == true && alreadyRemoved == true){
+		if(correctItemInHand == false && hasCloth == true && alreadyRemoved == true)
+		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a briliant shine " + ChatColor.GOLD + "Bling Bling! ");
 		}
 	}

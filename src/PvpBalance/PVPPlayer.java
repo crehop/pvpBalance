@@ -127,9 +127,11 @@ public class PVPPlayer {
 			this.setProperHealth();
 			}
 	}
-	public PVPPlayer getPVPPlayer(){
+	
+	/*public PVPPlayer getPVPPlayer()
+	{
 		return this;
-	}
+	}*/
 	
 	public void Damage(int dmg)
 	{

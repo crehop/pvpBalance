@@ -58,10 +58,10 @@ public class DBZListener implements Listener{
 	public void onPlayerDamageEvent(EntityDamageByEntityEvent event){
 		boolean canhit = DungeonAPI.canhit(event);
 		int dealtDamage = 0;
-		if (event.getDamager() instanceof Player){
-			Player damager = (Player)event.getDamager();
+		/*if (event.getDamager() instanceof Player){
+			//Player damager = (Player)event.getDamager();
 			PVPPlayer PVPdamager = Commands.getPVPPlayer(damager);
-		}
+		}*/
 		Entity e = event.getEntity();
 		if (e instanceof Player){
 			int rawDamage = event.getDamage();

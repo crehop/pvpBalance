@@ -22,7 +22,8 @@ import SaveLoad.LoadSave;
 import SaveLoad.Save;
 
 
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin
+{
 	public static List<Player> cooldown=new ArrayList<Player>();
 	public static List<Player> pvpstats=new ArrayList<Player>();
 	public static List<PVPPlayer> PVP=new ArrayList<PVPPlayer>();
@@ -45,14 +46,15 @@ public class Main extends JavaPlugin{
 
 
  
- @Override
+	@Override
  	public void onDisable()
- 		{
+ 	{
 	 	PluginDescriptionFile pdfFile=this.getDescription();
 	 	logger.info(pdfFile.getName() + " Has Been Disabled!!");
- 		}
+ 	}
  
- 	public void onEnable(){
+ 	public void onEnable()
+ 	{
 	 	plugin = this;
 	 	
 	 	sDamage = new Save(this, "Damage.yml");
@@ -70,13 +72,18 @@ public class Main extends JavaPlugin{
 	 	
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
+		{
 		    @Override  
-		    public void run() {
-		    	if(everyOther == 0){
+		    public void run()
+		    {
+		    	if(everyOther == 0)
+		    	{
 		    		everyOther = 1;
-			    	for(Player all : Bukkit.getServer().getOnlinePlayers()){
-							try {
+			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
+			    	{
+							try
+							{
 								PVPPlayer PVPPlayer = Commands.getPVPPlayer(all);
 								PVPPlayer.sethealth(PVPPlayer.gethealth());
 					    		// BASIC EFFECT  APLICATIONS ==========================================================================================
@@ -85,95 +92,135 @@ public class Main extends JavaPlugin{
 					    			Effects.igniteFirePlayers(all);
 					    		}	    
 					    		//ENCHANTED SWORD
-					    		if(all.getItemInHand().containsEnchantment(Enchantment.DAMAGE_ALL) || all.getItemInHand().containsEnchantment(Enchantment.ARROW_DAMAGE)){
+					    		if(all.getItemInHand().containsEnchantment(Enchantment.DAMAGE_ALL) || all.getItemInHand().containsEnchantment(Enchantment.ARROW_DAMAGE))
+					    		{
 					    			Effects.effectSharpnessPlayers(all);
 					    		}
 					    		//CONFUSED
-					    		if(all.getActivePotionEffects().toString().contains("CONFUSION")){
+					    		if(all.getActivePotionEffects().toString().contains("CONFUSION"))
+					    		{
 					    			Effects.effectConfuse(all);
 					    		}
 					    		//WITHERED
-					    		if(all.getActivePotionEffects().toString().contains("WITHER")){
+					    		if(all.getActivePotionEffects().toString().contains("WITHER"))
+					    		{
 					    			Effects.effectWither(all);
 					    			PVPPlayer.sethealth(PVPPlayer.gethealth() - 10);
 					    		}	
 					    		//POISONED
-					    		if(all.getActivePotionEffects().toString().contains("POISON")){
+					    		if(all.getActivePotionEffects().toString().contains("POISON"))
+					    		{
 					    			Effects.effectPoison(all);
 					    			PVPPlayer.sethealth(PVPPlayer.gethealth() - 10);
 					    		}
 					    		//BLIND
-					    		if(all.getActivePotionEffects().toString().contains("Blindness")){
+					    		if(all.getActivePotionEffects().toString().contains("Blindness"))
+					    		{
 					    			Effects.effectPoison(all);
 					    		}
 					    		//SPEED POT
-					    		if(all.getActivePotionEffects().toString().contains("SPEED")){
+					    		if(all.getActivePotionEffects().toString().contains("SPEED"))
+					    		{
 					    			Effects.effectSpeedPlayers(all, speed, getAmount());
 					    		}
 					    		//REGENERATING
-					    		if(all.getActivePotionEffects().toString().contains("REGENERATION")){
+					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
+					    		{
 					    			PVPPlayer.sethealth(PVPPlayer.gethealth() + 20);
 					    			Effects.effectHealthPlayers(all, (float) 0.3, 30);
-					    		    for (PotionEffect effect : all.getActivePotionEffects()){
+					    		    for (PotionEffect effect : all.getActivePotionEffects())
+					    		    {
 					    		        all.removePotionEffect(effect.getType());
 					    		    }
 					    			all.sendMessage(ChatColor.GREEN + "ALL EFFECTS CLENSED!");
 					    		}
 					    		//SPRINTING
-					    		if(all.isSprinting()){
+					    		if(all.isSprinting())
+					    		{
 					    			Effects.effectSprintPlayers(all, speed, (int)speed*5);
 					    			PVPPlayer.setHunger(PVPPlayer.getHunger() - 1);
 					    		}
 					    		//LOW HEALTH
-					    		if(all.getHealth() < 9){
+					    		if(all.getHealth() < 9)
+					    		{
 					    			Effects.bleed(all);
 					    		}
 					    		//PVP ABILITIES ====================================================================================
 							
-					    }catch (IllegalArgumentException e1) {
+					    }
+						catch (IllegalArgumentException e1)
+					    {
 							e1.printStackTrace();
-						} catch (NullPointerException e1) {
+						} 
+						catch (NullPointerException e1)
+						{
 							e1.printStackTrace();
-						} catch (ConcurrentModificationException e1) {
+						}
+						catch (ConcurrentModificationException e1)
+						{
 							e1.printStackTrace();
-						} catch (Exception e1) {
+						}
+						catch (Exception e1)
+						{
 							e1.printStackTrace();
 						}
 				}
 		    }
-		    if(everyOther == 1){
+		    if(everyOther == 1)
+		    {
 		    	everyOther = 2;
 	    		//ARMOR EFFECTS =================================================================================
-		    	for(Player all : Bukkit.getServer().getOnlinePlayers()){
-		    		try{
-		    			//ArmorEffects.checkForGlowTick(all);
+		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
+		    	{
+		    		try
+		    		{
+		    			ArmorEffects.checkForGlowTick(all);
 		
-		    		}catch (IllegalArgumentException e1) {
+		    		}
+		    		catch (IllegalArgumentException e1)
+		    		{
 							e1.printStackTrace();
-						} catch (NullPointerException e1) {
+					}
+		    		catch (NullPointerException e1)
+		    		{
 							e1.printStackTrace();
-						} catch (ConcurrentModificationException e1) {
+		    		}
+		    		catch (ConcurrentModificationException e1)
+		    		{
 							e1.printStackTrace();
-						} catch (Exception e1) {
+					}
+		    		catch (Exception e1)
+		    		{
 							e1.printStackTrace();
 					}
 				}
 		    }
-		    if(everyOther == 2){
+		    if(everyOther == 2)
+		    {
 		    	everyOther = 0;
 		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
-		    	for(PVPPlayer all: PVP){
-					try {
+		    	for(PVPPlayer all: PVP)
+		    	{
+					try
+					{
 						
 						all.tick();
 						
-					}catch (IllegalArgumentException e1) {
+					}
+					catch (IllegalArgumentException e1)
+					{
 						e1.printStackTrace();
-					} catch (NullPointerException e1) {
+					}
+					catch (NullPointerException e1)
+					{
 						e1.printStackTrace();
-					} catch (ConcurrentModificationException e1) {
+					}
+					catch (ConcurrentModificationException e1)
+					{
 						e1.printStackTrace();
-					} catch (Exception e1) {
+					}
+					catch (Exception e1)
+					{
 						e1.printStackTrace();
 					}
 				}
@@ -204,26 +251,39 @@ public class Main extends JavaPlugin{
 	     }
 	}*/
  	
-	public static String getParticleName(){
+	public static String getParticleName()
+	{
 		return name;
 	}
-	public static float getOffset(){
+	
+	public static float getOffset()
+	{
 		return offset;
 	}
-	public static float getSpeed(){
+	
+	public static float getSpeed()
+	{
 		return speed;
 	}
-	public static int getAmount(){
+	
+	public static int getAmount()
+	{
 		return amount;
 	}
-	public boolean isParticulating(){
+	
+	public boolean isParticulating()
+	{
 		return particulating;
 	}
-	public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args){
+	
+	public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args)
+	{
 		Player player = (Player) sender;
 		//Location location = player.getLocation();
-		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin")){
-			if(debug == false){
+		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin"))
+		{
+			if(debug == false)
+			{
 				debug = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "DEBUG MODE ENABLED");
 				Bukkit.broadcastMessage("PVP PLAYER: " + Commands.getPVPPlayer(player));
@@ -231,35 +291,41 @@ public class Main extends JavaPlugin{
 			}
 			else
 				debug = false;
-			if(Commands.getPVPPlayer(player) == null){
+			if(Commands.getPVPPlayer(player) == null)
+			{
 				PVPPlayer newPVP = new PVPPlayer(player);
 				Main.PVP.add(newPVP);
 			}
 
 		}
-		if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin")){
+		if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
+		{
 			Bukkit.broadcastMessage("VERSION .05 BETA");
 		}
-		if(commandLabel.equalsIgnoreCase("polish")){
+		if(commandLabel.equalsIgnoreCase("polish"))
+		{
 			ArmorEffects.polish(player);
 		}
-		if(commandLabel.equalsIgnoreCase("pvpinfo")){
-			PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
-			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + PVPPlayer.getPVPPlayer());
-			player.sendMessage(ChatColor.GREEN + "PLAYER NAME : " + PVPPlayer.getPlayer().getName());
-			player.sendMessage(ChatColor.GREEN + "MAXIMUM HEALTH  : " + PVPPlayer.getMaxHealth());
-			player.sendMessage(ChatColor.GREEN + "Health THIS TICK: " + PVPPlayer.gethealth());
-			player.sendMessage(ChatColor.GREEN + "Health LAST TICK: " + PVPPlayer.getHealthLastTick());
-			player.sendMessage(ChatColor.GREEN + "COOLDOWN (regen): " + PVPPlayer.getCooldown());
-			player.sendMessage(ChatColor.GREEN + "COMBAT COOLDOWN (FASTREGEN): " + PVPPlayer.getCombatCoolDown());
-			player.sendMessage(ChatColor.GREEN + "IS DEAD T/F : " + PVPPlayer.isDead);
-			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + PVPPlayer.isInCombat);
-			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + PVPPlayer.canRegen);
-			if(pvpstats.contains(player)){
+		if(commandLabel.equalsIgnoreCase("pvpinfo"))
+		{
+			PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
+			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + pvpPlayer);
+			player.sendMessage(ChatColor.GREEN + "PLAYER NAME : " + pvpPlayer.getPlayer().getName());
+			player.sendMessage(ChatColor.GREEN + "MAXIMUM HEALTH  : " + pvpPlayer.getMaxHealth());
+			player.sendMessage(ChatColor.GREEN + "Health THIS TICK: " + pvpPlayer.gethealth());
+			player.sendMessage(ChatColor.GREEN + "Health LAST TICK: " + pvpPlayer.getHealthLastTick());
+			player.sendMessage(ChatColor.GREEN + "COOLDOWN (regen): " + pvpPlayer.getCooldown());
+			player.sendMessage(ChatColor.GREEN + "COMBAT COOLDOWN (FASTREGEN): " + pvpPlayer.getCombatCoolDown());
+			player.sendMessage(ChatColor.GREEN + "IS DEAD T/F : " + pvpPlayer.isDead);
+			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + pvpPlayer.isInCombat);
+			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + pvpPlayer.canRegen);
+			if(pvpstats.contains(player))
+			{
 				pvpstats.remove(player);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPINFO again to Enable");
 			}
-			else{
+			else
+			{
 				pvpstats.add(player);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE ENABLED SAY /PVPINFO again to Disable");
 			}
