@@ -16,7 +16,7 @@ public class ArmorEffects {
 	public static final String CODE_ARMOR = "32188";
 	public static void checkForGlowTick(Player player){
 		for(ItemStack item:player.getInventory().getArmorContents()){
-			if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301){
+			if(item != null && item.hasItemMeta() == true && item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301){
 				PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
 				ItemMeta metah = item.getItemMeta();
 				LeatherArmorMeta meta = (LeatherArmorMeta) metah;
