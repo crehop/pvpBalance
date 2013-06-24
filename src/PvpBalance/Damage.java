@@ -151,7 +151,7 @@ public class Damage
 					}
 					else
 					{
-						armor += LoadSave.Ehelmet;
+						armor += LoadSave.Lhelmet;
 					}
 
 				break;
@@ -179,7 +179,7 @@ public class Damage
 					}
 					else
 					{
-						armor += LoadSave.Echest;
+						armor += LoadSave.Lchest;
 					}
 				break;
 				
@@ -206,7 +206,7 @@ public class Damage
 					}
 					else
 					{
-						armor += LoadSave.Eleggings;
+						armor += LoadSave.Lleggings;
 					}
 				break;
 				
@@ -226,11 +226,16 @@ public class Damage
 						{
 							armor += LoadSave.Lboots;
 						}
+						else
+						{
+							armor += LoadSave.Eboots;
+						}
 					}
 					else
 					{
-						armor += LoadSave.Eboots;
+						armor += LoadSave.Lboots;
 					}
+					
 					
 				break;
 			}

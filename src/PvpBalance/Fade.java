@@ -7,9 +7,9 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class Fade {
 	public static final Color CURSED = Color.fromRGB(0, 0, 0);
-	public static final Color MITHRIL = Color.fromRGB(51, 102, 204);
-	public static final Color FLAME = Color.fromRGB(204, 76, 76);
-	public static final Color VERITE = Color.fromRGB(127, 204, 25);
+	public static final Color MITHRIL = Color.fromRGB(0, 0, 128);
+	public static final Color FLAME = Color.fromRGB(255, 0, 22);
+	public static final Color VERITE = Color.fromRGB(0, 255, 0);
 	public static final Color PRIZED = Color.fromRGB(255, 255, 255);
 	
 	public static int type(ItemStack item)
