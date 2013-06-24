@@ -29,9 +29,12 @@ public class ArmorEffects
 				{
 					if(!meta.getColor().toString().contains("A06540"))
 					{
-						int nr = Fade.type(item)-1;
+						int nr = (Fade.type(item)-1);
 						if(metas[nr] != null)
-							((LeatherArmorMeta)item.getItemMeta()).setColor(metas[nr].clone().getColor());
+						{
+							meta.setColor(metas[nr].clone().getColor());
+							item.setItemMeta(meta);
+						}
 						else
 						{
 							switch(item.getTypeId())
@@ -58,7 +61,7 @@ public class ArmorEffects
 			int green = meta.getColor().getGreen();
 			if(Fade.type(item) == 1)
 			{
-				if(blue >= 90 || red >= 90 || green >= 90)
+				if(blue >= 90 && red >= 90 && green >= 90)
 				{
 					pvpPlayer.colorUpHelmet = false;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -78,7 +81,7 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = false;
 					}*/
 				}
-				else if(blue <= 0 || red <= 0 || green <= 0)
+				else if(blue <= 0 && red <= 0 && green <= 0)
 				{
 					pvpPlayer.colorUpHelmet = true;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -149,7 +152,7 @@ public class ArmorEffects
 			}
 			else if(Fade.type(item) == 2)
 			{
-				if(red >= 100 || green >= 180 || blue >= 255)
+				if(red >= 100 && green >= 180 && blue >= 255)
 				{
 					pvpPlayer.colorUpHelmet = false;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -169,7 +172,7 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = false;
 					}*/
 				}
-				else if(red >= 0 || green >= 0 || blue >= 205)
+				else if(red >= 0 && green >= 0 && blue >= 205)
 				{
 					pvpPlayer.colorUpHelmet = true;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -240,7 +243,7 @@ public class ArmorEffects
 			}
 			else if(Fade.type(item) == 3)
 			{
-				if(red >= 255 || green >= 0 || blue >= 0)
+				if(red >= 255 && green >= 0 && blue >= 0)
 				{
 					pvpPlayer.colorUpHelmet = false;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -260,7 +263,7 @@ public class ArmorEffects
 						pvpPlayer.colorUpBoots = false;
 					}*/
 				}
-				else if(red <= 125 || green <= 0 || blue <= 0)
+				else if(red <= 125 && green <= 0 && blue <= 0)
 				{
 					pvpPlayer.colorUpHelmet = true;
 					/*if(item.getType() == Material.LEATHER_HELMET)
@@ -283,14 +286,14 @@ public class ArmorEffects
 			if(pvpPlayer.colorUpHelmet == true)
 			{
 				red += 13;
-				blue += 0;
-				green += 0;
+				blue = 0;
+				green = 0;
 			}
 			else if(pvpPlayer.colorUpHelmet == false)
 			{
 				red -= 13;
-				blue -= 0;
-				green -= 0;
+				blue = 0;
+				green = 0;
 			}
 			/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
 			{
@@ -331,7 +334,7 @@ public class ArmorEffects
 		}
 		else if(Fade.type(item) == 4)
 		{
-			if(red >= 120 || green >= 250 || blue >= 0)
+			if(red >= 120 && green >= 250 && blue >= 0)
 			{
 				pvpPlayer.colorUpHelmet = false;
 				/*if(item.getType() == Material.LEATHER_HELMET)
@@ -351,7 +354,7 @@ public class ArmorEffects
 					pvpPlayer.colorUpBoots = false;
 				}*/
 			}
-			else if(red <= 0 || green <= 100 || blue <= 0)
+			else if(red <= 0 && green <= 100 && blue <= 0)
 			{
 				pvpPlayer.colorUpHelmet = true;
 				/*if(item.getType() == Material.LEATHER_HELMET)
@@ -375,13 +378,13 @@ public class ArmorEffects
 			{
 				red += 12;
 				green += 15;
-				blue += 0;
+				blue = 0;
 			}
 			else if(pvpPlayer.colorUpHelmet == false)
 			{
 				red -= 12;
 				green -= 15;
-				blue -= 0;
+				blue = 0;
 			}
 			/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
 			{
@@ -423,6 +426,21 @@ public class ArmorEffects
 		//meta.getColor().setBlue(blue);
 		//meta.getColor().setGreen(green);
 		//meta.getColor().setRed(red);
+		if(red < 0)
+			red = 0;
+		else if(red > 255)
+			red = 255;
+		
+		if(green < 0)
+			green = 0;
+		else if(green > 255)
+			green = 255;
+		
+		if(blue < 0)
+			blue = 0;
+		else if(blue > 255)
+			blue = 255;
+		
 		Color color = Color.fromRGB(red, green, blue);
 		meta.setColor(color);
 		item.setItemMeta(meta);

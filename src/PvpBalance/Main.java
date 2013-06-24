@@ -174,7 +174,7 @@ public class Main extends JavaPlugin
 		    	{
 		    		try
 		    		{
-		    			//ArmorEffects.checkForGlowTick(all);
+		    			ArmorEffects.checkForGlowTick(all);
 		
 		    		}
 		    		catch (IllegalArgumentException e1)
