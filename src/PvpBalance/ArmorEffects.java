@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class ArmorEffects
 {
-	public static final String CODE_PAPER = "32156";
+	public static final String CODE_PAPER = "32157";
 	public static final String CODE_ARMOR = "32188";
 	
 	public static void checkForGlowTick(Player player)
@@ -481,36 +481,63 @@ public class ArmorEffects
 											alreadyRemoved = true;
 											hasCloth = true;
 											i.setAmount(i.getAmount() - 1);
+											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+											{
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
+													ItemMeta metah = item.getItemMeta();
+													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+													if(!meta.getColor().toString().contains("A06540"))
+													{
+														List<String> lore = new ArrayList<String>();
+														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														meta.setLore(lore);
+														item.setItemMeta(meta);
+														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+														{
+															meta.setColor(Color.fromRGB(254, 255, 255));
+															item.setItemMeta(meta);
+															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														}
+													}
+													else
+													{
+														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
+																
+													}	
+												}
+											}
 										}
 										else if(alreadyRemoved == false)
 										{
 											alreadyRemoved = true;
 											hasCloth = true;
 											player.getInventory().removeItem(i);
-										}
-									}
-									if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
-									{
-										ItemMeta metah = item.getItemMeta();
-										LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-										if(!meta.getColor().toString().contains("A06540"))
-										{
-											List<String> lore = new ArrayList<String>();
-											lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-											meta.setLore(lore);
-											item.setItemMeta(meta);
-											if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
 											{
-												meta.setColor(Color.fromRGB(254, 255, 255));
-												item.setItemMeta(meta);
-												item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
+													ItemMeta metah = item.getItemMeta();
+													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+													if(!meta.getColor().toString().contains("A06540"))
+													{
+														List<String> lore = new ArrayList<String>();
+														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														meta.setLore(lore);
+														item.setItemMeta(meta);
+														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+														{
+															meta.setColor(Color.fromRGB(254, 255, 255));
+															item.setItemMeta(meta);
+															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														}
+													}
+													else
+													{
+														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
+																
+													}	
+												}
 											}
 										}
-										else
-										{
-											player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
-													
-										}	
 									}
 								}
 							}

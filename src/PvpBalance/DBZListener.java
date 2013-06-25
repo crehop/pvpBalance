@@ -52,6 +52,9 @@ public class DBZListener implements Listener{
 		if(Main.pvpstats.contains(quitplayer)){
 			Main.pvpstats.remove(quitplayer);
 		}
+		if(Commands.getPVPPlayer(quitplayer).isInCombat == true){
+			quitplayer.setHealth(0);
+		}
 	}
 	
 	@EventHandler
