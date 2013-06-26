@@ -64,42 +64,10 @@ public class ArmorEffects
 				if(blue >= 90 && red >= 90 && green >= 90)
 				{
 					pvpPlayer.colorUpHelmet = false;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = false;
-					}
-					else if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = false;
-					}
-					else if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = false;
-					}
-					else if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = false;
-					}*/
 				}
 				else if(blue <= 0 && red <= 0 && green <= 0)
 				{
 					pvpPlayer.colorUpHelmet = true;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = true;
-					}
-					else if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = true;
-					}
-					else if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = true;
-					}
-					else if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = true;
-					}*/
 				}
 				if(pvpPlayer.colorUpHelmet == true)
 				{
@@ -113,84 +81,16 @@ public class ArmorEffects
 					blue -= 9;
 					green -= 9;
 				}
-				/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					red += 5;
-					blue += 5;
-					green += 5;
-				}
-				else if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					red -= 5;
-					blue -= 5;
-					green -= 5;
-				}
-				if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					red += 5;
-					blue += 5;
-					green += 5;
-				}
-				else if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					red -= 5;
-					blue -= 5;
-					green -= 5;
-				}
-				if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
-				{
-					red += 5;
-					blue += 5;
-					green += 5;
-				}
-				else if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
-				{
-					red -= 5;
-					blue -= 5;
-					green -= 5;
-				}*/
 			}
 			else if(Fade.type(item) == 2)
 			{
 				if(red >= 100 && green >= 180 && blue >= 255)
 				{
 					pvpPlayer.colorUpHelmet = false;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = false;
-					}
-					if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = false;
-					}
-					if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = false;
-					}
-					if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = false;
-					}*/
 				}
 				else if(red >= 0 && green >= 0 && blue >= 205)
 				{
 					pvpPlayer.colorUpHelmet = true;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = true;
-					}
-					if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = true;
-					}
-					if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = true;
-					}
-					if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = true;
-					}*/
 				}
 				if(pvpPlayer.colorUpHelmet == true)
 				{
@@ -204,84 +104,16 @@ public class ArmorEffects
 					green -= 18;
 					blue -= 5;
 				}
-				/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					red += 7;
-					blue += 7;
-					green += 7;
-				}
-				if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					red -= 7;
-					blue -= 7;
-					green -= 7;
-				}
-				if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					red += 7;
-					blue += 7;
-					green += 7;
-				}
-				if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					red -= 7;
-					blue -= 7;
-					green -= 7;
-				}
-				if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
-				{
-					red += 7;
-					blue += 7;
-					green += 7;
-				}
-				if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
-				{
-					red -= 7;
-					blue -= 7;
-					green -= 7;
-				}*/
 			}
 			else if(Fade.type(item) == 3)
 			{
 				if(red >= 255 && green >= 0 && blue >= 0)
 				{
 					pvpPlayer.colorUpHelmet = false;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = false;
-					}
-					if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = false;
-					}
-					if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = false;
-					}
-					if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = false;
-					}*/
 				}
 				else if(red <= 125 && green <= 0 && blue <= 0)
 				{
 					pvpPlayer.colorUpHelmet = true;
-					/*if(item.getType() == Material.LEATHER_HELMET)
-					{
-						pvpPlayer.colorUpHelmet = true;
-					}
-					if(item.getType() == Material.LEATHER_CHESTPLATE)
-					{
-						pvpPlayer.colorUpChest = true;
-					}
-					if(item.getType() == Material.LEATHER_LEGGINGS)
-					{
-						pvpPlayer.colorUpLeggings = true;
-					}
-					if(item.getType() == Material.LEATHER_BOOTS)
-					{
-						pvpPlayer.colorUpBoots = true;
-					}*/
 				}
 			if(pvpPlayer.colorUpHelmet == true)
 			{
@@ -295,84 +127,16 @@ public class ArmorEffects
 				blue = 0;
 				green = 0;
 			}
-			/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
-			{
-				red += 5;
-				blue += 3;
-				green += 3;
-			}
-			if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
-			{
-				red -= 5;
-				blue -= 3;
-				green -= 3;
-			}
-			if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
-			{
-				red += 5;
-				blue += 3;
-				green += 3;
-			}
-			if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
-			{
-				red -= 5;
-				blue -= 3;
-				green -= 3;
-			}
-			if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
-			{
-				red += 10;
-				blue += 7;
-				green += 7;
-			}
-			if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
-			{
-				red -= 5;
-				blue -= 3;
-				green -= 3;
-			}*/
 		}
 		else if(Fade.type(item) == 4)
 		{
 			if(red >= 120 && green >= 250 && blue >= 0)
 			{
 				pvpPlayer.colorUpHelmet = false;
-				/*if(item.getType() == Material.LEATHER_HELMET)
-				{
-					pvpPlayer.colorUpHelmet = false;
-				}
-				if(item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					pvpPlayer.colorUpChest = false;
-				}
-				if(item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					pvpPlayer.colorUpLeggings = false;
-				}
-				if(item.getType() == Material.LEATHER_BOOTS)
-				{
-					pvpPlayer.colorUpBoots = false;
-				}*/
 			}
 			else if(red <= 0 && green <= 100 && blue <= 0)
 			{
 				pvpPlayer.colorUpHelmet = true;
-				/*if(item.getType() == Material.LEATHER_HELMET)
-				{
-					pvpPlayer.colorUpHelmet = true;
-				}
-				if(item.getType() == Material.LEATHER_CHESTPLATE)
-				{
-					pvpPlayer.colorUpChest = true;
-				}
-				if(item.getType() == Material.LEATHER_LEGGINGS)
-				{
-					pvpPlayer.colorUpLeggings = true;
-				}
-				if(item.getType() == Material.LEATHER_BOOTS)
-				{
-					pvpPlayer.colorUpBoots = true;
-				}*/
 			}
 			if(pvpPlayer.colorUpHelmet == true)
 			{
@@ -386,46 +150,47 @@ public class ArmorEffects
 				green -= 15;
 				blue = 0;
 			}
-			/*if(pvpPlayer.colorUpChest == true && item.getType() == Material.LEATHER_CHESTPLATE)
-			{
-				red += 6;
-				blue += 1;
-				green += 7;
-			}
-			if(pvpPlayer.colorUpChest == false && item.getType() == Material.LEATHER_CHESTPLATE)
-			{
-				red -= 6;
-				blue -= 1;
-				green -= 7;
-			}
-			if(pvpPlayer.colorUpLeggings == true && item.getType() == Material.LEATHER_LEGGINGS)
-			{
-				red += 6;
-				blue += 1;
-				green += 7;
-			}
-			if(pvpPlayer.colorUpLeggings == false && item.getType() == Material.LEATHER_LEGGINGS)
-			{
-				red -= 6;
-				blue -= 1;
-				green -= 7;
-			}
-			if(pvpPlayer.colorUpBoots == true && item.getType() == Material.LEATHER_BOOTS)
-			{
-				red += 6;
-				blue += 1;
-				green += 7;
-			}
-			if(pvpPlayer.colorUpBoots == false && item.getType() == Material.LEATHER_BOOTS)
-			{
-				red -= 12;
-				blue -= 1;
-				green -= 15;
-			}*/
 		}
-		//meta.getColor().setBlue(blue);
-		//meta.getColor().setGreen(green);
-		//meta.getColor().setRed(red);
+		else if(Fade.type(item) == 5 || item.getItemMeta().getLore().get(1) == "Polished Prized")
+		{
+			if(item.hasItemMeta() == true && item.getItemMeta().getLore().size() == 1){
+				List<String> lore = new ArrayList<String>();
+				lore.add(0, item.getItemMeta().getLore().get(0));
+				lore.add(1, "Polished Prized");
+				meta.setLore(lore);
+			}
+			if(red == Fade.PRIZED.getRed() && blue == Fade.PRIZED.getBlue() && green == Fade.PRIZED.getGreen()){
+				red = Fade.CURSED.getRed();
+				blue = Fade.CURSED.getBlue();
+				green = Fade.CURSED.getGreen();
+			}
+			else if(red == Fade.CURSED.getRed() && blue == Fade.CURSED.getBlue() && green == Fade.CURSED.getGreen()){
+				red = Fade.FLAME.getRed();
+				blue = Fade.FLAME.getBlue();
+				green = Fade.FLAME.getGreen();
+			}
+			else if(red == Fade.FLAME.getRed() && blue == Fade.FLAME.getBlue() && green == Fade.FLAME.getGreen()){
+				red = Fade.MITHRIL.getRed();
+				blue = Fade.MITHRIL.getBlue();
+				green = Fade.MITHRIL.getGreen();
+			}
+			else if(red == Fade.MITHRIL.getRed() && blue == Fade.MITHRIL.getBlue() && green == Fade.MITHRIL.getGreen()){
+				red = Fade.VERITE.getRed();
+				blue = Fade.VERITE.getBlue();
+				green = Fade.VERITE.getGreen();
+			}
+			else if(red == Fade.VERITE.getRed() && blue == Fade.VERITE.getBlue() && green == Fade.VERITE.getGreen()){
+				red = Fade.PRIZED.getRed();
+				blue = Fade.PRIZED.getBlue();
+				green = Fade.PRIZED.getGreen();
+			}
+			else{
+				red = Fade.PRIZED.getRed();
+				blue = Fade.PRIZED.getBlue();
+				green = Fade.PRIZED.getGreen();
+			}
+			
+		}	
 		if(red < 0)
 			red = 0;
 		else if(red > 255)
