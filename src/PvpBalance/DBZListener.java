@@ -149,7 +149,12 @@ public class DBZListener implements Listener{
 					Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
 				}
 			}
-			event.setDamage(0);
+			if(PVPDamagee.god == true){
+				event.setCancelled(true);
+			}
+			else{
+				event.setDamage(0);
+			}
 		}
 	}
 	
@@ -236,7 +241,6 @@ public class DBZListener implements Listener{
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
 			}
 			else if(event.getCause().equals(DamageCause.VOID))
 			{
