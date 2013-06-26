@@ -15,7 +15,7 @@ public class ArmorEffects
 {
 	public static final String CODE_PAPER = "32157";
 	public static final String CODE_ARMOR = "32188";
-	
+
 	public static void checkForGlowTick(Player player)
 	{
 		LeatherArmorMeta[] metas = new LeatherArmorMeta[5];
@@ -52,7 +52,7 @@ public class ArmorEffects
 			}
 		}
 	}
-	
+
 	public static LeatherArmorMeta glow(ItemStack item, PVPPlayer pvpPlayer)
 	{
 			LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
@@ -153,65 +153,72 @@ public class ArmorEffects
 		}
 		else if(Fade.type(item) == 5 || item.getItemMeta().getLore().get(1) == "Polished Prized")
 		{
-			if(item.hasItemMeta() == true && item.getItemMeta().getLore().size() == 1){
+			if(item.hasItemMeta() == true && item.getItemMeta().getLore().size() == 1)
+			{
 				List<String> lore = new ArrayList<String>();
 				lore.add(0, item.getItemMeta().getLore().get(0));
 				lore.add(1, "Polished Prized");
 				meta.setLore(lore);
 			}
-			if(red == Fade.PRIZED.getRed() && blue == Fade.PRIZED.getBlue() && green == Fade.PRIZED.getGreen()){
+			if(red == Fade.PRIZED.getRed() && blue == Fade.PRIZED.getBlue() && green == Fade.PRIZED.getGreen())
+			{
 				red = Fade.CURSED.getRed();
 				blue = Fade.CURSED.getBlue();
 				green = Fade.CURSED.getGreen();
 			}
-			else if(red == Fade.CURSED.getRed() && blue == Fade.CURSED.getBlue() && green == Fade.CURSED.getGreen()){
+			else if(red == Fade.CURSED.getRed() && blue == Fade.CURSED.getBlue() && green == Fade.CURSED.getGreen())
+			{
 				red = Fade.FLAME.getRed();
 				blue = Fade.FLAME.getBlue();
 				green = Fade.FLAME.getGreen();
 			}
-			else if(red == Fade.FLAME.getRed() && blue == Fade.FLAME.getBlue() && green == Fade.FLAME.getGreen()){
+			else if(red == Fade.FLAME.getRed() && blue == Fade.FLAME.getBlue() && green == Fade.FLAME.getGreen())
+			{
 				red = Fade.MITHRIL.getRed();
 				blue = Fade.MITHRIL.getBlue();
 				green = Fade.MITHRIL.getGreen();
 			}
-			else if(red == Fade.MITHRIL.getRed() && blue == Fade.MITHRIL.getBlue() && green == Fade.MITHRIL.getGreen()){
+			else if(red == Fade.MITHRIL.getRed() && blue == Fade.MITHRIL.getBlue() && green == Fade.MITHRIL.getGreen())
+			{
 				red = Fade.VERITE.getRed();
 				blue = Fade.VERITE.getBlue();
 				green = Fade.VERITE.getGreen();
 			}
-			else if(red == Fade.VERITE.getRed() && blue == Fade.VERITE.getBlue() && green == Fade.VERITE.getGreen()){
+			else if(red == Fade.VERITE.getRed() && blue == Fade.VERITE.getBlue() && green == Fade.VERITE.getGreen())
+			{
 				red = Fade.PRIZED.getRed();
 				blue = Fade.PRIZED.getBlue();
 				green = Fade.PRIZED.getGreen();
 			}
-			else{
+			else
+			{
 				red = Fade.PRIZED.getRed();
 				blue = Fade.PRIZED.getBlue();
 				green = Fade.PRIZED.getGreen();
 			}
-			
+
 		}	
 		if(red < 0)
 			red = 0;
 		else if(red > 255)
 			red = 255;
-		
+
 		if(green < 0)
 			green = 0;
 		else if(green > 255)
 			green = 255;
-		
+
 		if(blue < 0)
 			blue = 0;
 		else if(blue > 255)
 			blue = 255;
-		
+
 		Color color = Color.fromRGB(red, green, blue);
 		meta.setColor(color);
 		item.setItemMeta(meta);
 		return meta.clone();
 	}
-	
+
 	public static void polish(Player player)
 	{
 		boolean hasCloth = false;
@@ -267,7 +274,7 @@ public class ArmorEffects
 													else
 													{
 														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
-																
+
 													}	
 												}
 											}
@@ -279,7 +286,8 @@ public class ArmorEffects
 											player.getInventory().removeItem(i);
 											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
 											{
-												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
+												{
 													ItemMeta metah = item.getItemMeta();
 													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 													if(!meta.getColor().toString().contains("A06540"))
@@ -298,7 +306,7 @@ public class ArmorEffects
 													else
 													{
 														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
-																
+
 													}	
 												}
 											}

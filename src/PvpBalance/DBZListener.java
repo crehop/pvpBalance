@@ -52,13 +52,17 @@ public class DBZListener implements Listener{
 		if(Main.pvpstats.contains(quitplayer)){
 			Main.pvpstats.remove(quitplayer);
 		}
-		if(Commands.getPVPPlayer(quitplayer).isInCombat == true){
+		if(Commands.getPVPPlayer(quitplayer).isInCombat == true)
+		{
 			quitplayer.setHealth(0);
 		}
+
 	}
 	
+	
 	@EventHandler
-	public void onPlayerDamageEvent(EntityDamageByEntityEvent event){
+	public void onPlayerDamageEvent(EntityDamageByEntityEvent event)
+	{
 		boolean canhit = DungeonAPI.canhit(event);
 		int dealtDamage = 0;
 		/*if (event.getDamager() instanceof Player){
@@ -66,24 +70,30 @@ public class DBZListener implements Listener{
 			PVPPlayer PVPdamager = Commands.getPVPPlayer(damager);
 		}*/
 		Entity e = event.getEntity();
-		if (e instanceof Player){
+		if (e instanceof Player)
+		{
 			int rawDamage = event.getDamage();
 			Random rand = new Random();
 			Player damagee = (Player) e;
-			if(Commands.getPVPPlayer(damagee) == null){
+			if(Commands.getPVPPlayer(damagee) == null)
+			{
 				PVPPlayer newPVP = new PVPPlayer(damagee);
 				Main.PVP.add(newPVP);
 			}
 			PVPPlayer PVPDamagee = Commands.getPVPPlayer(damagee);
-			if(event.getCause() == DamageCause.PROJECTILE){
-				if(CombatUtil.preventDamageCall(damagee, damagee) == true && DungeonAPI.canhit(event) == true){
+			if(event.getCause() == DamageCause.PROJECTILE)
+			{
+				if(CombatUtil.preventDamageCall(damagee, damagee) && DungeonAPI.canhit(event))
+				{
 					event.setCancelled(true);
 					canhit = false;
 				}
 			}
-			if(event.getDamager() instanceof Player && canhit != false && event.getDamage() > 0){
+			if(event.getDamager() instanceof Player && canhit && event.getDamage() > 0)
+			{
 				Player damager = (Player)event.getDamager();
-				if(Commands.getPVPPlayer(damager) == null){
+				if(Commands.getPVPPlayer(damager) == null)
+				{
 					PVPPlayer newPVP = new PVPPlayer(damager);
 					Main.PVP.add(newPVP);
 				}
@@ -94,35 +104,55 @@ public class DBZListener implements Listener{
 				}
 				
 				
-				if(CombatUtil.preventDamageCall(damagee, damager) == false && DungeonAPI.canhit(event) == true && faction){
+				if(!CombatUtil.preventDamageCall(damagee, damager) && DungeonAPI.canhit(event) && faction)
+				{
 					PVPPlayer PVPdamager = Commands.getPVPPlayer(damager);
-					if(PVPdamager.getHitCooldown() < 1){
+					if(PVPdamager.getHitCooldown() < 1)
+					{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
-						if(PVPdamager.getHitCooldown() < 1){
-							PVPDamagee.Damage(dealtDamage);
+						if(PVPdamager.getHitCooldown() < 1)
+						{
+							PBDamageEvent pbdEvent = new PBDamageEvent(damagee, damager, dealtDamage, event.getCause());
+							Bukkit.getPluginManager().callEvent(pbdEvent);
+							if(!pbdEvent.isCancelled())
+							{
+								dealtDamage = pbdEvent.getDamage();
+								PVPDamagee.Damage(dealtDamage);
+							}
 						}
 						PVPdamager.setHitCoolDown(5);
 						PVPdamager.setCombatCoolDown(40);
 						PVPDamagee.setCombatCoolDown(40);
-						if(Main.debug == true || Main.pvpstats.contains(damager)){
+						if(Main.debug == true || Main.pvpstats.contains(damager))
+						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
 						}
 					}
 				}
-				else{
+				else
+				{
 					canhit = false;
 				}
 			}
-			else if(canhit != false && event.getDamage() > 0 && event.getDamager().getClass() != Player.class){
+			else if(canhit && event.getDamage() > 0 && event.getDamager().getClass() != Player.class)
+			{
 				dealtDamage = rawDamage * LoadSave.Multi;
-				PVPDamagee.Damage(dealtDamage);
-				if(Main.debug == true){
+				PBDamageEvent pbdEvent = new PBDamageEvent(damagee, event.getDamager(), dealtDamage, event.getCause());
+				Bukkit.getPluginManager().callEvent(pbdEvent);
+				if(!pbdEvent.isCancelled())
+				{
+					dealtDamage = pbdEvent.getDamage();
+					PVPDamagee.Damage(dealtDamage);
+				}
+				if(Main.debug == true)
+				{
 					Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
 				}
 			}
 			event.setDamage(0);
 		}
 	}
+	
 	@EventHandler
 	public void playerJoin(PlayerJoinEvent event){
 		PVPPlayer newPVP = new PVPPlayer(event.getPlayer());

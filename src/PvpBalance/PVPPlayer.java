@@ -23,7 +23,8 @@ public class PVPPlayer {
 	boolean colorUpChest;
 	boolean colorUpLeggings;
 	boolean colorUpBoots;
-	public PVPPlayer(Player player){
+	public PVPPlayer(Player player)
+	{
 		this.player = player;
 		this.health = 500;
 		this.canRegen = true;
