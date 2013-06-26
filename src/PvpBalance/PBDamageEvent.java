@@ -10,10 +10,10 @@ public class PBDamageEvent extends Event implements Cancellable
 {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
-	int damage;
-	Entity entity;
-	Entity damager;
-	DamageCause cause;
+	private int damage;
+	private Entity entity;
+	private Entity damager;
+	private DamageCause cause;
 	
 	public PBDamageEvent(Entity entity, Entity damager, int damage, DamageCause cause)
 	{
