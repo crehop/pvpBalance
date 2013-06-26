@@ -280,6 +280,16 @@ public class Main extends JavaPlugin
 	{
 		Player player = (Player) sender;
 		//Location location = player.getLocation();
+		if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
+		{
+			PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
+			if(PVPPlayer.isGod() == true){
+				PVPPlayer.setGod(false);
+			}
+			else{
+				PVPPlayer.setGod(true);
+			}
+		}
 		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin"))
 		{
 			if(debug == false)

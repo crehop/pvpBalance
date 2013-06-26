@@ -23,6 +23,7 @@ public class PVPPlayer {
 	boolean colorUpChest;
 	boolean colorUpLeggings;
 	boolean colorUpBoots;
+	boolean god;
 	public PVPPlayer(Player player)
 	{
 		this.player = player;
@@ -67,11 +68,17 @@ public class PVPPlayer {
 	public int getHunger(){
 		return this.hunger;
 	}
+	public boolean isGod(){
+		return god;
+	}
 	public int getHitCooldown(){
 		return this.hitCoolDown;
 	}
 	public int getArmorEventLastTick(){
 		return this.armorEventLastTick;
+	}
+	public void setGod(boolean god){
+		this.god = god;
 	}
 	public void setArmorEventLastTick(int armorEventLastTick){
 		this.armorEventLastTick = armorEventLastTick;
@@ -136,7 +143,7 @@ public class PVPPlayer {
 	
 	public void Damage(int dmg)
 	{
-		if(player.getGameMode() == GameMode.SURVIVAL)
+		if(player.getGameMode() == GameMode.SURVIVAL && this.god == false)
 		{
 			sethealth(gethealth() - dmg);
 			if(this.health <= 0 && this.isDead != true)
@@ -155,6 +162,7 @@ public class PVPPlayer {
 		else
 		{
 			this.health = this.maxHealth;
+			player.setFoodLevel(20);
 		}
 
 	}
