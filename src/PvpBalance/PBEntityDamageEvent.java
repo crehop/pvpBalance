@@ -6,21 +6,20 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-public class PBDamageEvent extends Event implements Cancellable
+public class PBEntityDamageEvent extends Event implements Cancellable
 {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
 	private int damage;
 	private Entity entity;
-	private Entity damager;
 	private DamageCause cause;
 	
-	public PBDamageEvent(Entity entity, Entity damager, int damage, DamageCause cause)
+	public PBEntityDamageEvent(Entity entity, int damage, DamageCause cause)
 	{
 		this.entity = entity;
-		this.damager = damager;
 		this.damage = damage;
 		this.cause = cause;
+		cancelled = false;
 	}
 	
 	@Override
@@ -49,11 +48,6 @@ public class PBDamageEvent extends Event implements Cancellable
 	public Entity getEntity()
 	{
 		return entity;
-	}
-	
-	public Entity getDamager()
-	{
-		return damager;
 	}
 	
 	public int getDamage()

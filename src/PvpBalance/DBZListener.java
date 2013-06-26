@@ -4,7 +4,6 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -23,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 import me.ThaH3lper.com.DungeonAPI;
 
@@ -112,7 +112,7 @@ public class DBZListener implements Listener{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
 						if(PVPdamager.getHitCooldown() < 1)
 						{
-							PBDamageEvent pbdEvent = new PBDamageEvent(damagee, damager, dealtDamage, event.getCause());
+							PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
 							Bukkit.getPluginManager().callEvent(pbdEvent);
 							if(!pbdEvent.isCancelled())
 							{
@@ -137,7 +137,7 @@ public class DBZListener implements Listener{
 			else if(canhit && event.getDamage() > 0 && event.getDamager().getClass() != Player.class)
 			{
 				dealtDamage = rawDamage * LoadSave.Multi;
-				PBDamageEvent pbdEvent = new PBDamageEvent(damagee, event.getDamager(), dealtDamage, event.getCause());
+				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), dealtDamage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
 				if(!pbdEvent.isCancelled())
 				{
@@ -196,29 +196,13 @@ public class DBZListener implements Listener{
 		event.setCancelled(true);
 	}
 	@EventHandler
-	public void playerinteract(PlayerInteractEvent event){
+	public void playerinteract(PlayerInteractEvent event)
+	{
 		Player player = event.getPlayer();
-		if(event.useItemInHand() == Result.DEFAULT && event.isBlockInHand() == false && event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
-			if(player.getItemInHand().getType() == Material.DIAMOND_BOOTS ||
-				player.getItemInHand().getType() == Material.DIAMOND_CHESTPLATE ||
-				player.getItemInHand().getType() == Material.DIAMOND_LEGGINGS ||
-				player.getItemInHand().getType() == Material.DIAMOND_HELMET ||
-				player.getItemInHand().getType() == Material.IRON_CHESTPLATE ||
-				player.getItemInHand().getType() == Material.IRON_LEGGINGS ||
-				player.getItemInHand().getType() == Material.IRON_HELMET ||
-				player.getItemInHand().getType() == Material.IRON_BOOTS ||
-				player.getItemInHand().getType() == Material.LEATHER_CHESTPLATE ||
-				player.getItemInHand().getType() == Material.LEATHER_LEGGINGS ||
-				player.getItemInHand().getType() == Material.LEATHER_HELMET ||
-				player.getItemInHand().getType() == Material.LEATHER_BOOTS ||
-				player.getItemInHand().getType() == Material.CHAINMAIL_CHESTPLATE ||
-				player.getItemInHand().getType() == Material.CHAINMAIL_LEGGINGS ||
-				player.getItemInHand().getType() == Material.CHAINMAIL_HELMET ||
-				player.getItemInHand().getType() == Material.CHAINMAIL_BOOTS ||
-				player.getItemInHand().getType() == Material.GOLD_CHESTPLATE ||
-				player.getItemInHand().getType() == Material.GOLD_LEGGINGS ||
-				player.getItemInHand().getType() == Material.GOLD_HELMET ||
-				player.getItemInHand().getType() == Material.GOLD_BOOTS){
+		if((event.useItemInHand() == Result.DEFAULT && !event.isBlockInHand()) && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
+		{
+			if(isArmor(player.getItemInHand()))
+			{
 				
 					Damage.calcArmor(player);
 					Commands.getPVPPlayer(player).setArmorEventLastTick(2);
@@ -232,51 +216,94 @@ public class DBZListener implements Listener{
 	}
 	@EventHandler 
 	public void damageCause(EntityDamageEvent event){
-		if (event.getEntity() instanceof Player){
+		if (event.getEntity() instanceof Player)
+		{
 			Player player = (Player)event.getEntity();
-			if(Commands.getPVPPlayer(player) == null){
+			if(Commands.getPVPPlayer(player) == null)
+			{
 				PVPPlayer newPVP = new PVPPlayer(player);
 				Main.PVP.add(newPVP);
 			}
 			PVPPlayer pvp = Commands.getPVPPlayer(player);
-			if(event.getCause().equals(DamageCause.STARVATION)){
+			if(event.getCause().equals(DamageCause.STARVATION))
+			{
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.FIRE_TICK)){
-				pvp.Damage(LoadSave.Firetick);
+			else if(event.getCause().equals(DamageCause.FIRE_TICK))
+			{
+				int damage = LoadSave.Firetick;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.VOID)){
-				pvp.Damage(LoadSave.Voide);
+			else if(event.getCause().equals(DamageCause.VOID))
+			{
+				int damage = LoadSave.Voide;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.CONTACT)){
-				pvp.Damage(LoadSave.Contact);
+			else if(event.getCause().equals(DamageCause.CONTACT))
+			{
+				int damage = LoadSave.Contact;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.DROWNING)){
-				pvp.Damage(LoadSave.Drowning);
+			else if(event.getCause().equals(DamageCause.DROWNING))
+			{
+				int damage = LoadSave.Drowning;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.POISON)){
-				pvp.Damage(LoadSave.Poison);
+			else if(event.getCause().equals(DamageCause.POISON))
+			{
+				int damage = LoadSave.Poison;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.FALL)){
-				pvp.Damage(LoadSave.Fall);
+			else if(event.getCause().equals(DamageCause.FALL))
+			{
+				int damage = LoadSave.Fall;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
-			else if(event.getCause().equals(DamageCause.WITHER)){
-				pvp.Damage(LoadSave.Wither);
+			else if(event.getCause().equals(DamageCause.WITHER))
+			{
+				int damage = LoadSave.Wither;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
 			else if(event.getCause() != DamageCause.PROJECTILE && event.getCause() != DamageCause.ENTITY_ATTACK)
 			{
-				pvp.Damage(event.getDamage());
+				int damage = event.getDamage();
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0);
 			}
 		}
 	}
+	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event){
 		Player player = event.getEntity();
@@ -288,44 +315,63 @@ public class DBZListener implements Listener{
 		PVPPlayer.setIsDead(true);
 	}
 	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event){
-    	if(event.isShiftClick()){
-    		if(event.getCurrentItem().getType() == Material.DIAMOND_BOOTS ||
-    			event.getCurrentItem().getType() == Material.DIAMOND_CHESTPLATE ||
-				event.getCurrentItem().getType() == Material.DIAMOND_LEGGINGS ||
-				event.getCurrentItem().getType() == Material.DIAMOND_HELMET ||
-				event.getCurrentItem().getType() == Material.IRON_CHESTPLATE ||
-				event.getCurrentItem().getType() == Material.IRON_LEGGINGS ||
-				event.getCurrentItem().getType() == Material.IRON_HELMET ||
-				event.getCurrentItem().getType() == Material.IRON_BOOTS ||
-				event.getCurrentItem().getType() == Material.LEATHER_CHESTPLATE ||
-				event.getCurrentItem().getType() == Material.LEATHER_LEGGINGS ||
-				event.getCurrentItem().getType() == Material.LEATHER_HELMET ||
-				event.getCurrentItem().getType() == Material.LEATHER_BOOTS ||
-				event.getCurrentItem().getType() == Material.CHAINMAIL_CHESTPLATE ||
-				event.getCurrentItem().getType() == Material.CHAINMAIL_LEGGINGS ||
-				event.getCurrentItem().getType() == Material.CHAINMAIL_HELMET ||
-				event.getCurrentItem().getType() == Material.CHAINMAIL_BOOTS ||
-				event.getCurrentItem().getType() == Material.GOLD_CHESTPLATE ||
-				event.getCurrentItem().getType() == Material.GOLD_LEGGINGS ||
-				event.getCurrentItem().getType() == Material.GOLD_HELMET ||
-				event.getCurrentItem().getType() == Material.GOLD_BOOTS){
-    				Player player = (Player) event.getWhoClicked();
-    					if(Commands.getPVPPlayer(player) == null){
-    						PVPPlayer newPVP = new PVPPlayer(player);
-    						Main.PVP.add(newPVP);
-    					}
-    					Commands.getPVPPlayer(player).setArmorEventLastTick(2);
+	public void onInventoryClick(InventoryClickEvent event)
+	{
+		if(event.isShiftClick())
+		{
+			if(isArmor(event.getCurrentItem()))
+			{
+    			Player player = (Player) event.getWhoClicked();
+    			if(Commands.getPVPPlayer(player) == null)
+    			{
+    				PVPPlayer newPVP = new PVPPlayer(player);
+    				Main.PVP.add(newPVP);
+    			}
+    			Commands.getPVPPlayer(player).setArmorEventLastTick(2);
     		}
     	}
-	    if(event.getSlotType() == SlotType.ARMOR){
+	    if(event.getSlotType() == SlotType.ARMOR)
+	    {
 	    	Player player = (Player) event.getWhoClicked();
-			if(Commands.getPVPPlayer(player) == null){
+			if(Commands.getPVPPlayer(player) == null)
+			{
 				PVPPlayer newPVP = new PVPPlayer(player);
 				Main.PVP.add(newPVP);
 			}
 	        Commands.getPVPPlayer(player).setArmorEventLastTick(2);
 	    }
+	}
+	
+	private boolean isArmor(ItemStack is)
+	{
+		if(is == null)
+			return false;
+		switch(is.getTypeId())
+		{
+		case 298:
+		case 299:
+		case 300:
+		case 301:
+		case 302:
+		case 303:
+		case 304:
+		case 305:
+		case 306:
+		case 307:
+		case 308:
+		case 309:
+		case 310:
+		case 311:
+		case 312:
+		case 313:
+		case 314:
+		case 315:
+		case 316:
+		case 317:
+			return true;
+		default:
+			return false;
+		}
 	}
 }
 	

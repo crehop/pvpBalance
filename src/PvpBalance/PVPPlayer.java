@@ -136,25 +136,33 @@ public class PVPPlayer {
 	
 	public void Damage(int dmg)
 	{
-		if(player.getGameMode() == GameMode.SURVIVAL){
+		if(player.getGameMode() == GameMode.SURVIVAL)
+		{
 			sethealth(gethealth() - dmg);
-			if(this.health <= 0 && this.isDead != true){
+			if(this.health <= 0 && this.isDead != true)
+			{
 				this.player.setHealth(0);
 				this.isDead = true;
 			}
-			if(healthLastTick > health){
-				if(cooldown < 20){
+			if(healthLastTick > health)
+			{
+				if(cooldown < 20)
+				{
 					cooldown = 20;
 				}
 			}
 		}
-		else{
+		else
+		{
 			this.health = this.maxHealth;
 		}
 
 	}
-	public void tick(){
-		if(player.getGameMode() == GameMode.CREATIVE){
+	
+	public void tick()
+	{
+		if(player.getGameMode() == GameMode.CREATIVE)
+		{
 			this.health = this.maxHealth;
 			this.canRegen = true;
 			this.healthLastTick = this.maxHealth;
@@ -165,38 +173,47 @@ public class PVPPlayer {
 			this.combatCoolDown = 0;
 			this.armorEventLastTick = 0;
 		}
-		if(this.armorEventLastTick > 0){
+		if(this.armorEventLastTick > 0)
+		{
 			this.armorEventLastTick--;
 			Damage.calcArmor(player);
 		}
-		if(player.getHealth() <= 0){
+		if(player.getHealth() <= 0)
+		{
 			this.health = 0;
 		}
-		if(this.health <= 0 && this.isDead != true){
+		if(this.health <= 0 && this.isDead != true)
+		{
 			this.player.setHealth(0);
 			this.isDead = true;
 		}
 		setProperHealth();
 		this.canRegen = true;
-		if(cooldown > 0){
+		if(cooldown > 0)
+		{
 			this.canRegen = false;
 			cooldown--;
 		}
-		if(cooldown > 0){
+		if(cooldown > 0)
+		{
 			this.canRegen = false;
 			cooldown--;
 		}
-		if(player.getFoodLevel() == 0){
+		if(player.getFoodLevel() == 0)
+		{
 			this.canRegen = false;
 		}
 		this.hunger = this.player.getFoodLevel();
-		if(this.hunger < 2 && this.health > 100){
+		if(this.hunger < 2 && this.health > 100)
+		{
 			this.canRegen = false;
 			this.sethealth(this.gethealth() - 10);
 		}
 
-		if(combatCoolDown > 0){
-			if(isInCombat == false){
+		if(combatCoolDown > 0)
+		{
+			if(isInCombat == false)
+			{
 				isInCombat = true;
 				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
 						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
@@ -204,31 +221,38 @@ public class PVPPlayer {
 			}
 			combatCoolDown--;
 		}
-		if(combatCoolDown <= 0){
+		if(combatCoolDown <= 0)
+		{
 			this.combatCoolDown = 0;
-			if(isInCombat == true){
+			if(isInCombat == true)
+			{
 				isInCombat = false;
 				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
 		}
 		
-		if(this.hitCoolDown > 0){
+		if(this.hitCoolDown > 0)
+		{
 			this.hitCoolDown--;
 		}
-		if(Main.debug == true){
+		if(Main.debug == true)
+		{
 			Bukkit.broadcastMessage("Cooldown: " + cooldown + " this.canRegen : " + this.canRegen + " MaxHealth: " + maxHealth + " Health: " + health );
 			Bukkit.broadcastMessage("HUNGER LEVEL" + hunger);
 			Bukkit.broadcastMessage(""+player.getExhaustion());
 			Bukkit.broadcastMessage("HITCoolDown:" + hitCoolDown);
 			
 		}
-		if(health < maxHealth && this.canRegen == true){
+		if(health < maxHealth && this.canRegen == true)
+		{
 			this.sethealth(health + 5);
-			if(this.isInCombat == false){
+			if(this.isInCombat == false)
+			{
 				this.sethealth(health + 10);
 			}
 		}
-		if(health > maxHealth){
+		if(health > maxHealth)
+		{
 			health = maxHealth;
 		}
 		healthLastTick = health;
