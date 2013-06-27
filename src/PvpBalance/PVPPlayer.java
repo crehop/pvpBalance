@@ -124,7 +124,19 @@ public class PVPPlayer {
 	}
 	public void sethealth(int health)
 	{
-		if(player.getGameMode() == GameMode.SURVIVAL)
+		if(Main.pvpstats.contains(player)){
+			if(this.health > health){
+				int decreasedBy = this.health - health;
+				player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
+			}
+			if(this.health < health){
+				int increasedBy = health - this.health;
+				if(increasedBy > 10){
+					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.GREEN + "+ " + increasedBy);
+				}
+			}
+		}
+		if(this.player.getGameMode() == GameMode.SURVIVAL)
 		{
 			if(health > this.maxHealth)
 			{
@@ -224,14 +236,17 @@ public class PVPPlayer {
 			this.canRegen = false;
 			this.sethealth(this.gethealth() - 10);
 		}
-
+		if(this.hitCoolDown > 0)
+		{
+			this.hitCoolDown--;
+		}
 		if(combatCoolDown > 0)
 		{
 			if(isInCombat == false)
 			{
 				isInCombat = true;
-				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
-						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
+//				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
+//						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
 			
 			}
 			combatCoolDown--;
@@ -242,13 +257,8 @@ public class PVPPlayer {
 			if(isInCombat == true)
 			{
 				isInCombat = false;
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
+//				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
-		}
-		
-		if(this.hitCoolDown > 0)
-		{
-			this.hitCoolDown--;
 		}
 		if(Main.debug == true)
 		{

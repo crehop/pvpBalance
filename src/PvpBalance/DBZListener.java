@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -59,7 +60,15 @@ public class DBZListener implements Listener{
 
 	}
 	
-	
+	@EventHandler
+	public void foodChangeEvent(FoodLevelChangeEvent event){
+		if(event.getEntity() instanceof Player){
+			Player player = (Player)event.getEntity();
+			if(Commands.getPVPPlayer(player).god == true){
+				event.setCancelled(true);
+			}
+		}
+	}
 	@EventHandler
 	public void onPlayerDamageEvent(EntityDamageByEntityEvent event)
 	{
@@ -165,6 +174,7 @@ public class DBZListener implements Listener{
 		if(player.getWorld().getName().contains("world")){
 			if(player.hasPermission("particles.admin")){
 				player.sendMessage("Welcome Administrator " + player);
+				newPVP.setGod(true);
 			}
 			else{
 				player.teleport(new Location(player.getWorld(), -730.50, 105, 319.50));
@@ -233,6 +243,9 @@ public class DBZListener implements Listener{
 			if(event.getCause().equals(DamageCause.STARVATION))
 			{
 				event.setDamage(0);
+			}
+			if(Commands.getPVPPlayer(player).god == true){
+				event.setCancelled(true);
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{

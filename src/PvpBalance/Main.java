@@ -282,16 +282,6 @@ public class Main extends JavaPlugin
 	{
 		Player player = (Player) sender;
 		//Location location = player.getLocation();
-		if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
-		{
-			PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
-			if(PVPPlayer.isGod() == true){
-				PVPPlayer.setGod(false);
-			}
-			else{
-				PVPPlayer.setGod(true);
-			}
-		}
 		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin"))
 		{
 			if(debug == false)
@@ -308,19 +298,32 @@ public class Main extends JavaPlugin
 				PVPPlayer newPVP = new PVPPlayer(player);
 				Main.PVP.add(newPVP);
 			}
-
+		}
+		if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
+		{
+			PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
+			if(PVPPlayer.isGod() == true){
+				PVPPlayer.setGod(false);
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GOD MODE DISABLED");
+			}
+			else{
+				PVPPlayer.setGod(true);
+				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "GOD MODE ENABLED");
+				player.setFoodLevel(20);
+				PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
+			}
 		}
 		if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
 		{
-			Bukkit.broadcastMessage("VERSION .05 BETA");
+			Bukkit.broadcastMessage("VERSION 1.5 BETA");
 		}
 		if(commandLabel.equalsIgnoreCase("polish"))
 		{
 			ArmorEffects.polish(player);
 		}
-		if(commandLabel.equalsIgnoreCase("pvpinfo"))
+		if(commandLabel.equalsIgnoreCase("pvpstats"))
 		{
-			PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
+			PVPPlayer pvpPlayer = Commands.getPVPPlayer(player); 
 			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + pvpPlayer);
 			player.sendMessage(ChatColor.GREEN + "PLAYER NAME : " + pvpPlayer.getPlayer().getName());
 			player.sendMessage(ChatColor.GREEN + "MAXIMUM HEALTH  : " + pvpPlayer.getMaxHealth());
@@ -330,16 +333,18 @@ public class Main extends JavaPlugin
 			player.sendMessage(ChatColor.GREEN + "COMBAT COOLDOWN (FASTREGEN): " + pvpPlayer.getCombatCoolDown());
 			player.sendMessage(ChatColor.GREEN + "IS DEAD T/F : " + pvpPlayer.isDead);
 			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + pvpPlayer.isInCombat);
+			player.sendMessage(ChatColor.GREEN + "HITCOOLDOWN : " + pvpPlayer.getHitCooldown());
 			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + pvpPlayer.canRegen);
+			
 			if(pvpstats.contains(player))
 			{
 				pvpstats.remove(player);
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPINFO again to Enable");
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPSTATS again to Enable");
 			}
 			else
 			{
 				pvpstats.add(player);
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE ENABLED SAY /PVPINFO again to Disable");
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE ENABLED SAY /PVPSTATS again to Disable");
 			}
 		}
         return true;
