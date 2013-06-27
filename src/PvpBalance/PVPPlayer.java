@@ -122,18 +122,24 @@ public class PVPPlayer {
 
 		}
 	}
-	public void sethealth(int health){
-		if(player.getGameMode() == GameMode.SURVIVAL){
-			if(health > this.maxHealth){
+	public void sethealth(int health)
+	{
+		if(player.getGameMode() == GameMode.SURVIVAL)
+		{
+			if(health > this.maxHealth)
+			{
 				health = this.maxHealth;
 			}
 			this.health = health;
 			DBZScoreBoard.setScore(health, player);
-			if(this.health <= 0){
+			if(this.health <= 0)
+			{
 				this.health = 0;
 			}
 			this.setProperHealth();
-			}
+		}
+		String message = ("SIDEBAR,Health,Your:," + health);
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	/*public PVPPlayer getPVPPlayer()
@@ -164,7 +170,8 @@ public class PVPPlayer {
 			this.health = this.maxHealth;
 			player.setFoodLevel(20);
 		}
-
+		String message = ("SIDEBAR,Health,Your:," + health);
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	public void tick()

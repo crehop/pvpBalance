@@ -67,6 +67,8 @@ public class Main extends JavaPlugin
 	 		faction = true;
 	 	}
 	 	
+	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
+	 	
 	 	Damage.LoadSave = loadSave;
 	 	getServer().getPluginManager().registerEvents(new DBZListener(this, loadSave), this);
 	 	
