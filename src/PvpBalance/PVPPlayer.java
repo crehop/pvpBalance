@@ -127,7 +127,9 @@ public class PVPPlayer {
 		if(Main.pvpstats.contains(player)){
 			if(this.health > health){
 				int decreasedBy = this.health - health;
-				player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
+				if(decreasedBy > 10){
+					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
+				}
 			}
 			if(this.health < health){
 				int increasedBy = health - this.health;
