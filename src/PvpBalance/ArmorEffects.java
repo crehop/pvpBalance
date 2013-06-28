@@ -197,7 +197,12 @@ public class ArmorEffects
 				green = Fade.PRIZED.getGreen();
 			}
 
-		}	
+		}
+		else{
+			red = 30;
+			blue = 30;
+			green = 20;
+		}
 		if(red < 0)
 			red = 0;
 		else if(red > 255)
