@@ -94,6 +94,7 @@ public class DBZListener implements Listener{
 			PVPPlayer PVPDamagee = Commands.getPVPPlayer(damagee);
 			if(event.getCause() == DamageCause.PROJECTILE)
 			{
+				//ARROW CODE (PLAYER HIT BY PLAYER ARROW)
 				if(CombatUtil.preventDamageCall(damagee, damagee) && DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
@@ -134,13 +135,16 @@ public class DBZListener implements Listener{
 								Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 							}
 						}
-						PVPdamager.setHitCoolDown(5);
+						PVPdamager.setHitCoolDown(4);
 						PVPdamager.setCombatCoolDown(40);
 						PVPDamagee.setCombatCoolDown(40);
 						if(Main.debug == true || Main.pvpstats.contains(damager))
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
 						}
+					}
+					else if(PVPdamager.getHitCooldown() > 0){
+						event.setCancelled(true);
 					}
 				}
 				else
@@ -215,6 +219,7 @@ public class DBZListener implements Listener{
 			PVPPlayer newPVP = new PVPPlayer(player);
 			Main.PVP.add(newPVP);
 		}
+		Damage.calcArmor(event.getPlayer());
 		PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(500);
@@ -229,7 +234,7 @@ public class DBZListener implements Listener{
 					Main.PVP.add(newPVP);
 				}
 				PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
-				PVPPlayer.sethealth(PVPPlayer.gethealth() + 700);
+				PVPPlayer.sethealth(PVPPlayer.gethealth() + 1000);
 			}
 		}
 		event.setCancelled(true);
