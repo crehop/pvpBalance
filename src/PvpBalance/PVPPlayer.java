@@ -150,7 +150,7 @@ public class PVPPlayer {
 			}
 			this.setProperHealth();
 		}
-		String message = ("SIDEBAR,Health,Your:," + health);
+		String message = ("SIDEBAR,Health," + ChatColor.GREEN + "Self:" + ChatColor.RESET + "," + health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
@@ -182,7 +182,7 @@ public class PVPPlayer {
 			this.health = this.maxHealth;
 			player.setFoodLevel(20);
 		}
-		String message = ("SIDEBAR,Health,Your:," + health);
+		String message = ("SIDEBAR,Health," + ChatColor.GREEN + "Self:" + ChatColor.RESET + "," + health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	

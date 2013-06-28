@@ -4,7 +4,9 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -127,6 +129,9 @@ public class DBZListener implements Listener{
 							{
 								dealtDamage = pbdEvent.getDamage();
 								PVPDamagee.Damage(dealtDamage);
+								
+								String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + PVPDamagee.gethealth();
+								Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 							}
 						}
 						PVPdamager.setHitCoolDown(5);
@@ -163,6 +168,25 @@ public class DBZListener implements Listener{
 			}
 			else{
 				event.setDamage(0);
+			}
+		}
+		else if(e instanceof LivingEntity)
+		{
+			if(!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Arrow))
+				return;
+			int health = ((LivingEntity)e).getHealth() - event.getDamage();
+			if(health < 0)
+				health = 0;
+			String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + health;
+			if(event.getDamager() instanceof Player)
+			{
+				Bukkit.getMessenger().dispatchIncomingMessage((Player)event.getDamager(), "Scoreboard", message.getBytes());
+			}
+			else
+			{
+				if(!(((Arrow)event.getDamager()).getShooter() instanceof Player))
+					return;
+				Bukkit.getMessenger().dispatchIncomingMessage((Player)((Arrow)event.getDamager()).getShooter(), "Scoreboard", message.getBytes());
 			}
 		}
 	}
