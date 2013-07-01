@@ -315,9 +315,10 @@ public class ArmorEffects
 								}
 							}
 						}
-						catch (NullPointerException e1)
+						catch (Exception e1)
 						{
 								e1.printStackTrace();
+								Main.logger.info("ArmorEffects!");
 						} 
 				}
 			}

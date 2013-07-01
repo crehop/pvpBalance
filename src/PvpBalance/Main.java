@@ -1,7 +1,6 @@
 package PvpBalance;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,7 +27,7 @@ public class Main extends JavaPlugin
 	public static List<Player> pvpstats=new ArrayList<Player>();
 	public static List<PVPPlayer> PVP=new ArrayList<PVPPlayer>();
 	public static List<Entity> projectile=new ArrayList<Entity>();
-	public final Logger logger=Logger.getLogger("Minecraft");
+	public static final Logger logger=Logger.getLogger("Minecraft");
     public static Main plugin;
     public File configFile;
 	private static String name = "witchMagic";
@@ -150,21 +149,10 @@ public class Main extends JavaPlugin
 					    		//PVP ABILITIES ====================================================================================
 							
 					    }
-						catch (IllegalArgumentException e1)
-					    {
-							e1.printStackTrace();
-						} 
-						catch (NullPointerException e1)
-						{
-							e1.printStackTrace();
-						}
-						catch (ConcurrentModificationException e1)
-						{
-							e1.printStackTrace();
-						}
 						catch (Exception e1)
 						{
 							e1.printStackTrace();
+							Main.logger.info("Main Effect!");
 						}
 				}
 		    }
@@ -179,21 +167,10 @@ public class Main extends JavaPlugin
 		    			ArmorEffects.checkForGlowTick(all);
 		
 		    		}
-		    		catch (IllegalArgumentException e1)
-		    		{
-							e1.printStackTrace();
-					}
-		    		catch (NullPointerException e1)
-		    		{
-							e1.printStackTrace();
-		    		}
-		    		catch (ConcurrentModificationException e1)
-		    		{
-							e1.printStackTrace();
-					}
 		    		catch (Exception e1)
 		    		{
 							e1.printStackTrace();
+							Main.logger.info("Main ArmorEffect!");
 					}
 				}
 		    }
@@ -209,21 +186,10 @@ public class Main extends JavaPlugin
 						all.tick();
 						
 					}
-					catch (IllegalArgumentException e1)
-					{
-						e1.printStackTrace();
-					}
-					catch (NullPointerException e1)
-					{
-						e1.printStackTrace();
-					}
-					catch (ConcurrentModificationException e1)
-					{
-						e1.printStackTrace();
-					}
 					catch (Exception e1)
 					{
 						e1.printStackTrace();
+						Main.logger.info("Main Tick!");
 					}
 				}
 		    }
