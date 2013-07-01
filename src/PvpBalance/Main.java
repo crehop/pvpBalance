@@ -323,7 +323,7 @@ public class Main extends JavaPlugin
 		}
 		if(commandLabel.equalsIgnoreCase("pvpstats"))
 		{
-			PVPPlayer pvpPlayer = Commands.getPVPPlayer(player); 
+			//PVPPlayer pvpPlayer = Commands.getPVPPlayer(player); 
 //			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + pvpPlayer);
 //			player.sendMessage(ChatColor.GREEN + "PLAYER NAME : " + pvpPlayer.getPlayer().getName());
 //			player.sendMessage(ChatColor.GREEN + "MAXIMUM HEALTH  : " + pvpPlayer.getMaxHealth());

@@ -3,6 +3,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 
 public class PVPPlayer {
@@ -24,6 +25,7 @@ public class PVPPlayer {
 	boolean colorUpLeggings;
 	boolean colorUpBoots;
 	boolean god;
+	
 	public PVPPlayer(Player player)
 	{
 		this.player = player;
@@ -223,11 +225,6 @@ public class PVPPlayer {
 			this.canRegen = false;
 			cooldown--;
 		}
-		if(cooldown > 0)
-		{
-			this.canRegen = false;
-			cooldown--;
-		}
 		if(player.getFoodLevel() == 0)
 		{
 			this.canRegen = false;
@@ -272,10 +269,23 @@ public class PVPPlayer {
 		}
 		if(health < maxHealth && this.canRegen == true)
 		{
-			this.sethealth(health + 5);
-			if(this.isInCombat == false)
+			if(isInCombat)
 			{
-				this.sethealth(health + 10);
+				int heal = 5;
+				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
+				Bukkit.getPluginManager().callEvent(pberh);
+				if(pberh.isCancelled())
+					return;
+				this.sethealth(health + heal);
+			}
+			else
+			{
+				int heal = 10;
+				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
+				Bukkit.getPluginManager().callEvent(pberh);
+				if(pberh.isCancelled())
+					return;
+				this.sethealth(health + heal);
 			}
 		}
 		if(health > maxHealth)
