@@ -223,6 +223,7 @@ public class DBZListener implements Listener
 			PVPPlayer newPVP = new PVPPlayer(player);
 			PvpHandler.addPvpPlayer(newPVP);
 		}
+		Damage.calcArmor(event.getPlayer());
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(500);
