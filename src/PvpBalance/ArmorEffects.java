@@ -21,31 +21,33 @@ public class ArmorEffects
 		LeatherArmorMeta[] metas = new LeatherArmorMeta[5];
 		for(ItemStack item : player.getInventory().getArmorContents())
 		{
-			if((item != null && item.hasItemMeta()) && (item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301))
+			if(item == null)
+				continue;
+			if(item.hasItemMeta() && (item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301))
 			{
 				PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 				LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
 				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR))
 				{
-					if(!meta.getColor().toString().contains("A06540"))
+					if(meta.getColor().toString().contains("A06540"))
+						continue;
+					
+					int nr = (Fade.type(item)-1);
+					if(metas[nr] != null)
 					{
-						int nr = (Fade.type(item)-1);
-						if(metas[nr] != null)
+						meta.setColor(metas[nr].clone().getColor());
+						item.setItemMeta(meta);
+					}
+					else
+					{
+						switch(item.getTypeId())
 						{
-							meta.setColor(metas[nr].clone().getColor());
-							item.setItemMeta(meta);
-						}
-						else
-						{
-							switch(item.getTypeId())
-							{
-							case 298:
-							case 299:
-							case 300:
-							case 301:
-								metas[nr] = glow(item,pvpPlayer);
-								break;
-							}
+						case 298:
+						case 299:
+						case 300:
+						case 301:
+							metas[nr] = glow(item,pvpPlayer);
+							break;
 						}
 					}
 				}

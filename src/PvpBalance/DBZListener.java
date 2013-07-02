@@ -1,5 +1,6 @@
 package PvpBalance;
 
+import java.util.Date;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -119,26 +120,24 @@ public class DBZListener implements Listener
 				
 				if(!CombatUtil.preventDamageCall(damagee, damager) && DungeonAPI.canhit(event) && faction)
 				{
+					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
-					if(PVPdamager.getHitCooldown() < 1)
+					if((date.getTime() / 1000) - PVPdamager.getHitCooldown() >= 1)
 					{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
-						if(PVPdamager.getHitCooldown() < 1)
+						
+						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
+						Bukkit.getPluginManager().callEvent(pbdEvent);
+						if(!pbdEvent.isCancelled())
 						{
-							PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
-							Bukkit.getPluginManager().callEvent(pbdEvent);
-							if(!pbdEvent.isCancelled())
-							{
-								dealtDamage = pbdEvent.getDamage();
-								PVPDamagee.Damage(dealtDamage);
+							dealtDamage = pbdEvent.getDamage();
+							PVPDamagee.Damage(dealtDamage);
 								
-								String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + PVPDamagee.gethealth();
-								Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
-							}
+							String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + PVPDamagee.gethealth();
+							Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 						}
-						PVPdamager.setHitCoolDown(5);
-						PVPdamager.setCombatCoolDown(40);
-						PVPDamagee.setCombatCoolDown(40);
+						PVPdamager.setHitCoolDown((int) (date.getTime() / 1000));
+						PVPdamager.setCombatCoolDown((int) (date.getTime() / 1000));
 						if(PvpBalance.plugin.isDebug() || PVPdamager.isPvpstats())
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
@@ -196,11 +195,14 @@ public class DBZListener implements Listener
 	}
 	
 	@EventHandler
-	public void playerJoin(PlayerJoinEvent event){
+	public void playerJoin(PlayerJoinEvent event)
+	{
 		PVPPlayer newPVP = new PVPPlayer(event.getPlayer());
 		Player player = event.getPlayer();
-		if(player.getWorld().getName().contains("world")){
-			if(player.hasPermission("particles.admin")){
+		if(player.getWorld().getName().contains("world"))
+		{
+			if(player.hasPermission("particles.admin"))
+			{
 				player.sendMessage("Welcome Administrator " + player);
 				newPVP.setGod(true);
 			}

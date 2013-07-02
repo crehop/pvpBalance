@@ -1,4 +1,6 @@
 package PvpBalance;
+import java.util.Date;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -202,20 +204,18 @@ public class PVPPlayer
 	
 	public void Damage(int dmg)
 	{
-		if(player.getGameMode() == GameMode.SURVIVAL && this.god == false)
+		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			sethealth(gethealth() - dmg);
-			if(this.health <= 0 && this.isDead != true)
+			health = health - dmg;
+			if(this.health <= 0 && !this.isDead)
 			{
+				health = 0;
 				this.player.setHealth(0);
 				this.isDead = true;
 			}
 			if(healthLastTick > health)
 			{
-				if(cooldown < 20)
-				{
-					cooldown = 20;
-				}
+				cooldown = (int) (new Date().getTime()/1000);
 			}
 		}
 		else
@@ -229,6 +229,7 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		Date date = new Date();
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
 			this.health = this.maxHealth;
@@ -236,7 +237,7 @@ public class PVPPlayer
 			this.healthLastTick = this.maxHealth;
 			this.cooldown = 0;
 			this.isDead = false;
-			this.hitCoolDown = 10;
+			this.hitCoolDown = 0;
 			this.inCombat = false;
 			this.combatCoolDown = 0;
 			this.armorEventLastTick = 0;
@@ -256,11 +257,9 @@ public class PVPPlayer
 			this.isDead = true;
 		}
 		setProperHealth();
-		this.canRegen = true;
-		if(cooldown > 0)
+		if((date.getTime()/1000) - cooldown < 20)
 		{
 			this.canRegen = false;
-			cooldown--;
 		}
 		if(player.getFoodLevel() == 0)
 		{
@@ -272,28 +271,21 @@ public class PVPPlayer
 			this.canRegen = false;
 			this.sethealth(this.gethealth() - 10);
 		}
-		if(this.hitCoolDown > 0)
+		if((date.getTime() / 1000) - combatCoolDown >= 40)
 		{
-			this.hitCoolDown--;
+			if(inCombat)
+			{
+				inCombat = false;
+//				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
+			}
 		}
-		if(combatCoolDown > 0)
+		else
 		{
 			if(!inCombat)
 			{
 				inCombat = true;
 //				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
 //						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
-			
-			}
-			combatCoolDown--;
-		}
-		if(combatCoolDown <= 0)
-		{
-			this.combatCoolDown = 0;
-			if(inCombat)
-			{
-				inCombat = false;
-//				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
 		}
 		if(PvpBalance.plugin.isDebug())
@@ -304,7 +296,7 @@ public class PVPPlayer
 			Bukkit.broadcastMessage("HITCoolDown:" + hitCoolDown);
 			
 		}
-		if(health < maxHealth && this.canRegen == true)
+		if(health < maxHealth && this.canRegen)
 		{
 			if(inCombat)
 			{

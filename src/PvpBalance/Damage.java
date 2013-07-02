@@ -235,11 +235,8 @@ public class Damage
 					{
 						armor += LoadSave.Lboots;
 					}
-					
-					
 				break;
 			}
-			
 		}
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;

@@ -143,7 +143,7 @@ public class PvpBalance extends JavaPlugin
 						}
 				}
 		    }
-		    if(everyOther == 1)
+		    else if(everyOther == 1)
 		    {
 		    	everyOther = 2;
 	    		//ARMOR EFFECTS =================================================================================
@@ -161,7 +161,7 @@ public class PvpBalance extends JavaPlugin
 					}
 				}
 		    }
-		    if(everyOther == 2)
+		    else if(everyOther == 2)
 		    {
 		    	everyOther = 0;
 		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
@@ -257,7 +257,7 @@ public class PvpBalance extends JavaPlugin
 				PvpHandler.addPvpPlayer(newPVP);
 			}
 		}
-		if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
+		else if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
 		{
 			PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 			if(PVPPlayer.isGod())
@@ -273,15 +273,15 @@ public class PvpBalance extends JavaPlugin
 				PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 			}
 		}
-		if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
+		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
 		{
 			Bukkit.broadcastMessage("VERSION 1.5 BETA");
 		}
-		if(commandLabel.equalsIgnoreCase("polish"))
+		else if(commandLabel.equalsIgnoreCase("polish"))
 		{
 			ArmorEffects.polish(player);
 		}
-		if(commandLabel.equalsIgnoreCase("pvpstats"))
+		else if(commandLabel.equalsIgnoreCase("pvpstats"))
 		{
 			//PVPPlayer pvpPlayer = Commands.getPVPPlayer(player); 
 //			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + pvpPlayer);
