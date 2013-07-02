@@ -157,6 +157,8 @@ public class PvpBalance extends JavaPlugin
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
+		    		if(all == null)
+		    			continue;
 		    		try
 		    		{
 		    			ArmorEffects.checkForGlowTick(all);

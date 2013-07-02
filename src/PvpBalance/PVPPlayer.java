@@ -26,6 +26,7 @@ public class PVPPlayer
 	private boolean canRegen;
 	private boolean god;
 	private boolean pvpstats;
+	private boolean colorUp;
 	
 	public PVPPlayer(Player player)
 	{
@@ -41,6 +42,7 @@ public class PVPPlayer
 		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
+		colorUp = false;
 	}
 
 	public Player getPlayer()
@@ -61,6 +63,11 @@ public class PVPPlayer
 	public boolean isDead()
 	{
 		return isDead;
+	}
+	
+	public boolean isColorUp()
+	{
+		return colorUp;
 	}
 	
 	public int getHealthLastTick()
@@ -139,6 +146,11 @@ public class PVPPlayer
 	public void setIsDead(boolean isDead)
 	{
 		this.isDead = isDead;
+	}
+	
+	public void setColorUp(boolean value)
+	{
+		colorUp = value;
 	}
 	
 	public void setMaxHealth(int maxHealth)

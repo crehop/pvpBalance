@@ -63,25 +63,24 @@ public class ArmorEffects
 			int blue = meta.getColor().getBlue();
 			int red = meta.getColor().getRed();
 			int green = meta.getColor().getGreen();
-			boolean colorUp = false;
 			if(Fade.type(item) == 1)
 			{
 				if(blue >= 90 && red >= 90 && green >= 90)
 				{
-					colorUp = false;
+					pvpPlayer.setColorUp(false);
 				}
 				else if(blue <= 0 && red <= 0 && green <= 0)
 				{
-					colorUp = true;
+					pvpPlayer.setColorUp(true);
 				}
 				
-				if(colorUp)
+				if(pvpPlayer.isColorUp())
 				{
 					red += 9;
 					blue += 9;
 					green += 9;
 				}
-				else if(!colorUp)
+				else
 				{
 					red -= 9;
 					blue -= 9;
@@ -92,19 +91,19 @@ public class ArmorEffects
 			{
 				if(red >= 100 && green >= 180 && blue >= 255)
 				{
-					colorUp = false;
+					pvpPlayer.setColorUp(false);
 				}
-				else if(red >= 0 && green >= 0 && blue >= 205)
+				else if(red <= 0 && green <= 0 && blue <= 205)
 				{
-					colorUp = true;
+					pvpPlayer.setColorUp(true);
 				}
-				if(colorUp)
+				if(pvpPlayer.isColorUp())
 				{
 					red += 10;
 					green += 18;
 					blue += 5;
 				}
-				else if(!colorUp)
+				else
 				{
 					red -= 10;
 					green -= 18;
@@ -115,19 +114,19 @@ public class ArmorEffects
 			{
 				if(red >= 255 && green >= 0 && blue >= 0)
 				{
-					colorUp = false;
+					pvpPlayer.setColorUp(false);
 				}
 				else if(red <= 125 && green <= 0 && blue <= 0)
 				{
-					colorUp = true;
+					pvpPlayer.setColorUp(true);
 				}
-			if(colorUp)
+			if(pvpPlayer.isColorUp())
 			{
 				red += 13;
 				blue = 0;
 				green = 0;
 			}
-			else if(!colorUp)
+			else
 			{
 				red -= 13;
 				blue = 0;
@@ -138,19 +137,19 @@ public class ArmorEffects
 		{
 			if(red >= 120 && green >= 250 && blue >= 0)
 			{
-				colorUp = false;
+				pvpPlayer.setColorUp(false);
 			}
 			else if(red <= 0 && green <= 100 && blue <= 0)
 			{
-				colorUp = true;
+				pvpPlayer.setColorUp(true);
 			}
-			if(colorUp)
+			if(pvpPlayer.isColorUp())
 			{
 				red += 12;
 				green += 15;
 				blue = 0;
 			}
-			else if(!colorUp)
+			else
 			{
 				red -= 12;
 				green -= 15;

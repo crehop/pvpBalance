@@ -475,4 +475,12 @@ public class ItemUtils
 		item.setItemMeta(lam);
 		return true;
 	}
+	
+	public static Color getColor(ItemStack item)
+	{
+		if(!(item.getItemMeta() instanceof LeatherArmorMeta))
+			return null;
+		LeatherArmorMeta lam = (LeatherArmorMeta)item.getItemMeta();
+		return lam.getColor();
+	}
 }
