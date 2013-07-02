@@ -273,6 +273,8 @@ public class PVPPlayer
 		{
 			this.canRegen = false;
 		}
+		else
+			canRegen = true;
 		if(player.getFoodLevel() == 0)
 		{
 			this.canRegen = false;

@@ -1,6 +1,6 @@
 name: PVPBalance
-main: PvpBalance.Main
-version: 1.2
+main: PvpBalance.PvpBalance
+version: 1.5
 description: >
             The Best plugin EVER!
 commands:
