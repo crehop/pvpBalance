@@ -42,6 +42,8 @@ public class DBZListener implements Listener
 {
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
+	private final int HITCOOLDOWN = 2;
+	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
 		this.LoadSave = LoadSave;
@@ -121,7 +123,7 @@ public class DBZListener implements Listener
 				{
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
-					if((date.getTime() / 1000) - PVPdamager.getHitCooldown() >= 2)
+					if(((date.getTime() / 1000) - PVPdamager.getHitCooldown()) >= HITCOOLDOWN)
 					{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
 						
@@ -223,7 +225,7 @@ public class DBZListener implements Listener
 			PVPPlayer newPVP = new PVPPlayer(player);
 			PvpHandler.addPvpPlayer(newPVP);
 		}
-		Damage.calcArmor(event.getPlayer());
+		Damage.calcArmor(player);
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(500);
