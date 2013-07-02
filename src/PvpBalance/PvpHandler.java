@@ -47,4 +47,9 @@ public class PvpHandler
 	{
 		return players;
 	}
+	
+	public static void clear()
+	{
+		players.clear();
+	}
 }

@@ -35,13 +35,21 @@ public class PvpBalance extends JavaPlugin
 	@Override
  	public void onDisable()
  	{
-	 	PluginDescriptionFile pdfFile=this.getDescription();
+		PvpHandler.clear();
+	 	PluginDescriptionFile pdfFile = this.getDescription();
 	 	logger.info(pdfFile.getName() + " Has Been Disabled!!");
  	}
  
  	public void onEnable()
  	{
 	 	plugin = this;
+	 	
+	 	for(Player p : Bukkit.getOnlinePlayers())
+	 	{
+	 		if(p == null)
+	 			continue;
+	 		PvpHandler.addPvpPlayer(new PVPPlayer(p));
+	 	}
 	 	
 	 	sDamage = new Save(this, "Damage.yml");
 	 	protection = new Save(this, "Protection.yml");
@@ -169,9 +177,7 @@ public class PvpBalance extends JavaPlugin
 		    	{
 					try
 					{
-						
 						all.tick();
-						
 					}
 					catch (Exception e1)
 					{
@@ -181,30 +187,10 @@ public class PvpBalance extends JavaPlugin
 				}
 		    }
 		}
-	}, 0L, 10L);
+	}, 0L, 3L);
 		
 	 	logger.info(pdfFile.getName() + " Has Been Enabled!!");
  	}
- 	
-	/*private void copy(InputStream in, File file)
-	{ 
-		try
-	     {
-	         OutputStream out = new FileOutputStream(file);
-	         byte[] buffer = new byte[1024];
-	         int len;
-	         while((len=in.read(buffer))>0)
-	         {
-	             out.write(buffer,0,len);
-	         }
-	         out.close();
-	         in.close();
-	     }
-	     catch (Exception e)
-	     {
-	         e.printStackTrace();
-	     }
-	}*/
 	
 	public boolean isDebug()
 	{

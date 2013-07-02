@@ -53,12 +53,11 @@ public class DBZListener implements Listener
 	{
 		Player quitPlayer = quitevent.getPlayer();
 		PVPPlayer pp = PvpHandler.getPvpPlayer(quitPlayer);
-		
-		PvpHandler.removePvpPlayer(pp);
 		if(pp.isInCombat())
 		{
 			quitPlayer.setHealth(0);
 		}
+		PvpHandler.removePvpPlayer(pp);
 	}
 	
 	@EventHandler
@@ -197,8 +196,8 @@ public class DBZListener implements Listener
 	@EventHandler
 	public void playerJoin(PlayerJoinEvent event)
 	{
-		PVPPlayer newPVP = new PVPPlayer(event.getPlayer());
 		Player player = event.getPlayer();
+		PVPPlayer newPVP = new PVPPlayer(player);
 		if(player.getWorld().getName().contains("world"))
 		{
 			if(player.hasPermission("particles.admin"))

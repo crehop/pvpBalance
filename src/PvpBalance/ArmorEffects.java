@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import Util.ItemUtils;
+
 public class ArmorEffects
 {
 	public static final String CODE_PAPER = "32157";
@@ -329,15 +331,13 @@ public class ArmorEffects
 		}
 		if(player.isOp() && !hasCloth)
 		{
-			ItemStack i = new ItemStack(Material.PAPER);
-			ItemMeta imeta = i.getItemMeta();
+			ItemStack paper = new ItemStack(Material.PAPER);
 			List<String> lore = new ArrayList<String>();
-			lore.add(0, "Polishing Cloth " + ChatColor.MAGIC + " " + CODE_PAPER);
-			lore.add(1, ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
-			imeta.setLore(lore);
-			imeta.setDisplayName(ChatColor.GOLD + "Polishing Cloth");
-			i.setItemMeta(imeta);
-			player.getInventory().addItem(i);
+			lore.add("Polishing Cloth " + ChatColor.MAGIC + " " + CODE_PAPER);
+			lore.add(ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			ItemUtils.setLore(paper, lore);
+			ItemUtils.setName(paper, ChatColor.GOLD + "Polishing Cloth");
+			player.getInventory().addItem(paper);
 			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided please try again.");
 		}
 		if(!correctItemInHand && hasCloth)

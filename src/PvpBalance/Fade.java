@@ -2,8 +2,8 @@ package PvpBalance;
 
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import Util.ItemUtils;
 
 public class Fade
 {
@@ -15,21 +15,19 @@ public class Fade
 	
 	public static int type(ItemStack item)
 	{
-		ItemMeta itemMeta = item.getItemMeta();
-		//LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
-		if(itemMeta.getDisplayName().contains("Cursed"))
+		if(ItemUtils.getName(item).contains("Cursed"))
 		{
 			return 1;
 		}
-		else if(itemMeta.getDisplayName().contains("Mithril"))
+		else if(ItemUtils.getName(item).contains("Mithril"))
 		{
 			return 2;
 		}
-		else if(itemMeta.getDisplayName().contains("Flame"))
+		else if(ItemUtils.getName(item).contains("Flame"))
 		{
 			return 3;
 		}
-		else if(itemMeta.getDisplayName().contains("Verite"))
+		else if(ItemUtils.getName(item).contains("Verite"))
 		{
 			return 4;
 		}
@@ -42,27 +40,21 @@ public class Fade
 	
 	public static void setBaseColor(ItemStack item)
 	{
-		ItemMeta iMeta = item.getItemMeta();
-		LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
-		if(iMeta.getDisplayName().contains("Cursed"))
+		if(ItemUtils.getName(item).contains("Cursed"))
 		{
-				leatherMeta.setColor(CURSED);
-				item.setItemMeta(iMeta);
+			ItemUtils.setColor(item, CURSED);
 		}
-		if(iMeta.getDisplayName().contains("Mithril"))
+		else if(ItemUtils.getName(item).contains("Mithril"))
 		{
-			leatherMeta.setColor(MITHRIL);
-			item.setItemMeta(iMeta);
+			ItemUtils.setColor(item, MITHRIL);
 		}
-		if(iMeta.getDisplayName().contains("Flame"))
+		else if(ItemUtils.getName(item).contains("Flame"))
 		{
-			leatherMeta.setColor(FLAME);
-			item.setItemMeta(iMeta);
+			ItemUtils.setColor(item, FLAME);
 		}
-		if(iMeta.getDisplayName().contains("Verite"))
+		else if(ItemUtils.getName(item).contains("Verite"))
 		{
-			leatherMeta.setColor(VERITE);
-			item.setItemMeta(iMeta);
+			ItemUtils.setColor(item, VERITE);
 		}
 	}
 }

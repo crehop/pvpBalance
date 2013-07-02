@@ -67,64 +67,79 @@ public class Damage
 				break;
 				
 				//diamond chest
-				case 311: armor += LoadSave.Dchest;
+				case 311:
+					armor += LoadSave.Dchest;
 				break;
 				
 				//diamond leggings
-				case 312: armor += LoadSave.Dleggings;
+				case 312:
+					armor += LoadSave.Dleggings;
 				break;
 				
 				//diamond boots
-				case 313: armor += LoadSave.Dboots;
+				case 313:
+					armor += LoadSave.Dboots;
 				break;
 				//GOLD ===========================
 				//gold helm
-				case 314: armor += LoadSave.Ghelmet;
+				case 314:
+					armor += LoadSave.Ghelmet;
 				break;
 				
 				//gold chest
-				case 315: armor += LoadSave.Gchest;
+				case 315:
+					armor += LoadSave.Gchest;
 				break;
 				
 				//gold leggings
-				case 316: armor += LoadSave.Gleggings;
+				case 316:
+					armor += LoadSave.Gleggings;
 				break;
 				
 				//gold boots
-				case 317: armor += LoadSave.Gboots;
+				case 317:
+					armor += LoadSave.Gboots;
 				break;
 				
 				//IRON ===========================
 				//iron helm
-				case 306: armor += LoadSave.Ihelmet;
+				case 306:
+					armor += LoadSave.Ihelmet;
 				break;
 				
 				//iron chest
-				case 307: armor += LoadSave.Ichest;
+				case 307:
+					armor += LoadSave.Ichest;
 				break;
 				
 				//iron leggings
-				case 308: armor += LoadSave.Ileggings;
+				case 308:
+					armor += LoadSave.Ileggings;
 				break;
 				
 				//iron boots
-				case 309: armor += LoadSave.Iboots;
+				case 309:
+					armor += LoadSave.Iboots;
 				break;
 				
 				//Chain ===========================
 				//chain helm
-				case 302: armor += LoadSave.Chelmet;
+				case 302:
+					armor += LoadSave.Chelmet;
 				break;
 				
 				//chain chest
-				case 303: armor += LoadSave.Cchest;
+				case 303:
+					armor += LoadSave.Cchest;
 				break;
 				
 				//chain leggings
-				case 304: armor += LoadSave.Cleggings;
+				case 304:
+					armor += LoadSave.Cleggings;
 				break;
 				//chain boots
-				case 305: armor += LoadSave.Cboots;
+				case 305:
+					armor += LoadSave.Cboots;
 				break;
 				
 				//Leather ===========================
