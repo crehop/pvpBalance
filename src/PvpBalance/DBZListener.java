@@ -121,7 +121,7 @@ public class DBZListener implements Listener
 				{
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
-					if((date.getTime() / 1000) - PVPdamager.getHitCooldown() >= 1)
+					if((date.getTime() / 1000) - PVPdamager.getHitCooldown() >= 2)
 					{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
 						
