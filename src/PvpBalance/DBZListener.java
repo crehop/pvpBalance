@@ -42,7 +42,7 @@ public class DBZListener implements Listener
 {
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
-	private final int HITCOOLDOWN = 2;
+	private final double HITCOOLDOWN = 2.0D;
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
@@ -137,8 +137,8 @@ public class DBZListener implements Listener
 							String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + PVPDamagee.gethealth();
 							Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 						}
-						PVPdamager.setHitCoolDown((int) (date.getTime() / 1000));
-						PVPdamager.setCombatCoolDown((int) (date.getTime() / 1000));
+						PVPdamager.setHitCoolDown((date.getTime() / 1000));
+						PVPdamager.setCombatCoolDown((date.getTime() / 1000));
 						if(PvpBalance.plugin.isDebug() || PVPdamager.isPvpstats())
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);

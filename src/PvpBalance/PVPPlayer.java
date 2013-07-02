@@ -16,9 +16,9 @@ public class PVPPlayer
 	private int health;
 	private int healthLastTick;
 	private int maxHealth;
-	private int cooldown;
-	private int hitCoolDown;
-	private int combatCoolDown;
+	private double cooldown;
+	private double hitCoolDown;
+	private double combatCoolDown;
 	private int hunger;
 	private int armorEventLastTick;
 	private boolean inCombat;
@@ -50,12 +50,12 @@ public class PVPPlayer
 		return this.player;
 	}
 	
-	public int getCombatCoolDown()
+	public double getCombatCoolDown()
 	{
 		return combatCoolDown;
 	}
 	
-	public int getCooldown()
+	public double getCooldown()
 	{
 		return cooldown;
 	}
@@ -95,7 +95,7 @@ public class PVPPlayer
 		return god;
 	}
 	
-	public int getHitCooldown()
+	public double getHitCooldown()
 	{
 		return this.hitCoolDown;
 	}
@@ -115,7 +115,7 @@ public class PVPPlayer
 		this.armorEventLastTick = armorEventLastTick;
 	}
 	
-	public void setCombatCoolDown(int combatCoolDown)
+	public void setCombatCoolDown(double combatCoolDown)
 	{
 		this.combatCoolDown = combatCoolDown;
 	}
@@ -133,12 +133,12 @@ public class PVPPlayer
 		
 	}
 	
-	public void setHitCoolDown(int hitCoolDown)
+	public void setHitCoolDown(double hitCoolDown)
 	{
 		this.hitCoolDown = hitCoolDown;
 	}
 	
-	public void setCooldown(int cooldown)
+	public void setCooldown(double cooldown)
 	{
 		this.cooldown = cooldown;
 	}
@@ -227,7 +227,7 @@ public class PVPPlayer
 			}
 			if(healthLastTick > health)
 			{
-				cooldown = (int) (new Date().getTime()/1000);
+				cooldown = (new Date().getTime()/1000);
 			}
 		}
 		else
