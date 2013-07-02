@@ -1,26 +1,24 @@
 package SaveLoad;
 
-
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import PvpBalance.Main;
+import PvpBalance.PvpBalance;
 
 public class Save {
 		
 	private FileConfiguration DataConfig = null;
 	private File data = null;
 	
-	private Main dun;
+	private PvpBalance dun;
 	private String file;
 	private File thefile;
 	
-	public Save(Main dun, String newfile)
+	public Save(PvpBalance dun, String newfile)
 	{
 		this.dun = dun;
 		file = newfile;
@@ -32,7 +30,9 @@ public class Save {
 		reloadCustomConfig();
 		saveCustomConfig();
 	}
-	public void reloadCustomConfig() {
+	
+	public void reloadCustomConfig()
+	{
 	    if (data == null) 
 	    {
 	    	data = new File(dun.getDataFolder(), file);
@@ -52,21 +52,29 @@ public class Save {
 	    }
 	}
 
-	public FileConfiguration getCustomConfig() {
-	    if (DataConfig == null) {
+	public FileConfiguration getCustomConfig()
+	{
+	    if (DataConfig == null)
+	    {
 	        reloadCustomConfig();
 	    }
 	    return DataConfig;
 	}
 
-	public void saveCustomConfig() {
-	    if (DataConfig == null || data == null) {
-	    return;
+	public void saveCustomConfig()
+	{
+	    if (DataConfig == null || data == null)
+	    {
+	    	return;
 	    }
-	    try {
+	    try
+	    {
 	        getCustomConfig().save(data);
-	    } catch (IOException ex) {
+	    }
+	    catch (Exception ex)
+	    {
 	        dun.getLogger().log(Level.SEVERE, "Could not save config to " + data, ex);
+	        PvpBalance.logger.info("Save CustomConfig!");
 	    }
 	    
 	}

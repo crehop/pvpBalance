@@ -51,7 +51,7 @@ public class Damage
 	}
 	public static int calcArmor(Player player)
 	{
-		PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
+		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		int armor = 500;
 		for(ItemStack i:player.getInventory().getArmorContents())
 		{

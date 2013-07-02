@@ -5,8 +5,11 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
+import Event.PBEntityRegainHealthEvent;
 
-public class PVPPlayer {
+
+public class PVPPlayer
+{
 	private Player player;
 	private int health;
 	private int healthLastTick;
@@ -15,16 +18,12 @@ public class PVPPlayer {
 	private int hitCoolDown;
 	private int combatCoolDown;
 	private int hunger;
-	//private int hungerMax = 20;
 	private int armorEventLastTick;
-	boolean isInCombat;
-	boolean isDead;
-	boolean canRegen;
-	boolean colorUpHelmet;
-	boolean colorUpChest;
-	boolean colorUpLeggings;
-	boolean colorUpBoots;
-	boolean god;
+	private boolean inCombat;
+	private boolean isDead;
+	private boolean canRegen;
+	private boolean god;
+	private boolean pvpstats;
 	
 	public PVPPlayer(Player player)
 	{
@@ -37,105 +36,149 @@ public class PVPPlayer {
 		this.isDead = false;
 		this.hitCoolDown = 0;
 		this.hunger = player.getFoodLevel();
-		this.isInCombat = false;
+		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
-		this.colorUpHelmet = true;
-		this.colorUpChest = true;
-		this.colorUpLeggings = true;
-		this.colorUpBoots = true;
 	}
 
-	public Player getPlayer(){
+	public Player getPlayer()
+	{
 		return this.player;
 	}
-	public int getCombatCoolDown(){
+	
+	public int getCombatCoolDown()
+	{
 		return combatCoolDown;
 	}
-	public int getCooldown(){
+	
+	public int getCooldown()
+	{
 		return cooldown;
 	}
-	public boolean isDead(){
+	
+	public boolean isDead()
+	{
 		return isDead;
 	}
-	public int getHealthLastTick(){
+	
+	public int getHealthLastTick()
+	{
 		return this.healthLastTick;
 	}
-	public int getMaxHealth(){
+	
+	public int getMaxHealth()
+	{
 		return this.maxHealth;
 	}
-	public int gethealth(){
+	
+	public int gethealth()
+	{
 		return this.health;
 	}
-	public int getHunger(){
+	
+	public int getHunger()
+	{
 		return this.hunger;
 	}
-	public boolean isGod(){
+	
+	public boolean isGod()
+	{
 		return god;
 	}
-	public int getHitCooldown(){
+	
+	public int getHitCooldown()
+	{
 		return this.hitCoolDown;
 	}
-	public int getArmorEventLastTick(){
+	
+	public int getArmorEventLastTick()
+	{
 		return this.armorEventLastTick;
 	}
-	public void setGod(boolean god){
+	
+	public void setGod(boolean god)
+	{
 		this.god = god;
 	}
-	public void setArmorEventLastTick(int armorEventLastTick){
+	
+	public void setArmorEventLastTick(int armorEventLastTick)
+	{
 		this.armorEventLastTick = armorEventLastTick;
 	}
-	public void setCombatCoolDown(int combatCoolDown){
+	
+	public void setCombatCoolDown(int combatCoolDown)
+	{
 		this.combatCoolDown = combatCoolDown;
 	}
-	public void setHunger(int hunger){
-		if(this.getHunger() - hunger < 1){
+	
+	public void setHunger(int hunger)
+	{
+		if(this.getHunger() - hunger < 1)
+		{
 			this.hunger = 1;
 		}
-		else{
+		else
+		{
 			this.hunger = hunger;
 		}
 		
 	}
-	public void setHitCoolDown(int hitCoolDown){
+	
+	public void setHitCoolDown(int hitCoolDown)
+	{
 		this.hitCoolDown = hitCoolDown;
 	}
-	public void setCooldown(int cooldown){
-		
+	
+	public void setCooldown(int cooldown)
+	{
 		this.cooldown = cooldown;
 	}
-	public void setIsDead(boolean isDead){
+	
+	public void setIsDead(boolean isDead)
+	{
 		this.isDead = isDead;
 	}
-	public void setMaxHealth(int maxHealth){
-		if(this.health == this.maxHealth){
+	
+	public void setMaxHealth(int maxHealth)
+	{
+		if(this.health == this.maxHealth)
+		{
 			this.maxHealth = maxHealth;
 			this.sethealth(this.maxHealth);
-			if(this.armorEventLastTick == 1){
+			if(this.armorEventLastTick == 1)
+			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
 			}
 		}
-		else{
+		else
+		{
 			this.maxHealth = maxHealth;
-			if(this.armorEventLastTick == 1){
+			if(this.armorEventLastTick == 1)
+			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.RED + "Due to recent combat you will gain life to your new max");
 			}
 
 		}
 	}
+	
 	public void sethealth(int health)
 	{
-		if(Main.pvpstats.contains(player)){
-			if(this.health > health){
+		if(pvpstats)
+		{
+			if(this.health > health)
+			{
 				int decreasedBy = this.health - health;
-				if(decreasedBy > 10){
+				if(decreasedBy > 10)
+				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
 				}
 			}
-			if(this.health < health){
+			if(this.health < health)
+			{
 				int increasedBy = health - this.health;
-				if(increasedBy > 10){
+				if(increasedBy > 10)
+				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.GREEN + "+ " + increasedBy);
 				}
 			}
@@ -147,7 +190,6 @@ public class PVPPlayer {
 				health = this.maxHealth;
 			}
 			this.health = health;
-			DBZScoreBoard.setScore(health, player);
 			if(this.health <= 0)
 			{
 				this.health = 0;
@@ -157,11 +199,6 @@ public class PVPPlayer {
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
-	
-	/*public PVPPlayer getPVPPlayer()
-	{
-		return this;
-	}*/
 	
 	public void Damage(int dmg)
 	{
@@ -200,7 +237,7 @@ public class PVPPlayer {
 			this.cooldown = 0;
 			this.isDead = false;
 			this.hitCoolDown = 10;
-			this.isInCombat = false;
+			this.inCombat = false;
 			this.combatCoolDown = 0;
 			this.armorEventLastTick = 0;
 		}
@@ -241,9 +278,9 @@ public class PVPPlayer {
 		}
 		if(combatCoolDown > 0)
 		{
-			if(isInCombat == false)
+			if(!inCombat)
 			{
-				isInCombat = true;
+				inCombat = true;
 //				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
 //						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
 			
@@ -253,13 +290,13 @@ public class PVPPlayer {
 		if(combatCoolDown <= 0)
 		{
 			this.combatCoolDown = 0;
-			if(isInCombat == true)
+			if(inCombat)
 			{
-				isInCombat = false;
+				inCombat = false;
 //				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
 		}
-		if(Main.debug == true)
+		if(PvpBalance.plugin.isDebug())
 		{
 			Bukkit.broadcastMessage("Cooldown: " + cooldown + " this.canRegen : " + this.canRegen + " MaxHealth: " + maxHealth + " Health: " + health );
 			Bukkit.broadcastMessage("HUNGER LEVEL" + hunger);
@@ -269,7 +306,7 @@ public class PVPPlayer {
 		}
 		if(health < maxHealth && this.canRegen == true)
 		{
-			if(isInCombat)
+			if(inCombat)
 			{
 				int heal = 5;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
@@ -300,13 +337,35 @@ public class PVPPlayer {
 		if(this.isDead == false)
 		{
 			int realHealth = health/(maxHealth/20);
-			if(realHealth <= 1){
+			if(realHealth <= 1)
+			{
 				realHealth = 1;
 			}
-			if(realHealth > 20){
+			if(realHealth > 20)
+			{
 				realHealth = 20;
 			}
 			player.setHealth(realHealth);
 		}
+	}
+	
+	public boolean isPvpstats()
+	{
+		return pvpstats;
+	}
+	
+	public void setPvpstats(boolean value)
+	{
+		pvpstats = value;
+	}
+	
+	public boolean isInCombat()
+	{
+		return inCombat;
+	}
+	
+	public void setInCombat(boolean value)
+	{
+		inCombat = value;
 	}
 }

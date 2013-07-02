@@ -23,7 +23,7 @@ public class ArmorEffects
 		{
 			if((item != null && item.hasItemMeta()) && (item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301))
 			{
-				PVPPlayer pvpPlayer = Commands.getPVPPlayer(player);
+				PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 				LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
 				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR))
 				{
@@ -59,23 +59,25 @@ public class ArmorEffects
 			int blue = meta.getColor().getBlue();
 			int red = meta.getColor().getRed();
 			int green = meta.getColor().getGreen();
+			boolean colorUp = false;
 			if(Fade.type(item) == 1)
 			{
 				if(blue >= 90 && red >= 90 && green >= 90)
 				{
-					pvpPlayer.colorUpHelmet = false;
+					colorUp = false;
 				}
 				else if(blue <= 0 && red <= 0 && green <= 0)
 				{
-					pvpPlayer.colorUpHelmet = true;
+					colorUp = true;
 				}
-				if(pvpPlayer.colorUpHelmet == true)
+				
+				if(colorUp)
 				{
 					red += 9;
 					blue += 9;
 					green += 9;
 				}
-				else if(pvpPlayer.colorUpHelmet == false)
+				else if(!colorUp)
 				{
 					red -= 9;
 					blue -= 9;
@@ -86,19 +88,19 @@ public class ArmorEffects
 			{
 				if(red >= 100 && green >= 180 && blue >= 255)
 				{
-					pvpPlayer.colorUpHelmet = false;
+					colorUp = false;
 				}
 				else if(red >= 0 && green >= 0 && blue >= 205)
 				{
-					pvpPlayer.colorUpHelmet = true;
+					colorUp = true;
 				}
-				if(pvpPlayer.colorUpHelmet == true)
+				if(colorUp)
 				{
 					red += 10;
 					green += 18;
 					blue += 5;
 				}
-				else if(pvpPlayer.colorUpHelmet == false)
+				else if(!colorUp)
 				{
 					red -= 10;
 					green -= 18;
@@ -109,19 +111,19 @@ public class ArmorEffects
 			{
 				if(red >= 255 && green >= 0 && blue >= 0)
 				{
-					pvpPlayer.colorUpHelmet = false;
+					colorUp = false;
 				}
 				else if(red <= 125 && green <= 0 && blue <= 0)
 				{
-					pvpPlayer.colorUpHelmet = true;
+					colorUp = true;
 				}
-			if(pvpPlayer.colorUpHelmet == true)
+			if(colorUp)
 			{
 				red += 13;
 				blue = 0;
 				green = 0;
 			}
-			else if(pvpPlayer.colorUpHelmet == false)
+			else if(!colorUp)
 			{
 				red -= 13;
 				blue = 0;
@@ -132,19 +134,19 @@ public class ArmorEffects
 		{
 			if(red >= 120 && green >= 250 && blue >= 0)
 			{
-				pvpPlayer.colorUpHelmet = false;
+				colorUp = false;
 			}
 			else if(red <= 0 && green <= 100 && blue <= 0)
 			{
-				pvpPlayer.colorUpHelmet = true;
+				colorUp = true;
 			}
-			if(pvpPlayer.colorUpHelmet == true)
+			if(colorUp)
 			{
 				red += 12;
 				green += 15;
 				blue = 0;
 			}
-			else if(pvpPlayer.colorUpHelmet == false)
+			else if(!colorUp)
 			{
 				red -= 12;
 				green -= 15;
@@ -318,12 +320,12 @@ public class ArmorEffects
 						catch (Exception e1)
 						{
 								e1.printStackTrace();
-								Main.logger.info("ArmorEffects!");
+								PvpBalance.logger.info("ArmorEffects!");
 						} 
 				}
 			}
 		}
-		if(player.isOp() && hasCloth == false)
+		if(player.isOp() && !hasCloth)
 		{
 			ItemStack i = new ItemStack(Material.PAPER);
 			ItemMeta imeta = i.getItemMeta();
@@ -336,17 +338,17 @@ public class ArmorEffects
 			player.getInventory().addItem(i);
 			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided please try again.");
 		}
-		if(correctItemInHand == false && hasCloth == true)
+		if(!correctItemInHand && hasCloth)
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You sre not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 		}
-		if(hasCloth == false)
+		if(!hasCloth)
 		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 		}
-		if(correctItemInHand == false && hasCloth == true && alreadyRemoved == true)
+		if(!correctItemInHand && hasCloth && alreadyRemoved)
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a briliant shine " + ChatColor.GOLD + "Bling Bling! ");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a brilliant shine " + ChatColor.GOLD + "Bling Bling! ");
 		}
 	}
 }

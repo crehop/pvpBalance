@@ -1,7 +1,4 @@
 package PvpBalance;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -9,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,29 +16,19 @@ import com.massivecraft.factions.P;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
 
-//test 123 github test
-
-public class Main extends JavaPlugin
+public class PvpBalance extends JavaPlugin
 {
-	public static List<Player> cooldown=new ArrayList<Player>();
-	public static List<Player> pvpstats=new ArrayList<Player>();
-	public static List<PVPPlayer> PVP=new ArrayList<PVPPlayer>();
-	public static List<Entity> projectile=new ArrayList<Entity>();
-	public static final Logger logger=Logger.getLogger("Minecraft");
-    public static Main plugin;
-    public File configFile;
-	private static String name = "witchMagic";
-	private static float offset = (float) 0.1;
-	private static float speed = (float) 0.2;
-	private static int amount = 300;
-	public static boolean particulating = false;
-	public static int everyOther = 0;
-	public static boolean debug = false;
+	public static final Logger logger = Logger.getLogger("Minecraft");
+    public static PvpBalance plugin;
+	private float speed = (float) 0.2;
+	private int amount = 300;
+	private static int everyOther = 0;
+	private boolean debug = false;
 	
-	public P factions;
-	public boolean faction = false;
+	private P factions;
+	private boolean faction = false;
 	
-	public Save sDamage, Protection;
+	private Save sDamage, protection;
 
 
  
@@ -58,7 +44,7 @@ public class Main extends JavaPlugin
 	 	plugin = this;
 	 	
 	 	sDamage = new Save(this, "Damage.yml");
-	 	Protection = new Save(this, "Protection.yml");
+	 	protection = new Save(this, "Protection.yml");
 	 	LoadSave loadSave  = new LoadSave(this);
 	 	
 	 	factions = (P) Bukkit.getPluginManager().getPlugin("Factions");
@@ -86,7 +72,7 @@ public class Main extends JavaPlugin
 			    	{
 							try
 							{
-								PVPPlayer PVPPlayer = Commands.getPVPPlayer(all);
+								PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(all);
 								PVPPlayer.sethealth(PVPPlayer.gethealth());
 					    		// BASIC EFFECT  APLICATIONS ==========================================================================================
 					    		//ON FIRE
@@ -123,7 +109,7 @@ public class Main extends JavaPlugin
 					    		//SPEED POT
 					    		if(all.getActivePotionEffects().toString().contains("SPEED"))
 					    		{
-					    			Effects.effectSpeedPlayers(all, speed, getAmount());
+					    			Effects.effectSpeedPlayers(all, speed, amount);
 					    		}
 					    		//REGENERATING
 					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
@@ -153,7 +139,7 @@ public class Main extends JavaPlugin
 						catch (Exception e1)
 						{
 							e1.printStackTrace();
-							Main.logger.info("Main Effect!");
+							logger.info("Main Effect!");
 						}
 				}
 		    }
@@ -171,7 +157,7 @@ public class Main extends JavaPlugin
 		    		catch (Exception e1)
 		    		{
 							e1.printStackTrace();
-							Main.logger.info("Main ArmorEffect!");
+							logger.info("Main ArmorEffect!");
 					}
 				}
 		    }
@@ -179,7 +165,7 @@ public class Main extends JavaPlugin
 		    {
 		    	everyOther = 0;
 		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
-		    	for(PVPPlayer all: PVP)
+		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
 					try
 					{
@@ -190,7 +176,7 @@ public class Main extends JavaPlugin
 					catch (Exception e1)
 					{
 						e1.printStackTrace();
-						Main.logger.info("Main Tick!");
+						logger.info("Main Tick!");
 					}
 				}
 		    }
@@ -219,30 +205,35 @@ public class Main extends JavaPlugin
 	         e.printStackTrace();
 	     }
 	}*/
- 	
-	public static String getParticleName()
+	
+	public boolean isDebug()
 	{
-		return name;
+		return debug;
 	}
 	
-	public static float getOffset()
+	public void setDebug(boolean value)
 	{
-		return offset;
+		debug = value;
 	}
 	
-	public static float getSpeed()
+	public boolean hasFaction()
 	{
-		return speed;
+		return faction;
 	}
 	
-	public static int getAmount()
+	public P getFactions()
 	{
-		return amount;
+		return factions;
 	}
 	
-	public boolean isParticulating()
+	public Save getSDamage()
 	{
-		return particulating;
+		return sDamage;
+	}
+	
+	public Save getProtection()
+	{
+		return protection;
 	}
 	
 	public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args)
@@ -255,25 +246,27 @@ public class Main extends JavaPlugin
 			{
 				debug = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "DEBUG MODE ENABLED");
-				Bukkit.broadcastMessage("PVP PLAYER: " + Commands.getPVPPlayer(player));
-				Bukkit.broadcastMessage("PVP PLAYER NAME: " + Commands.getPVPPlayer(player).getPlayer().getName());
+				Bukkit.broadcastMessage("PVP PLAYER: " + PvpHandler.getPvpPlayer(player));
+				Bukkit.broadcastMessage("PVP PLAYER NAME: " + PvpHandler.getPvpPlayer(player).getPlayer().getName());
 			}
 			else
 				debug = false;
-			if(Commands.getPVPPlayer(player) == null)
+			if(PvpHandler.getPvpPlayer(player) == null)
 			{
 				PVPPlayer newPVP = new PVPPlayer(player);
-				Main.PVP.add(newPVP);
+				PvpHandler.addPvpPlayer(newPVP);
 			}
 		}
 		if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
 		{
-			PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
-			if(PVPPlayer.isGod() == true){
+			PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
+			if(PVPPlayer.isGod())
+			{
 				PVPPlayer.setGod(false);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GOD MODE DISABLED");
 			}
-			else{
+			else
+			{
 				PVPPlayer.setGod(true);
 				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "GOD MODE ENABLED");
 				player.setFoodLevel(20);
@@ -302,15 +295,15 @@ public class Main extends JavaPlugin
 //			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + pvpPlayer.isInCombat);
 //			player.sendMessage(ChatColor.GREEN + "HITCOOLDOWN : " + pvpPlayer.getHitCooldown());
 //			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + pvpPlayer.canRegen);
-			
-			if(pvpstats.contains(player))
+			PVPPlayer pp = PvpHandler.getPvpPlayer(player);
+			if(pp.isPvpstats())
 			{
-				pvpstats.remove(player);
+				pp.setPvpstats(false);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPSTATS again to Enable");
 			}
 			else
 			{
-				pvpstats.add(player);
+				pp.setPvpstats(true);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE ENABLED SAY /PVPSTATS again to Disable");
 			}
 		}

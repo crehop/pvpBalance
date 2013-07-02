@@ -1,4 +1,5 @@
-package PvpBalance;
+package Util;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,28 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-
-public class Commands
+public class Utils
 {
-	public static PVPPlayer getPVPPlayer(Player player)
-	{
-		PVPPlayer pvpPlayer = null;
-		for(PVPPlayer check : Main.PVP)
-		{
-			if(check.getPlayer() == player)
-			{
-				pvpPlayer = check;
-				return pvpPlayer;
-			}
-		}
-		if(pvpPlayer == null)
-		{
-			pvpPlayer = new PVPPlayer(player);
-			Main.PVP.add(pvpPlayer);
-		}
-		return pvpPlayer;
-		
-	}
 	public static Vector getTargetVector(Location shooter, Location target)
 	{
 		Location first_location = shooter.add(0, 1, 0);
@@ -74,10 +55,10 @@ public class Commands
                 {
                     target = (Entity)e;
                     break;
- 
                 }
             }
-            if(target == null){
+            if(target == null)
+            {
                 for (Entity e : nearbyE)
                 {
                     loc = e.getLocation();
@@ -89,11 +70,8 @@ public class Commands
                         target = e;
                         break;
                     }
-                }
-            	
+                }            	
             }
-            
- 
         }
         return target;
     }

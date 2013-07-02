@@ -5,7 +5,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-public class Fade {
+public class Fade
+{
 	public static final Color CURSED = Color.fromRGB(0, 0, 0);
 	public static final Color MITHRIL = Color.fromRGB(0, 0, 128);
 	public static final Color FLAME = Color.fromRGB(255, 0, 22);
@@ -38,7 +39,9 @@ public class Fade {
 		} 
 		
 	}
-	public static void setBaseColor(ItemStack item){
+	
+	public static void setBaseColor(ItemStack item)
+	{
 		ItemMeta iMeta = item.getItemMeta();
 		LeatherArmorMeta leatherMeta = (LeatherArmorMeta)iMeta;
 		if(iMeta.getDisplayName().contains("Cursed"))

@@ -31,44 +31,43 @@ import me.ThaH3lper.com.DungeonAPI;
 
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
+import Event.PBEntityDamageEntityEvent;
+import Event.PBEntityDamageEvent;
+import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
 
 
 public class DBZListener implements Listener
 {
-	public static Main plugin;
+	public static PvpBalance plugin;
 	public LoadSave LoadSave;
-	public DBZListener(Main instance, LoadSave LoadSave)
+	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
 		this.LoadSave = LoadSave;
 		plugin = instance;
 	}	
 		
 	@EventHandler	
-	 public void playerQuit(PlayerQuitEvent quitevent){
-		Player quitplayer = quitevent.getPlayer();
-		if(Main.cooldown.contains(quitplayer)){
-			Main.cooldown.remove(quitplayer);
-		}
-		if(Main.PVP.contains(Commands.getPVPPlayer(quitplayer))){
-			PVPPlayer PVPPlayer = Commands.getPVPPlayer(quitplayer);
-			Main.PVP.remove(PVPPlayer);
-		}
-		if(Main.pvpstats.contains(quitplayer)){
-			Main.pvpstats.remove(quitplayer);
-		}
-		if(Commands.getPVPPlayer(quitplayer).isInCombat == true)
+	public void playerQuit(PlayerQuitEvent quitevent)
+	{
+		Player quitPlayer = quitevent.getPlayer();
+		PVPPlayer pp = PvpHandler.getPvpPlayer(quitPlayer);
+		
+		PvpHandler.removePvpPlayer(pp);
+		if(pp.isInCombat())
 		{
-			quitplayer.setHealth(0);
+			quitPlayer.setHealth(0);
 		}
-
 	}
 	
 	@EventHandler
-	public void foodChangeEvent(FoodLevelChangeEvent event){
-		if(event.getEntity() instanceof Player){
+	public void foodChangeEvent(FoodLevelChangeEvent event)
+	{
+		if(event.getEntity() instanceof Player)
+		{
 			Player player = (Player)event.getEntity();
-			if(Commands.getPVPPlayer(player).god == true){
+			if(PvpHandler.getPvpPlayer(player).isGod())
+			{
 				event.setCancelled(true);
 			}
 		}
@@ -81,7 +80,7 @@ public class DBZListener implements Listener
 		int dealtDamage = 0;
 		/*if (event.getDamager() instanceof Player){
 			//Player damager = (Player)event.getDamager();
-			PVPPlayer PVPdamager = Commands.getPVPPlayer(damager);
+			PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 		}*/
 		Entity e = event.getEntity();
 		if (e instanceof Player)
@@ -89,12 +88,12 @@ public class DBZListener implements Listener
 			int rawDamage = event.getDamage();
 			Random rand = new Random();
 			Player damagee = (Player) e;
-			if(Commands.getPVPPlayer(damagee) == null)
+			if(PvpHandler.getPvpPlayer(damagee) == null)
 			{
 				PVPPlayer newPVP = new PVPPlayer(damagee);
-				Main.PVP.add(newPVP);
+				PvpHandler.addPvpPlayer(newPVP);
 			}
-			PVPPlayer PVPDamagee = Commands.getPVPPlayer(damagee);
+			PVPPlayer PVPDamagee = PvpHandler.getPvpPlayer(damagee);
 			if(event.getCause() == DamageCause.PROJECTILE)
 			{
 				if(CombatUtil.preventDamageCall(damagee, damagee) && DungeonAPI.canhit(event))
@@ -106,21 +105,21 @@ public class DBZListener implements Listener
 			if(event.getDamager() instanceof Player && canhit && event.getDamage() > 0)
 			{
 				Player damager = (Player)event.getDamager();
-				if(Commands.getPVPPlayer(damager) == null)
+				if(PvpHandler.getPvpPlayer(damager) == null)
 				{
 					PVPPlayer newPVP = new PVPPlayer(damager);
-					Main.PVP.add(newPVP);
+					PvpHandler.addPvpPlayer(newPVP);
 				}
 				Boolean faction = true;
-				if(plugin.faction)
+				if(plugin.hasFaction())
 				{
-					faction = plugin.factions.entityListener.canDamagerHurtDamagee(event, true);
+					faction = plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true);
 				}
 				
 				
 				if(!CombatUtil.preventDamageCall(damagee, damager) && DungeonAPI.canhit(event) && faction)
 				{
-					PVPPlayer PVPdamager = Commands.getPVPPlayer(damager);
+					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 					if(PVPdamager.getHitCooldown() < 1)
 					{
 						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
@@ -140,7 +139,7 @@ public class DBZListener implements Listener
 						PVPdamager.setHitCoolDown(5);
 						PVPdamager.setCombatCoolDown(40);
 						PVPDamagee.setCombatCoolDown(40);
-						if(Main.debug == true || Main.pvpstats.contains(damager))
+						if(PvpBalance.plugin.isDebug() || PVPdamager.isPvpstats())
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
 						}
@@ -161,15 +160,17 @@ public class DBZListener implements Listener
 					dealtDamage = pbdEvent.getDamage();
 					PVPDamagee.Damage(dealtDamage);
 				}
-				if(Main.debug == true)
+				if(PvpBalance.plugin.isDebug())
 				{
 					Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
 				}
 			}
-			if(PVPDamagee.god == true){
+			if(PVPDamagee.isGod())
+			{
 				event.setCancelled(true);
 			}
-			else{
+			else
+			{
 				event.setDamage(0);
 			}
 		}
@@ -207,20 +208,21 @@ public class DBZListener implements Listener
 				player.teleport(new Location(player.getWorld(), -730.50, 105, 319.50));
 			}
 		}
-		Main.PVP.add(newPVP);
+		PvpHandler.addPvpPlayer(newPVP);
 		Damage.calcArmor(event.getPlayer());
 		newPVP.sethealth(newPVP.getMaxHealth());
 	}
 	
 	@EventHandler
-	public void respawn(PlayerRespawnEvent event){
+	public void respawn(PlayerRespawnEvent event)
+	{
 		Player player = event.getPlayer();
-		if(Commands.getPVPPlayer(player) == null){
+		if(PvpHandler.getPvpPlayer(player) == null)
+		{
 			PVPPlayer newPVP = new PVPPlayer(player);
-			Main.PVP.add(newPVP);
+			PvpHandler.addPvpPlayer(newPVP);
 		}
-		Damage.calcArmor(event.getPlayer());
-		PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
+		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(500);
 	}
@@ -233,12 +235,12 @@ public class DBZListener implements Listener
 			if(event.getRegainReason() == RegainReason.MAGIC)
 			{
 				Player player = (Player)event.getEntity();
-				if(Commands.getPVPPlayer(player) == null)
+				if(PvpHandler.getPvpPlayer(player) == null)
 				{
 					PVPPlayer newPVP = new PVPPlayer(player);
-					Main.PVP.add(newPVP);
+					PvpHandler.addPvpPlayer(newPVP);
 				}
-				PVPPlayer PVPPlayer = Commands.getPVPPlayer(player);
+				PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 				int heal = 700;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, event.getRegainReason());
 				Bukkit.getPluginManager().callEvent(pberh);
@@ -260,7 +262,7 @@ public class DBZListener implements Listener
 			{
 				
 					Damage.calcArmor(player);
-					Commands.getPVPPlayer(player).setArmorEventLastTick(2);
+					PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
 			}
 
 		}
@@ -275,17 +277,17 @@ public class DBZListener implements Listener
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player)event.getEntity();
-			if(Commands.getPVPPlayer(player) == null)
+			if(PvpHandler.getPvpPlayer(player) == null)
 			{
 				PVPPlayer newPVP = new PVPPlayer(player);
-				Main.PVP.add(newPVP);
+				PvpHandler.addPvpPlayer(newPVP);
 			}
-			PVPPlayer pvp = Commands.getPVPPlayer(player);
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 			if(event.getCause().equals(DamageCause.STARVATION))
 			{
 				event.setDamage(0);
 			}
-			if(Commands.getPVPPlayer(player).god == true){
+			if(PvpHandler.getPvpPlayer(player).isGod()){
 				event.setCancelled(true);
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
@@ -373,11 +375,11 @@ public class DBZListener implements Listener
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event){
 		Player player = event.getEntity();
-		if(Commands.getPVPPlayer(player) == null){
+		if(PvpHandler.getPvpPlayer(player) == null){
 			PVPPlayer newPVP = new PVPPlayer(player);
-			Main.PVP.add(newPVP);
+			PvpHandler.addPvpPlayer(newPVP);
 		}
-		PVPPlayer PVPPlayer = Commands.getPVPPlayer(event.getEntity().getPlayer());
+		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(event.getEntity().getPlayer());
 		PVPPlayer.setIsDead(true);
 	}
 	@EventHandler
@@ -388,23 +390,23 @@ public class DBZListener implements Listener
 			if(isArmor(event.getCurrentItem()))
 			{
     			Player player = (Player) event.getWhoClicked();
-    			if(Commands.getPVPPlayer(player) == null)
+    			if(PvpHandler.getPvpPlayer(player) == null)
     			{
     				PVPPlayer newPVP = new PVPPlayer(player);
-    				Main.PVP.add(newPVP);
+    				PvpHandler.addPvpPlayer(newPVP);
     			}
-    			Commands.getPVPPlayer(player).setArmorEventLastTick(2);
+    			PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
     		}
     	}
 	    if(event.getSlotType() == SlotType.ARMOR)
 	    {
 	    	Player player = (Player) event.getWhoClicked();
-			if(Commands.getPVPPlayer(player) == null)
+			if(PvpHandler.getPvpPlayer(player) == null)
 			{
 				PVPPlayer newPVP = new PVPPlayer(player);
-				Main.PVP.add(newPVP);
+				PvpHandler.addPvpPlayer(newPVP);
 			}
-	        Commands.getPVPPlayer(player).setArmorEventLastTick(2);
+	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
 	    }
 	}
 	
