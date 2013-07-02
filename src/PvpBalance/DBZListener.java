@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -98,7 +99,7 @@ public class DBZListener implements Listener
 			PVPPlayer PVPDamagee = PvpHandler.getPvpPlayer(damagee);
 			if(event.getCause() == DamageCause.PROJECTILE)
 			{
-				if(CombatUtil.preventDamageCall(damagee, damagee) && DungeonAPI.canhit(event))
+				if(CombatUtil.preventDamageCall(damagee, damagee) && !DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
 					canhit = false;
@@ -124,8 +125,11 @@ public class DBZListener implements Listener
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 					if(((date.getTime() / 1000) - PVPdamager.getHitCooldown()) >= HITCOOLDOWN)
-					{
-						dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
+					{												
+						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE))
+							dealtDamage = 20;
+						else
+							dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
 						
 						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
 						Bukkit.getPluginManager().callEvent(pbdEvent);
