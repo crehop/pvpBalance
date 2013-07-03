@@ -2,12 +2,15 @@ package PvpBalance;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import Util.ItemUtils;
@@ -232,12 +235,14 @@ public class ArmorEffects
 	public static void polish(Player player)
 	{
 		ItemStack item = null;
-		if(player.getItemInHand() != null)
+		if(player.getItemInHand() == null){
 			return;
+		}
 		item = player.getItemInHand();
-		if(item.getType() != Material.LEATHER_BOOTS && item.getType() != Material.LEATHER_CHESTPLATE && item.getType() != Material.LEATHER_HELMET && item.getType() != Material.LEATHER_LEGGINGS)
+		if(item.getType() != Material.LEATHER_BOOTS && item.getType() != Material.LEATHER_CHESTPLATE && item.getType() != Material.LEATHER_HELMET && item.getType() != Material.LEATHER_LEGGINGS){
 			return;
-		if(!ItemUtils.getColor(item).toString().contains("A06540"))
+		}
+		if(ItemUtils.getColor(item).toString().contains("A06540"))
 		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
@@ -262,21 +267,24 @@ public class ArmorEffects
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
 		}
-		for(ItemStack papper: player.getInventory())
+		for(ItemStack paper: player.getInventory())
 		{
-			if(papper == null)
+			if(paper == null){
 				continue;
-			if(!papper.hasItemMeta())
+			}
+			if(!paper.hasItemMeta()){
 				continue;
-			if(!ItemUtils.hasLore(papper))
+			}
+			if(paper.getItemMeta().getLore() != null){
 				continue;
-			if(!ItemUtils.getLore(papper).get(0).toString().contains(CODE_PAPER))
+			}
+			if(ItemUtils.getLore(paper).get(0).toString().contains(CODE_PAPER)){
 				continue;
-			
-			papper.setAmount(papper.getAmount() - 1);
-			if(papper.getAmount() <= 0)
-				player.getInventory().removeItem(papper);
-			
+			}
+			paper.setAmount(paper.getAmount() - 1);
+			if(paper.getAmount() <= 0){
+				player.getInventory().removeItem(paper);
+			}
 			Color color = ItemUtils.getColor(item);
 			List<String> lore = new ArrayList<String>();
 			lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);

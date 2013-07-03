@@ -58,7 +58,7 @@ public class DBZListener implements Listener
 		PVPPlayer pp = PvpHandler.getPvpPlayer(quitPlayer);
 		if(pp.isInCombat())
 		{
-			quitPlayer.setHealth(0);
+			quitPlayer.setHealth(0f);
 		}
 		PvpHandler.removePvpPlayer(pp);
 	}
@@ -85,7 +85,7 @@ public class DBZListener implements Listener
 		Entity e = event.getEntity();
 		if (e instanceof Player)
 		{
-			int rawDamage = event.getDamage();
+			int rawDamage = (int) event.getDamage();
 			Random rand = new Random();
 			Player damagee = (Player) e;
 			if(PvpHandler.getPvpPlayer(damagee) == null)
@@ -172,14 +172,14 @@ public class DBZListener implements Listener
 			}
 			else
 			{
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 		}
 		else if(e instanceof LivingEntity)
 		{
 			if(!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Arrow))
 				return;
-			int health = ((LivingEntity)e).getHealth() - event.getDamage();
+			int health = (int) (((LivingEntity)e).getHealth() - (int) event.getDamage());
 			if(health < 0)
 				health = 0;
 			String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + health;
@@ -290,7 +290,7 @@ public class DBZListener implements Listener
 			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 			if(event.getCause().equals(DamageCause.STARVATION))
 			{
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			if(PvpHandler.getPvpPlayer(player).isGod()){
 				event.setCancelled(true);
@@ -312,7 +312,7 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.CONTACT))
 			{
@@ -322,7 +322,7 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.DROWNING))
 			{
@@ -332,7 +332,7 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.POISON))
 			{
@@ -342,7 +342,7 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
@@ -352,7 +352,7 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.WITHER))
 			{
@@ -362,17 +362,17 @@ public class DBZListener implements Listener
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 			else if(event.getCause() != DamageCause.PROJECTILE && event.getCause() != DamageCause.ENTITY_ATTACK)
 			{
-				int damage = event.getDamage();
+				int damage = (int) event.getDamage();
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
 				if(pbdEvent.isCancelled())
 					return;
 				pvp.Damage(pbdEvent.getDamage());
-				event.setDamage(0);
+				event.setDamage(0f);
 			}
 		}
 	}
