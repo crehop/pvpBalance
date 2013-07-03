@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import Util.ItemUtils;
@@ -231,65 +232,130 @@ public class ArmorEffects
 	}
 
 	public static void polish(Player player)
-	{
-		ItemStack item = null;
-		if(player.getItemInHand() == null)
-			return;
-		item = player.getItemInHand();
-		if(item.getType() != Material.LEATHER_BOOTS && item.getType() != Material.LEATHER_CHESTPLATE && item.getType() != Material.LEATHER_HELMET && item.getType() != Material.LEATHER_LEGGINGS)
-			return;
-		if(ItemUtils.getColor(item).toString().contains("A06540"))
-		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
-			return;
-		}
-		if(player.isOp())
-		{
-			Color color = ItemUtils.getColor(item);
-			List<String> lore = new ArrayList<String>();
-			lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-			lore.addAll(ItemUtils.getLore(item));
-			ItemUtils.setLore(item, lore);
-			if(color.getBlue() == 255 && color.getGreen() == 255 && color.getRed() == 255)
-			{
-				ItemUtils.setColor(item, Color.fromRGB(254, 255, 255));
-				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+ 	{
+		boolean hasCloth = false;
+		boolean alreadyRemoved = false;
+		boolean correctItemInHand = false;
+ 		ItemStack item = null;
+ 		if(player.getItemInHand() != null)
+ 		{
+ 			item = player.getItemInHand();
+			if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_LEGGINGS){
+				correctItemInHand = true;
 			}
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a brilliant shine " + ChatColor.GOLD + "Bling Bling! ");
-			return;
-		}
-		if(!player.getInventory().contains(Material.PAPER))
-		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
-			return;
-		}
-		for(ItemStack papper: player.getInventory())
-		{
-			if(papper == null)
-				continue;
-			if(!papper.hasItemMeta())
-				continue;
-			if(!ItemUtils.hasLore(papper))
-				continue;
-			if(!ItemUtils.getLore(papper).get(0).toString().contains(CODE_PAPER))
-				continue;
-			
-			papper.setAmount(papper.getAmount() - 1);
-			if(papper.getAmount() <= 0)
-				player.getInventory().removeItem(papper);
-			
-			Color color = ItemUtils.getColor(item);
-			List<String> lore = new ArrayList<String>();
-			lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-			lore.addAll(ItemUtils.getLore(item));
-			ItemUtils.setLore(item, lore);
-			if(color.getBlue() == 255 && color.getGreen() == 255 && color.getRed() == 255)
-			{
-				ItemUtils.setColor(item, Color.fromRGB(254, 255, 255));
-				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+			if(player.getInventory().contains(Material.PAPER) && item != null)
+ 			{
+				for(ItemStack i: player.getInventory())
+						try
+						{
+							ItemMeta itemMeta = null;
+							if(i != null){
+								if(i.hasItemMeta())
+								{
+									itemMeta = i.getItemMeta();
+								}
+								if(i.hasItemMeta() && itemMeta.hasLore() && correctItemInHand == true)
+								{
+									if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
+									{
+										if(i.getAmount() > 1 && alreadyRemoved == false)
+										{
+											alreadyRemoved = true;
+											hasCloth = true;
+											i.setAmount(i.getAmount() - 1);
+											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+											{
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
+													ItemMeta metah = item.getItemMeta();
+													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+													if(!meta.getColor().toString().contains("A06540"))
+													{
+														List<String> lore = new ArrayList<String>();
+														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														meta.setLore(lore);
+														item.setItemMeta(meta);
+														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+														{
+															meta.setColor(Color.fromRGB(254, 255, 255));
+															item.setItemMeta(meta);
+															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														}
+													}
+													else
+													{
+														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
+
+													}	
+												}
+											}
+										}
+										else if(alreadyRemoved == false)
+										{
+											alreadyRemoved = true;
+											hasCloth = true;
+											player.getInventory().removeItem(i);
+											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+											{
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
+												{
+													ItemMeta metah = item.getItemMeta();
+													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+													if(!meta.getColor().toString().contains("A06540"))
+													{
+														List<String> lore = new ArrayList<String>();
+														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														meta.setLore(lore);
+														item.setItemMeta(meta);
+														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+														{
+															meta.setColor(Color.fromRGB(254, 255, 255));
+															item.setItemMeta(meta);
+															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														}
+													}
+													else
+													{
+														player.sendMessage("THIS IS NORMAL ARMOR DONT TRY TO CHEAT!");
+
+													}	
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						catch (Exception e1)
+						{
+								e1.printStackTrace();
+								PvpBalance.logger.info("ArmorEffects!");
+						} 
 			}
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a brilliant shine " + ChatColor.GOLD + "Bling Bling! ");
-			return;
-		}
-	}
+			if(player.isOp() && !hasCloth)
+			{
+				ItemStack paper = new ItemStack(Material.PAPER);
+				List<String> lore = new ArrayList<String>();
+				lore.add("Polishing Cloth " + ChatColor.MAGIC + " " + CODE_PAPER);
+				lore.add(ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+				ItemUtils.setLore(paper, lore);
+				ItemUtils.setName(paper, ChatColor.GOLD + "Polishing Cloth");
+				player.getInventory().addItem(paper);
+				player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided please try again.");
+			}
+			if(!correctItemInHand && hasCloth)
+			{
+				player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			}
+			if(!hasCloth)
+			{
+				player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			}
+			if(!correctItemInHand && hasCloth && alreadyRemoved)
+			{
+				player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You polish the armor to a brilliant shine " + ChatColor.GOLD + "Bling Bling! ");
+	 		}
+ 		}
+ 	}
 }
+	
+

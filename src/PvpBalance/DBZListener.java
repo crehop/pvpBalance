@@ -115,18 +115,18 @@ public class DBZListener implements Listener
 				{
 					faction = plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true);
 				}
-				
-				
 				if(!CombatUtil.preventDamageCall(damagee, damager) && DungeonAPI.canhit(event) && faction)
 				{
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 					if(((date.getTime() / 1000) - PVPdamager.getHitCooldown()) >= HITCOOLDOWN)
 					{												
-						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE))
+						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE)){
 							dealtDamage = 20;
-						else
+						}
+						else{
 							dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
+						}
 						
 						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
 						Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -149,6 +149,7 @@ public class DBZListener implements Listener
 				else
 				{
 					canhit = false;
+					event.setCancelled(true);
 				}
 			}
 			else if(canhit && event.getDamage() > 0 && event.getDamager().getClass() != Player.class)
@@ -193,7 +194,7 @@ public class DBZListener implements Listener
 					return;
 				Bukkit.getMessenger().dispatchIncomingMessage((Player)((Arrow)event.getDamager()).getShooter(), "Scoreboard", message.getBytes());
 			}
-		}
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 	}
 	
 	@EventHandler
@@ -201,11 +202,12 @@ public class DBZListener implements Listener
 	{
 		Player player = event.getPlayer();
 		PVPPlayer newPVP = new PVPPlayer(player);
+		
 		if(player.getWorld().getName().contains("world"))
 		{
 			if(player.hasPermission("particles.admin"))
 			{
-				player.sendMessage("Welcome Administrator " + player);
+				player.sendMessage("Welcome Administrator :" + player.getDisplayName());
 				newPVP.setGod(true);
 			}
 			else{
@@ -227,9 +229,9 @@ public class DBZListener implements Listener
 			PvpHandler.addPvpPlayer(newPVP);
 		}
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
-		PVPPlayer.sethealth(500);
-		Damage.calcArmor(player);
 		PVPPlayer.setIsDead(false);
+		Damage.calcArmor(player);
+		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 
 	}
 	

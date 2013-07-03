@@ -210,8 +210,6 @@ public class PVPPlayer
 			}
 			this.setProperHealth();
 		}
-		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
-		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	public void Damage(int dmg)
@@ -235,8 +233,6 @@ public class PVPPlayer
 			this.health = this.maxHealth;
 			player.setFoodLevel(20);
 		}
-		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
-		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	public void tick()
@@ -268,7 +264,7 @@ public class PVPPlayer
 			this.player.setHealth(0);
 			this.isDead = true;
 		}
-		setProperHealth();
+		this.setProperHealth();
 		if((date.getTime()/1000) - cooldown < 20)
 		{
 			this.canRegen = false;
@@ -353,6 +349,8 @@ public class PVPPlayer
 			}
 			player.setHealth(realHealth);
 		}
+		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	public boolean isPvpstats()
