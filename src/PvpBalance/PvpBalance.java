@@ -20,8 +20,8 @@ public class PvpBalance extends JavaPlugin
 {
 	public static final Logger logger = Logger.getLogger("Minecraft");
     public static PvpBalance plugin;
-	private float speed = (float) 0.2;
-	private int amount = 300;
+	private final float SPEED = 0.2F;
+	private final int AMOUNT = 300;
 	private static int everyOther = 0;
 	private boolean debug = false;
 	
@@ -117,7 +117,7 @@ public class PvpBalance extends JavaPlugin
 					    		//SPEED POT
 					    		if(all.getActivePotionEffects().toString().contains("SPEED"))
 					    		{
-					    			Effects.effectSpeedPlayers(all, speed, amount);
+					    			Effects.effectSpeedPlayers(all, SPEED, AMOUNT);
 					    		}
 					    		//REGENERATING
 					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
@@ -133,7 +133,7 @@ public class PvpBalance extends JavaPlugin
 					    		//SPRINTING
 					    		if(all.isSprinting())
 					    		{
-					    			Effects.effectSprintPlayers(all, speed, (int)speed*5);
+					    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
 					    			PVPPlayer.setHunger(PVPPlayer.getHunger() - 1);
 					    		}
 					    		//LOW HEALTH
