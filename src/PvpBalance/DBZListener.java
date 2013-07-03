@@ -159,7 +159,7 @@ public class DBZListener implements Listener
 						dealtDamage = pbdEvent.getDamage();
 						PVPDamagee.Damage(dealtDamage);
 					}
-					event.setCancelled(true);
+					event.setDamage(0);
 				}
 				else
 				{
@@ -185,7 +185,6 @@ public class DBZListener implements Listener
 			{
 				event.setDamage(0);
 			}
-			event.setCancelled(true);
 		}
 		else if(e instanceof LivingEntity)
 		{
