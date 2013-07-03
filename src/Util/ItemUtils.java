@@ -37,6 +37,8 @@ public class ItemUtils
 	{
 		ItemMeta im = item.getItemMeta();
 		List<String> temp = im.getLore();
+		if(temp == null)
+			temp = new ArrayList<String>();
 		temp.add(addChatColor(lore));
 		im.setLore(temp);
 		item.setItemMeta(im);
@@ -482,5 +484,13 @@ public class ItemUtils
 			return null;
 		LeatherArmorMeta lam = (LeatherArmorMeta)item.getItemMeta();
 		return lam.getColor();
+	}
+	
+	public static boolean hasLore(ItemStack item)
+	{
+		if(!item.hasItemMeta())
+			return false;
+		ItemMeta im = item.getItemMeta();
+		return im.hasLore();
 	}
 }

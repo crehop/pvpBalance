@@ -3,10 +3,12 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +17,7 @@ import com.massivecraft.factions.P;
 
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
+import Util.ItemUtils;
 
 public class PvpBalance extends JavaPlugin
 {
@@ -263,7 +266,10 @@ public class PvpBalance extends JavaPlugin
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
 		{
-			Bukkit.broadcastMessage("VERSION 1.5 BETA");
+			ItemStack paper = new ItemStack(Material.PAPER);
+			ItemUtils.addLore(paper, "32157");
+			player.getInventory().addItem(paper);
+			Bukkit.broadcastMessage("VERSION 1.5");
 		}
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{

@@ -2,6 +2,7 @@ package PvpBalance;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -232,12 +233,12 @@ public class ArmorEffects
 	public static void polish(Player player)
 	{
 		ItemStack item = null;
-		if(player.getItemInHand() != null)
+		if(player.getItemInHand() == null)
 			return;
 		item = player.getItemInHand();
 		if(item.getType() != Material.LEATHER_BOOTS && item.getType() != Material.LEATHER_CHESTPLATE && item.getType() != Material.LEATHER_HELMET && item.getType() != Material.LEATHER_LEGGINGS)
 			return;
-		if(!ItemUtils.getColor(item).toString().contains("A06540"))
+		if(ItemUtils.getColor(item).toString().contains("A06540"))
 		{
 			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;

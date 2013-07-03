@@ -43,7 +43,7 @@ public class DBZListener implements Listener
 {
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
-	private final double HITCOOLDOWN = 1.5D;
+	private final double HITCOOLDOWN = 2.0D;
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
