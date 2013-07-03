@@ -272,13 +272,13 @@ public class ArmorEffects
 			if(paper == null){
 				continue;
 			}
-			if(paper.hasItemMeta()){
+			if(!paper.hasItemMeta()){
 				continue;
 			}
 			if(paper.getItemMeta().getLore() != null){
 				continue;
 			}
-			if(!ItemUtils.getLore(paper).get(0).toString().contains(CODE_PAPER)){
+			if(ItemUtils.getLore(paper).get(0).toString().contains(CODE_PAPER)){
 				continue;
 			}
 			paper.setAmount(paper.getAmount() - 1);
