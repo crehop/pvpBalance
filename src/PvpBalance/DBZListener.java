@@ -85,7 +85,7 @@ public class DBZListener implements Listener
 		Entity e = event.getEntity();
 		if (e instanceof Player)
 		{
-			int rawDamage = (int) event.getDamage();
+			int rawDamage = event.getDamage();
 			Random rand = new Random();
 			Player damagee = (Player) e;
 			if(PvpHandler.getPvpPlayer(damagee) == null)
@@ -179,7 +179,7 @@ public class DBZListener implements Listener
 		{
 			if(!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Arrow))
 				return;
-			int health = (int) (((LivingEntity)e).getHealth() - (int) event.getDamage());
+			int health = ((LivingEntity)e).getHealth() - event.getDamage();
 			if(health < 0)
 				health = 0;
 			String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + health;
@@ -366,7 +366,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause() != DamageCause.PROJECTILE && event.getCause() != DamageCause.ENTITY_ATTACK)
 			{
-				int damage = (int) event.getDamage();
+				int damage = event.getDamage();
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
 				if(pbdEvent.isCancelled())
