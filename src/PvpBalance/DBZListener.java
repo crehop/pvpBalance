@@ -96,37 +96,31 @@ public class DBZListener implements Listener
 			PVPPlayer PVPDamagee = PvpHandler.getPvpPlayer(damagee);
 			if(event.getCause() == DamageCause.PROJECTILE)
 			{
-				if(CombatUtil.preventDamageCall(damagee, damagee) && !DungeonAPI.canhit(event))
+				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
-					canhit = false;
+					return;
 				}
 			}
 			if(event.getDamager() instanceof Player && canhit && event.getDamage() > 0)
 			{
 				Player damager = (Player)event.getDamager();
-				if(PvpHandler.getPvpPlayer(damager) == null)
-				{
-					PVPPlayer newPVP = new PVPPlayer(damager);
-					PvpHandler.addPvpPlayer(newPVP);
-				}
 				Boolean faction = true;
 				if(plugin.hasFaction())
 				{
 					faction = plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true);
 				}
-				if(!CombatUtil.preventDamageCall(damagee, damager) && DungeonAPI.canhit(event) && faction)
+				
+				if(!CombatUtil.preventDamageCall(damager, damagee) && DungeonAPI.canhit(event) && faction)
 				{
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 					if(((date.getTime() / 1000) - PVPdamager.getHitCooldown()) >= HITCOOLDOWN)
-					{												
-						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE)){
+					{
+						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE))
 							dealtDamage = 20;
-						}
-						else{
+						else
 							dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
-						}
 						
 						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
 						Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -134,7 +128,7 @@ public class DBZListener implements Listener
 						{
 							dealtDamage = pbdEvent.getDamage();
 							PVPDamagee.Damage(dealtDamage);
-								
+							
 							String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + PVPDamagee.gethealth();
 							Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 						}
@@ -149,22 +143,38 @@ public class DBZListener implements Listener
 				else
 				{
 					canhit = false;
-					event.setCancelled(true);
 				}
 			}
-			else if(canhit && event.getDamage() > 0 && event.getDamager().getClass() != Player.class)
+			else if(canhit && event.getDamage() > 0 && !(event.getDamager() instanceof Player))
 			{
-				dealtDamage = rawDamage * LoadSave.Multi;
-				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), dealtDamage, event.getCause());
-				Bukkit.getPluginManager().callEvent(pbdEvent);
-				if(!pbdEvent.isCancelled())
+				if(event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player)
 				{
-					dealtDamage = pbdEvent.getDamage();
-					PVPDamagee.Damage(dealtDamage);
+					Player damager = (Player)((Arrow)event.getDamager()).getShooter();
+					//dealtDamage = rawDamage * LoadSave.Diamond;
+					dealtDamage = Damage.calcDamage(damager);
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(!pbdEvent.isCancelled())
+					{
+						dealtDamage = pbdEvent.getDamage();
+						PVPDamagee.Damage(dealtDamage);
+					}
+					event.setCancelled(true);
 				}
-				if(PvpBalance.plugin.isDebug())
+				else
 				{
-					Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
+					dealtDamage = rawDamage * LoadSave.Multi;
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(!pbdEvent.isCancelled())
+					{
+						dealtDamage = pbdEvent.getDamage();
+						PVPDamagee.Damage(dealtDamage);
+					}
+					if(PvpBalance.plugin.isDebug())
+					{
+						Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
+					}
 				}
 			}
 			if(PVPDamagee.isGod())
@@ -175,6 +185,7 @@ public class DBZListener implements Listener
 			{
 				event.setDamage(0);
 			}
+			event.setCancelled(true);
 		}
 		else if(e instanceof LivingEntity)
 		{
@@ -194,7 +205,7 @@ public class DBZListener implements Listener
 					return;
 				Bukkit.getMessenger().dispatchIncomingMessage((Player)((Arrow)event.getDamager()).getShooter(), "Scoreboard", message.getBytes());
 			}
-		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+		}
 	}
 	
 	@EventHandler
@@ -202,12 +213,11 @@ public class DBZListener implements Listener
 	{
 		Player player = event.getPlayer();
 		PVPPlayer newPVP = new PVPPlayer(player);
-		
 		if(player.getWorld().getName().contains("world"))
 		{
 			if(player.hasPermission("particles.admin"))
 			{
-				player.sendMessage("Welcome Administrator :" + player.getDisplayName());
+				player.sendMessage("Welcome Administrator " + player);
 				newPVP.setGod(true);
 			}
 			else{
@@ -228,11 +238,10 @@ public class DBZListener implements Listener
 			PVPPlayer newPVP = new PVPPlayer(player);
 			PvpHandler.addPvpPlayer(newPVP);
 		}
+		Damage.calcArmor(player);
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 		PVPPlayer.setIsDead(false);
-		Damage.calcArmor(player);
 		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
-
 	}
 	
 	@EventHandler

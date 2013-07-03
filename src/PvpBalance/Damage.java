@@ -41,7 +41,7 @@ public class Damage
 		}
 		else if(player.getItemInHand().getType() == Material.BOW)
 		{
-			damage += 100;
+			damage += 200;
 			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * LoadSave.Sharpness;
 		}
 		damage += player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL) * LoadSave.Sharpness;
@@ -49,6 +49,7 @@ public class Damage
 		
 	//END ADDED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	}
+	
 	public static int calcArmor(Player player)
 	{
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);

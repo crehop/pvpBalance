@@ -269,7 +269,7 @@ public class PvpBalance extends JavaPlugin
 			ItemStack paper = new ItemStack(Material.PAPER);
 			ItemUtils.addLore(paper, "32157");
 			player.getInventory().addItem(paper);
-			Bukkit.broadcastMessage("VERSION 1.52");
+			Bukkit.broadcastMessage("VERSION 1.5");
 		}
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{
