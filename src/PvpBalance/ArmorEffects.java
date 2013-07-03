@@ -20,6 +20,8 @@ public class ArmorEffects
 
 	public static void checkForGlowTick(Player player)
 	{
+		if(player == null)
+			return;
 		LeatherArmorMeta[] metas = new LeatherArmorMeta[5];
 		for(ItemStack item : player.getInventory().getArmorContents())
 		{
@@ -28,7 +30,11 @@ public class ArmorEffects
 			if(item.hasItemMeta() && (item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301))
 			{
 				PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
+				if(pvpPlayer == null)
+					return;
 				LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
+				if(ItemUtils.getLore(item) == null || ItemUtils.getLore(item).isEmpty())
+					return;
 				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR))
 				{
 					if(meta.getColor().toString().contains("A06540"))
