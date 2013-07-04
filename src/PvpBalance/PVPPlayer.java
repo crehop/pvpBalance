@@ -290,7 +290,7 @@ public class PVPPlayer
 			this.isDead = true;
 		}
 		setProperHealth();
-		if((date.getTime()/1000) - cooldown < 20)
+		if((date.getTime()/1000) - cooldown < 15)
 		{
 			this.canRegen = false;
 		}
@@ -301,12 +301,11 @@ public class PVPPlayer
 			this.canRegen = false;
 		}
 		this.hunger = this.player.getFoodLevel();
-		if(this.hunger < 2 && this.health > 100)
+		if(this.hunger < 1 && this.health > 100)
 		{
-			this.canRegen = false;
 			this.sethealth(this.gethealth() - 10);
 		}
-		if((date.getTime() / 1000) - combatCoolDown >= 40)
+		if((date.getTime() / 1000) - combatCoolDown >= 30)
 		{
 			if(inCombat)
 			{
@@ -344,7 +343,7 @@ public class PVPPlayer
 			}
 			else
 			{
-				int heal = 35;
+				int heal = 25;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())
