@@ -28,6 +28,7 @@ public class PVPPlayer
 	private boolean god;
 	private boolean pvpstats;
 	private boolean colorUp;
+	private final double INVULNERABILITY_TIMER = 0.5D;
 	
 	public PVPPlayer(Player player)
 	{
@@ -43,7 +44,7 @@ public class PVPPlayer
 		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
-		this.lastDamage = 0.0f;
+		this.lastDamage = 0.0D;
 		colorUp = false;
 	}
 
@@ -190,7 +191,6 @@ public class PVPPlayer
 	
 	public void sethealth(int health)
 	{
-		Date date = new Date();
 		if(pvpstats)
 		{
 			if(this.health > health)
@@ -216,18 +216,22 @@ public class PVPPlayer
 			{
 				health = this.maxHealth;
 			}
-			if(health < this.health && (date.getTime()/1000) - this.lastDamage > 0.5D){
-				if(this.health - health > 50){
-					this.health = health;
-					lastDamage = (new Date().getTime()/1000);
-				}
-			}
-			if(health < this.health){
-				if(this.health - health < 50){
+			if(health < this.health)
+			{
+				if(this.health - health > 50)
+				{
 					this.health = health;
 				}
 			}
-			if(health > this.health){
+			if(health < this.health)
+			{
+				if(this.health - health < 50)
+				{
+					this.health = health;
+				}
+			}
+			else if(health > this.health)
+			{
 				this.health = health;
 			}
 			if(this.health <= 0)
@@ -270,6 +274,7 @@ public class PVPPlayer
 			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
+		lastDamage = (new Date().getTime() / 1000);
 //		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
 //		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
@@ -393,19 +398,25 @@ public class PVPPlayer
 	{
 		return pvpstats;
 	}
-	
+
 	public void setPvpstats(boolean value)
 	{
 		pvpstats = value;
 	}
-	
+
 	public boolean isInCombat()
 	{
 		return inCombat;
 	}
-	
+
 	public void setInCombat(boolean value)
 	{
 		inCombat = value;
+	}
+
+	public boolean isVulnerable()
+	{
+		Date date = new Date();
+		return ((date.getTime() / 1000) - lastDamage) > INVULNERABILITY_TIMER ? true:false;
 	}
 }

@@ -89,12 +89,13 @@ public class DBZListener implements Listener
 			int rawDamage = event.getDamage();
 			Random rand = new Random();
 			Player damagee = (Player) e;
-			if(PvpHandler.getPvpPlayer(damagee) == null)
-			{
-				PVPPlayer newPVP = new PVPPlayer(damagee);
-				PvpHandler.addPvpPlayer(newPVP);
-			}
+			
 			PVPPlayer PVPDamagee = PvpHandler.getPvpPlayer(damagee);
+			if(!PVPDamagee.isVulnerable())
+			{
+				event.setCancelled(true);
+				return;
+			}
 			if(event.getCause() == DamageCause.PROJECTILE)
 			{
 				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
@@ -290,16 +291,19 @@ public class DBZListener implements Listener
 	}
 	
 	@EventHandler 
-	public void damageCause(EntityDamageEvent event){
+	public void damageCause(EntityDamageEvent event)
+	{
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player)event.getEntity();
-			if(PvpHandler.getPvpPlayer(player) == null)
-			{
-				PVPPlayer newPVP = new PVPPlayer(player);
-				PvpHandler.addPvpPlayer(newPVP);
-			}
 			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			
+			if(!pvp.isVulnerable())
+			{
+				event.setCancelled(true);
+				return;
+			}
+			
 			if(event.getCause().equals(DamageCause.STARVATION))
 			{
 				event.setDamage(0);
