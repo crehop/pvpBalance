@@ -1,4 +1,6 @@
 package PvpBalance;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -267,9 +269,15 @@ public class PvpBalance extends JavaPlugin
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
 		{
 			ItemStack paper = new ItemStack(Material.PAPER);
-			ItemUtils.addLore(paper, "32157");
+			List<String> lore = new ArrayList<String>();
+			lore.add("Polishing Cloth " + ChatColor.MAGIC + " " + ArmorEffects.CODE_PAPER);
+			lore.add(ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			ItemUtils.setLore(paper, lore);
+			ItemUtils.setName(paper, ChatColor.GOLD + "Polishing Cloth");
 			player.getInventory().addItem(paper);
-			Bukkit.broadcastMessage("VERSION 1.5");
+			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided");
+			player.getInventory().addItem(paper);
+			player.sendMessage("VERSION 1.52");
 		}
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{
