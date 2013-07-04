@@ -358,7 +358,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				int damage = (int)(pvp.getMaxHealth() / 20) * event.getDamage();
+				int damage = LoadSave.Fall;;
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
 				if(pbdEvent.isCancelled())
