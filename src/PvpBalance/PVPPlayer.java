@@ -190,6 +190,7 @@ public class PVPPlayer
 	
 	public void sethealth(int health)
 	{
+		Date date = new Date();
 		if(pvpstats)
 		{
 			if(this.health > health)
@@ -215,14 +216,27 @@ public class PVPPlayer
 			{
 				health = this.maxHealth;
 			}
-			this.health = health;
+			if(health < this.health && (date.getTime()/1000) - this.lastDamage > 0.5D){
+				if(this.health - health > 50){
+					this.health = health;
+					lastDamage = (new Date().getTime()/1000);
+				}
+			}
+			if(health < this.health){
+				if(this.health - health < 50){
+					this.health = health;
+				}
+			}
+			if(health > this.health){
+				this.health = health;
+			}
 			if(this.health <= 0)
 			{
 				this.health = 0;
 			}
 			this.setProperHealth();
 		}
-		final int displayHealth = health;
+		final int displayHealth = this.health;
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
 		{
 			@Override
@@ -239,7 +253,7 @@ public class PVPPlayer
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			health = health - dmg;
+			this.sethealth(health - dmg);
 			if(this.health <= 0 && !this.isDead)
 			{
 				health = 0;
@@ -253,11 +267,11 @@ public class PVPPlayer
 		}
 		else
 		{
-			this.health = this.maxHealth;
+			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
-		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
-		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
+//		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
+//		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 	}
 	
 	public void tick()
