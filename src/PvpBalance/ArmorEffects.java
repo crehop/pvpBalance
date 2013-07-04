@@ -280,9 +280,11 @@ public class ArmorEffects
 			if(!ItemUtils.getLore(paper).get(0).toString().contains(CODE_PAPER))
 				continue;
 			
-			paper.setAmount(paper.getAmount() - 1);
-			if(paper.getAmount() <= 0)
+			if(paper.getAmount() <= 1)
 				player.getInventory().removeItem(paper);
+			else
+				paper.setAmount(paper.getAmount() - 1);
+			
 			
 			Color color = ItemUtils.getColor(item);
 			List<String> lore = new ArrayList<String>();
