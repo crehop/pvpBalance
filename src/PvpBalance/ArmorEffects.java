@@ -235,18 +235,18 @@ public class ArmorEffects
 		ItemStack item = null;
 		if(player.getItemInHand() == null)
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + "You arent holding anything in your hand please hold the item you wish to polish " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
 		}
 		item = player.getItemInHand();
 		if(item.getType() != Material.LEATHER_BOOTS && item.getType() != Material.LEATHER_CHESTPLATE && item.getType() != Material.LEATHER_HELMET && item.getType() != Material.LEATHER_LEGGINGS)
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding the right item please hold the EPIC armor you want to polish " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
 		}
 		if(ItemUtils.getColor(item).toString().contains("A06540"))
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You are not holding epic armor in your hand " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " This is normal leather... not Epic " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
 		}
 		if(player.isOp())
@@ -266,7 +266,7 @@ public class ArmorEffects
 		}
 		if(!player.getInventory().contains(Material.PAPER))
 		{
-			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth or are not holding the right item please say " + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
+			player.sendMessage(ChatColor.YELLOW + "[Armor Polish]:" + ChatColor.RED + " You did not have a Polishing Cloth" + ChatColor.GREEN + "" + ChatColor.BOLD + "/rules polish");
 			return;
 		}
 		for(ItemStack paper : player.getInventory())
@@ -280,11 +280,9 @@ public class ArmorEffects
 			if(!ItemUtils.getLore(paper).get(0).toString().contains(CODE_PAPER))
 				continue;
 			
-			if(paper.getAmount() <= 1)
+			paper.setAmount(paper.getAmount() - 1);
+			if(paper.getAmount() <= 0)
 				player.getInventory().removeItem(paper);
-			else
-				paper.setAmount(paper.getAmount() - 1);
-			
 			
 			Color color = ItemUtils.getColor(item);
 			List<String> lore = new ArrayList<String>();

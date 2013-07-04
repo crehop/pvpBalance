@@ -19,6 +19,7 @@ public class PVPPlayer
 	private double cooldown;
 	private double hitCoolDown;
 	private double combatCoolDown;
+	private double lastDamage;
 	private int hunger;
 	private int armorEventLastTick;
 	private boolean inCombat;
@@ -42,6 +43,7 @@ public class PVPPlayer
 		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
+		this.lastDamage = 0.0f;
 		colorUp = false;
 	}
 
@@ -53,6 +55,11 @@ public class PVPPlayer
 	public double getCombatCoolDown()
 	{
 		return combatCoolDown;
+	}
+	
+	public double getLasteDamage()
+	{
+		return lastDamage;
 	}
 	
 	public double getCooldown()
@@ -118,6 +125,11 @@ public class PVPPlayer
 	public void setCombatCoolDown(double combatCoolDown)
 	{
 		this.combatCoolDown = combatCoolDown;
+	}
+
+	public void setLastDamage(double lastDamage)
+	{
+		this.lastDamage = lastDamage;
 	}
 	
 	public void setHunger(int hunger)
@@ -323,7 +335,7 @@ public class PVPPlayer
 		{
 			if(inCombat)
 			{
-				int heal = 5;
+				int heal = 15;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())
@@ -332,7 +344,7 @@ public class PVPPlayer
 			}
 			else
 			{
-				int heal = 10;
+				int heal = 35;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())

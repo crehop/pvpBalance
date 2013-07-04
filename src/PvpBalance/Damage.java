@@ -41,7 +41,7 @@ public class Damage
 		}
 		else if(player.getItemInHand().getType() == Material.BOW)
 		{
-			damage += 200;
+			damage += 150;
 			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * LoadSave.Sharpness;
 		}
 		damage += player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL) * LoadSave.Sharpness;

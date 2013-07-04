@@ -43,7 +43,8 @@ public class DBZListener implements Listener
 {
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
-	private final double HITCOOLDOWN = 1.45D;
+	private final double HITCOOLDOWN = 2D;
+	private final int HEAL_POTION = 1500;
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
@@ -257,7 +258,7 @@ public class DBZListener implements Listener
 					PvpHandler.addPvpPlayer(newPVP);
 				}
 				PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
-				int heal = 700;
+				int heal = HEAL_POTION;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, event.getRegainReason());
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())
@@ -357,7 +358,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				int damage = LoadSave.Fall;
+				int damage = (int)(pvp.getMaxHealth() / 20) * event.getDamage();
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
 				if(pbdEvent.isCancelled())
