@@ -83,14 +83,14 @@ public class PVPPlayer
 		return this.healthLastTick;
 	}
 	
-	public double getMaxHealth()
+	public int getMaxHealth()
 	{
-		return this.maxHealth;
+		return (int)this.maxHealth;
 	}
 	
-	public double gethealth()
+	public int gethealth()
 	{
-		return this.health;
+		return (int)this.health;
 	}
 	
 	public int getHunger()
