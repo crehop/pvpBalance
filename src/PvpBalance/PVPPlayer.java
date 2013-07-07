@@ -13,9 +13,9 @@ import Event.PBEntityRegainHealthEvent;
 public class PVPPlayer
 {
 	private Player player;
-	private int health;
-	private int healthLastTick;
-	private int maxHealth;
+	private double health;
+	private double healthLastTick;
+	private double maxHealth;
 	private double cooldown;
 	private double hitCoolDown;
 	private double combatCoolDown;
@@ -78,17 +78,17 @@ public class PVPPlayer
 		return colorUp;
 	}
 	
-	public int getHealthLastTick()
+	public double getHealthLastTick()
 	{
 		return this.healthLastTick;
 	}
 	
-	public int getMaxHealth()
+	public double getMaxHealth()
 	{
 		return this.maxHealth;
 	}
 	
-	public int gethealth()
+	public double gethealth()
 	{
 		return this.health;
 	}
@@ -166,7 +166,7 @@ public class PVPPlayer
 		colorUp = value;
 	}
 	
-	public void setMaxHealth(int maxHealth)
+	public void setMaxHealth(double maxHealth)
 	{
 		if(this.health == this.maxHealth)
 		{
@@ -189,21 +189,21 @@ public class PVPPlayer
 		}
 	}
 	
-	public void sethealth(int health)
+	public void sethealth(double maxHealth2)
 	{
 		if(pvpstats)
 		{
-			if(this.health > health)
+			if(this.health > maxHealth2)
 			{
-				int decreasedBy = this.health - health;
+				double decreasedBy = this.health - maxHealth2;
 				if(decreasedBy > 10)
 				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
 				}
 			}
-			else if(this.health < health)
+			else if(this.health < maxHealth2)
 			{
-				int increasedBy = health - this.health;
+				double increasedBy = maxHealth2 - this.health;
 				if(increasedBy > 10)
 				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.GREEN + "+ " + increasedBy);
@@ -212,27 +212,27 @@ public class PVPPlayer
 		}
 		if(this.player.getGameMode() == GameMode.SURVIVAL)
 		{
-			if(health > this.maxHealth)
+			if(maxHealth2 > this.maxHealth)
 			{
-				health = this.maxHealth;
+				maxHealth2 = this.maxHealth;
 			}
-			if(health < this.health)
+			if(maxHealth2 < this.health)
 			{
-				if(this.health - health > 50)
+				if(this.health - maxHealth2 > 50)
 				{
-					this.health = health;
+					this.health = maxHealth2;
 				}
 			}
-			if(health < this.health)
+			if(maxHealth2 < this.health)
 			{
-				if(this.health - health < 50)
+				if(this.health - maxHealth2 < 50)
 				{
-					this.health = health;
+					this.health = maxHealth2;
 				}
 			}
-			else if(health > this.health)
+			else if(maxHealth2 > this.health)
 			{
-				this.health = health;
+				this.health = maxHealth2;
 			}
 			if(this.health <= 0)
 			{
@@ -240,28 +240,28 @@ public class PVPPlayer
 			}
 			this.setProperHealth();
 		}
-		final int displayHealth = this.health;
+		final double displayHealth = this.health;
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + displayHealth);
+				String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)displayHealth);
 				Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 			}
 		},1L);
 		
 	}
 	
-	public void Damage(int dmg)
+	public void Damage(double dealtDamage)
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			this.sethealth(health - dmg);
+			this.sethealth(health - dealtDamage);
 			if(this.health <= 0 && !this.isDead)
 			{
 				health = 0;
-				this.player.setHealth(0);
+				this.player.setHealth(0f);
 				this.isDead = true;
 			}
 			if(healthLastTick > health)
@@ -305,7 +305,7 @@ public class PVPPlayer
 		}
 		if(this.health <= 0 && this.isDead != true)
 		{
-			this.player.setHealth(0);
+			this.player.setHealth(0f);
 			this.isDead = true;
 		}
 		setProperHealth();
@@ -381,7 +381,7 @@ public class PVPPlayer
 	{
 		if(this.isDead == false)
 		{
-			int realHealth = health/(maxHealth/20);
+			double realHealth = health/(maxHealth/20);
 			if(realHealth <= 1)
 			{
 				realHealth = 1;
