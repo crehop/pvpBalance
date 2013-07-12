@@ -390,6 +390,26 @@ public class DBZListener implements Listener
 				pvp.Damage(pbdEvent.getDamage());
 				event.setDamage(0f);
 			}
+			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
+			{
+				int damage = LoadSave.Explosion;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				Bukkit.getPluginManager().callEvent(pbdEvent);
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
+				event.setDamage(0f);
+			}
+			else if(event.getCause().equals(DamageCause.LIGHTNING))
+			{
+				int damage = 100;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				Bukkit.getPluginManager().callEvent(pbdEvent);
+				if(pbdEvent.isCancelled())
+					return;
+				pvp.Damage(pbdEvent.getDamage());
+				event.setDamage(0f);
+			}
 		}
 	}
 	

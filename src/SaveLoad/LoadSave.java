@@ -20,7 +20,7 @@ public class LoadSave
 	
 	public final int Diamond, Iron, Gold, Stone, Wood, Normal;
 	public final int Sharpness, Multi;
-	public final int Firetick, Voide, Contact, Drowning, Poison, Fall, Wither;
+	public final int Firetick, Voide, Contact, Drowning, Poison, Fall, Wither, Explosion, Lightning;
 	
 	public LoadSave(PvpBalance plugin)
 	{
@@ -43,6 +43,8 @@ public class LoadSave
 		Poison = plugin.getSDamage().getCustomConfig().getInt("Natural.Poison");
 		Fall = plugin.getSDamage().getCustomConfig().getInt("Natural.Fall");
 		Wither = plugin.getSDamage().getCustomConfig().getInt("Natural.Wither");
+		Explosion = plugin.getSDamage().getCustomConfig().getInt("Natural.Explosion");
+		Lightning = plugin.getSDamage().getCustomConfig().getInt("Natural.Lightning");
 		
 		
 		Dhelmet = plugin.getProtection().getCustomConfig().getInt("Diamond.Helmet");

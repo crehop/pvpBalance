@@ -15,5 +15,7 @@ Natural:
   Poison: 40
   Fall: 200
   Wither: 75
+  Explosion: 100
+  Lightning: 100
 Mobs:
-  Multiplier: 10
+  Multiplier: 15
