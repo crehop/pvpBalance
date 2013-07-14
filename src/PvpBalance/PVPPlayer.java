@@ -28,7 +28,7 @@ public class PVPPlayer
 	private boolean god;
 	private boolean pvpstats;
 	private boolean colorUp;
-	private final double INVULNERABILITY_TIMER = 0.5D;
+	//private final double INVULNERABILITY_TIMER = 1D;
 	
 	public PVPPlayer(Player player)
 	{
@@ -189,21 +189,21 @@ public class PVPPlayer
 		}
 	}
 	
-	public void sethealth(double maxHealth2)
+	public void sethealth(double health)
 	{
 		if(pvpstats)
 		{
-			if(this.health > maxHealth2)
+			if(this.health > health)
 			{
-				double decreasedBy = this.health - maxHealth2;
+				double decreasedBy = this.health - health;
 				if(decreasedBy > 10)
 				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.RED + "- " + decreasedBy);
 				}
 			}
-			else if(this.health < maxHealth2)
+			else if(this.health < health)
 			{
-				double increasedBy = maxHealth2 - this.health;
+				double increasedBy = health - this.health;
 				if(increasedBy > 10)
 				{
 					player.sendMessage(ChatColor.YELLOW + "[HEALTH]: " + ChatColor.GREEN + "+ " + increasedBy);
@@ -212,27 +212,17 @@ public class PVPPlayer
 		}
 		if(this.player.getGameMode() == GameMode.SURVIVAL)
 		{
-			if(maxHealth2 > this.maxHealth)
+			if(health > this.maxHealth)
 			{
-				maxHealth2 = this.maxHealth;
+				health = this.maxHealth;
 			}
-			if(maxHealth2 < this.health)
+			if(health < this.health)
 			{
-				if(this.health - maxHealth2 > 50)
-				{
-					this.health = maxHealth2;
-				}
+				this.health = health;
 			}
-			if(maxHealth2 < this.health)
+			if(health > this.health)
 			{
-				if(this.health - maxHealth2 < 50)
-				{
-					this.health = maxHealth2;
-				}
-			}
-			else if(maxHealth2 > this.health)
-			{
-				this.health = maxHealth2;
+				this.health = health;
 			}
 			if(this.health <= 0)
 			{
@@ -252,8 +242,7 @@ public class PVPPlayer
 		},1L);
 		
 	}
-	
-	public void Damage(double dealtDamage)
+	public void Damage(int dealtDamage)
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
@@ -275,8 +264,7 @@ public class PVPPlayer
 			player.setFoodLevel(20);
 		}
 		lastDamage = (new Date().getTime() / 1000);
-//		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + health);
-//		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
+		
 	}
 	
 	public void tick()
@@ -305,6 +293,11 @@ public class PVPPlayer
 		}
 		if(this.health <= 0 && this.isDead != true)
 		{
+
+			if(player.getFireTicks() > 0){
+				player.setFireTicks(0);
+			}
+			player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
 			this.player.setHealth(0f);
 			this.isDead = true;
 		}
@@ -416,7 +409,12 @@ public class PVPPlayer
 
 	public boolean isVulnerable()
 	{
-		Date date = new Date();
-		return ((date.getTime() / 1000) - lastDamage) > INVULNERABILITY_TIMER ? true:false;
+		if(player.getNoDamageTicks() <= 0){
+				return true;
+		}
+		return false;
+		//Date date = new Date();
+		//boolean canhit = (date.getTime() / 1000) - lastDamage > INVULNERABILITY_TIMER ? true:false;
+		//return canhit;
 	}
 }

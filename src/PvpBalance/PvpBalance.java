@@ -25,6 +25,7 @@ public class PvpBalance extends JavaPlugin
 {
 	public static final Logger logger = Logger.getLogger("Minecraft");
     public static PvpBalance plugin;
+	public LoadSave LoadSave;
 	private final float SPEED = 0.2F;
 	private final int AMOUNT = 300;
 	private static int everyOther = 0;
@@ -58,7 +59,7 @@ public class PvpBalance extends JavaPlugin
 	 	
 	 	sDamage = new Save(this, "Damage.yml");
 	 	protection = new Save(this, "Protection.yml");
-	 	LoadSave loadSave  = new LoadSave(this);
+	 	LoadSave  = new LoadSave(this);
 	 	
 	 	factions = (P) Bukkit.getPluginManager().getPlugin("Factions");
 	 	if(factions != null)
@@ -68,8 +69,8 @@ public class PvpBalance extends JavaPlugin
 	 	
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
 	 	
-	 	Damage.LoadSave = loadSave;
-	 	getServer().getPluginManager().registerEvents(new DBZListener(this, loadSave), this);
+	 	Damage.LoadSave = LoadSave;
+	 	getServer().getPluginManager().registerEvents(new DBZListener(this, LoadSave), this);
 	 	
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 
@@ -278,6 +279,7 @@ public class PvpBalance extends JavaPlugin
 			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided");
 			player.getInventory().addItem(paper);
 			player.sendMessage("VERSION 1.52");
+			SaveLoad.LoadSave.reloadValues(this, player);
 		}
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{
