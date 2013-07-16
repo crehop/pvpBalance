@@ -119,13 +119,14 @@ public class DBZListener implements Listener
 				{
 					Date date = new Date();
 					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
-					if(((date.getTime() / 1000) - PVPdamager.getHitCooldown()) >= SaveLoad.LoadSave.HitCooldown)
+					if(PVPDamagee.isVulnerable())
 					{
-						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE))
+						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE)){
 							dealtDamage = 20;
-						else
+						}
+						else{
 							dealtDamage = Damage.calcDamage(damager) + rand.nextInt(Damage.calcDamage(damager) / 10);
-						
+						}
 						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
 						Bukkit.getPluginManager().callEvent(pbdEvent);
 						if(!pbdEvent.isCancelled())

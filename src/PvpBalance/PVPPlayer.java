@@ -246,12 +246,14 @@ public class PVPPlayer
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			this.sethealth(health - dealtDamage);
-			if(this.health <= 0 && !this.isDead)
-			{
-				health = 0;
-				this.player.setHealth(0f);
-				this.isDead = true;
+			if(this.isVulnerable()){
+				this.sethealth(health - dealtDamage);
+				if(this.health <= 0 && !this.isDead){
+					health = 0;
+					this.player.setHealth(0f);
+					this.isDead = true;
+				}
+				lastDamage = (new Date().getTime() / 1000);
 			}
 			if(healthLastTick > health)
 			{
@@ -263,7 +265,7 @@ public class PVPPlayer
 			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
-		lastDamage = (new Date().getTime() / 1000);
+
 		
 	}
 	
