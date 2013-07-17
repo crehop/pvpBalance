@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -98,12 +99,29 @@ public class DBZListener implements Listener
 				event.setCancelled(true);
 				return;
 			}
-			else if(event.getCause() == DamageCause.PROJECTILE)
+			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
 				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
 					return;
+				}
+				if(event.getDamager().getType() == EntityType.ARROW){
+					Arrow arrow = (Arrow)event.getDamager();
+					Entity damager = arrow.getShooter();
+					if(damager instanceof Player && event.getEntity() instanceof Player){
+						dealtDamage = SaveLoad.LoadSave.Bow;
+					}
+					if(!(arrow.getShooter() instanceof Player)){
+						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
+					}
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(!pbdEvent.isCancelled())
+					{
+						dealtDamage = pbdEvent.getDamage();
+						PVPDamagee.Damage((int)dealtDamage);
+					}
 				}
 			}
 			else if(event.getDamager() instanceof Player && canhit && event.getDamage() > 0)

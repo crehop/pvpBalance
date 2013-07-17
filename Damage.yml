@@ -1,5 +1,6 @@
 Weapon:
   HitCooldown: 1.5
+  Bow: 300
   Diamond: 100
   Iron: 85
   Gold: 70

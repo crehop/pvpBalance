@@ -411,7 +411,7 @@ public class PVPPlayer
 
 	public boolean isVulnerable()
 	{
-		if(player.getNoDamageTicks() <= 0){
+		if(player.getNoDamageTicks() <= 10){
 				return true;
 		}
 		return false;

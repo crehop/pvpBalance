@@ -8,6 +8,8 @@ import PvpBalance.PvpBalance;
 public class LoadSave
 {
 	
+	
+
 	PvpBalance plugin;
 	
 	//Protection
@@ -22,7 +24,7 @@ public class LoadSave
 	//Damage
 	
 	public static double HitCooldown = 0;
-	public static int Diamond = 0, Iron = 0, Gold = 0, Stone = 0, Wood = 0, Normal = 0;
+	public static int Diamond = 0, Iron = 0, Gold = 0, Stone = 0, Wood = 0,Bow = 0, Normal = 0;
 	public static int Sharpness = 0, Multi = 0, Explosion_Mob = 0;
 	public static int Firetick = 0, Voide = 0, Contact = 0, Drowning = 0, Poison = 0, Fall = 0, Wither = 0, Explosion = 0, Lightning = 0;
 	
@@ -30,6 +32,7 @@ public class LoadSave
 	{
 		this.plugin = plugin;
 		
+		Bow = plugin.getSDamage().getCustomConfig().getInt("Weapon.Bow");
 		Diamond = plugin.getSDamage().getCustomConfig().getInt("Weapon.Diamond");
 		Iron = plugin.getSDamage().getCustomConfig().getInt("Weapon.Iron");
 		Gold = plugin.getSDamage().getCustomConfig().getInt("Weapon.Gold");
@@ -89,6 +92,8 @@ public class LoadSave
 	}
 	public static void reloadValues(PvpBalance plugin, Player player)
 	{
+		Bow = plugin.getSDamage().getCustomConfig().getInt("Weapon.Bow");
+		player.sendMessage(ChatColor.DARK_GREEN + "Bow Base: " + ChatColor.RED + LoadSave.Bow);
 		Diamond = plugin.getSDamage().getCustomConfig().getInt("Weapon.Diamond");
 		player.sendMessage(ChatColor.DARK_GREEN + "Diamond Sword Base: " + ChatColor.RED + LoadSave.Diamond);
 		Iron = plugin.getSDamage().getCustomConfig().getInt("Weapon.Iron");
