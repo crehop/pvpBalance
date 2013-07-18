@@ -12,8 +12,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.SmallFireball;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -101,7 +103,43 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
-				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
+				if((event.getDamager().getType() == EntityType.SMALL_FIREBALL)){
+					dealtDamage += 50;
+					if(CombatUtil.preventDamageCall(((SmallFireball)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
+					{
+						event.setCancelled(true);
+						return;
+					}
+					else{
+						Entity damager = ((SmallFireball)event.getDamager()).getShooter();
+						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
+						Bukkit.getPluginManager().callEvent(pbdEvent);
+						if(!pbdEvent.isCancelled())
+						{
+							dealtDamage = pbdEvent.getDamage();
+							PVPDamagee.Damage((int)dealtDamage);
+						}
+					}
+				}
+				else if(event.getDamager().getType() == EntityType.FIREBALL){
+					dealtDamage += 150;
+					if(CombatUtil.preventDamageCall(((Fireball)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
+					{
+						event.setCancelled(true);
+						return;
+					}
+					else{
+						Entity damager = ((Fireball)event.getDamager()).getShooter();
+						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
+						Bukkit.getPluginManager().callEvent(pbdEvent);
+						if(!pbdEvent.isCancelled())
+						{
+							dealtDamage = pbdEvent.getDamage();
+							PVPDamagee.Damage((int)dealtDamage);
+						}
+					}
+				}
+				else if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
 					return;
