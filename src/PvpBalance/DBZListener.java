@@ -25,6 +25,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -42,6 +43,7 @@ import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import Event.PBEntityDamageEntityEvent;
 import Event.PBEntityDamageEvent;
+import Event.PBEntityDeathEvent;
 import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
 
@@ -503,15 +505,26 @@ public class DBZListener implements Listener
 	}
 	
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event){
+	public void onPlayerDeath(PlayerDeathEvent event)
+	{
 		Player player = event.getEntity();
-		if(PvpHandler.getPvpPlayer(player) == null){
+		if(PvpHandler.getPvpPlayer(player) == null)
+		{
 			PVPPlayer newPVP = new PVPPlayer(player);
 			PvpHandler.addPvpPlayer(newPVP);
 		}
-		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(event.getEntity().getPlayer());
-		PVPPlayer.setIsDead(true);
+		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(event.getEntity().getPlayer());
+		pvpPlayer.setIsDead(true);
 	}
+	
+	@EventHandler
+	public void onEntityDeathEvent(EntityDeathEvent event)
+	{
+		PBEntityDeathEvent pbede = new PBEntityDeathEvent(event.getEntity(), event.getDrops(), event.getDroppedExp());
+		Bukkit.getPluginManager().callEvent(pbede);
+		event.setDroppedExp(pbede.getDropExp());
+	}
+	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event)
 	{
