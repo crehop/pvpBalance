@@ -256,7 +256,6 @@ public class DBZListener implements Listener
 					pvpDamagee.Damage((int)dealtDamage ,event.getEntity());
 					if(PvpBalance.plugin.isDebug())
 					{
-						Bukkit.broadcastMessage(ChatColor.RED + " DAMAGE DEALT: " + dealtDamage);
 					}
 				}
 			}
@@ -395,7 +394,6 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{
-				Bukkit.broadcastMessage("CONFIRM FIRE TICK");
 				int damage = SaveLoad.LoadSave.Firetick;
 				dealt = dealt + damage;
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());

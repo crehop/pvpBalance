@@ -356,11 +356,6 @@ public class PVPPlayer
 		}
 		if(PvpBalance.plugin.isDebug())
 		{
-			Bukkit.broadcastMessage("Cooldown: " + cooldown + " this.canRegen : " + this.canRegen + " MaxHealth: " + maxHealth + " Health: " + health );
-			Bukkit.broadcastMessage("HUNGER LEVEL" + hunger);
-			Bukkit.broadcastMessage(""+player.getExhaustion());
-			Bukkit.broadcastMessage("HITCoolDown:" + hitCoolDown);
-			
 		}
 		if(health < maxHealth && this.canRegen)
 		{
