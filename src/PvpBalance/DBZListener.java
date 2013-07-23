@@ -161,6 +161,12 @@ public class DBZListener implements Listener
 						return;
 					}
 					dealtDamage = pbdEvent.getDamage();
+					if(arrow.getShooter() instanceof Player){
+						PVPPlayer PVPdamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+						PVPdamager.setCombatCoolDown(80);
+					}
+
+					pvpDamagee.setCombatCoolDown(80);
 					pvpDamagee.Damage((int)dealtDamage , damager);
 				}
 			}
@@ -199,8 +205,8 @@ public class DBZListener implements Listener
 						String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + pvpDamagee.gethealth();
 						Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 						PVPdamager.setHitCoolDown(SaveLoad.LoadSave.HitCooldown);
-						PVPdamager.setCombatCoolDown(60);
-						pvpDamagee.setCombatCoolDown(60);
+						PVPdamager.setCombatCoolDown(80);
+						pvpDamagee.setCombatCoolDown(80);
 						if(PvpBalance.plugin.isDebug() || PVPdamager.isPvpstats())
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
@@ -220,6 +226,7 @@ public class DBZListener implements Listener
 				if(event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player)
 				{
 					Player damager = (Player)((Arrow)event.getDamager()).getShooter();
+					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
 					//dealtDamage = rawDamage * LoadSave.Diamond;
 					dealtDamage = Damage.calcDamage(damager);
 					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
@@ -231,6 +238,8 @@ public class DBZListener implements Listener
 					}
 					dealtDamage = pbdEvent.getDamage();
 					pvpDamagee.Damage((int)dealtDamage ,event.getEntity());
+					PVPdamager.setCombatCoolDown(80);
+					pvpDamagee.setCombatCoolDown(80);
 					event.setDamage(0D);
 				}
 				else
