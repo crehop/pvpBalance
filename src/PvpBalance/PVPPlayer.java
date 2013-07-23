@@ -1,9 +1,9 @@
 package PvpBalance;
-import java.util.Date;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -17,9 +17,8 @@ public class PVPPlayer
 	private double healthLastTick;
 	private double maxHealth;
 	private double cooldown;
-	private double hitCoolDown;
-	private double combatCoolDown;
-	private double lastDamage;
+	private int hitCoolDown;
+	private int combatCoolDown;
 	private int hunger;
 	private int armorEventLastTick;
 	private boolean inCombat;
@@ -44,7 +43,6 @@ public class PVPPlayer
 		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
-		this.lastDamage = 0.0D;
 		colorUp = false;
 	}
 
@@ -56,11 +54,6 @@ public class PVPPlayer
 	public double getCombatCoolDown()
 	{
 		return combatCoolDown;
-	}
-	
-	public double getLasteDamage()
-	{
-		return lastDamage;
 	}
 	
 	public double getCooldown()
@@ -123,14 +116,9 @@ public class PVPPlayer
 		this.armorEventLastTick = armorEventLastTick;
 	}
 	
-	public void setCombatCoolDown(double combatCoolDown)
+	public void setCombatCoolDown(int combatCoolDown)
 	{
 		this.combatCoolDown = combatCoolDown;
-	}
-
-	public void setLastDamage(double lastDamage)
-	{
-		this.lastDamage = lastDamage;
 	}
 	
 	public void setHunger(int hunger)
@@ -146,7 +134,7 @@ public class PVPPlayer
 		
 	}
 	
-	public void setHitCoolDown(double hitCoolDown)
+	public void setHitCoolDown(int hitCoolDown)
 	{
 		this.hitCoolDown = hitCoolDown;
 	}
@@ -224,40 +212,39 @@ public class PVPPlayer
 			{
 				this.health = health;
 			}
-			if(this.health <= 0)
-			{
-				this.health = 0;
+			if(this.health <= 0){
+				health = 0;
+				this.player.setHealth(0f);
+				this.isDead = true;
+				this.combatCoolDown = 0;
+				this.hitCoolDown = 0;
 			}
-			this.setProperHealth();
+			else{
+				this.setProperHealth();
+			}
+			
 		}
-		final double displayHealth = this.health;
-		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)displayHealth);
-				Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
-			}
-		},1L);
 		
 	}
-	public void Damage(int dealtDamage)
+	public void Damage(int dealtDamage,Entity damager)
 	{
-		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
-		{
-			if(this.isVulnerable()){
-				this.sethealth(health - dealtDamage);
-				if(this.health <= 0 && !this.isDead){
-					health = 0;
-					this.player.setHealth(0f);
-					this.isDead = true;
+
+		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god){
+			if(damager instanceof Player){
+				PVPPlayer PVPDamager = PvpHandler.getPvpPlayer((Player)damager);
+				if(PVPDamager.canHit() == false){
+					
 				}
-				lastDamage = (new Date().getTime() / 1000);
+				else{
+					this.sethealth(health - dealtDamage);
+				}
+				
 			}
 			if(healthLastTick > health)
 			{
-				cooldown = (new Date().getTime()/1000);
+				if(this.combatCoolDown < 40){
+					this.combatCoolDown = this.combatCoolDown + 20;
+				}
 			}
 		}
 		else
@@ -265,13 +252,21 @@ public class PVPPlayer
 			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
-
-		
 	}
 	
 	public void tick()
 	{
-		Date date = new Date();
+		if(this.combatCoolDown > 0){
+			this.combatCoolDown--;
+		}
+		if(this.cooldown > 0){
+			this.cooldown--;
+		}
+		if(this.hitCoolDown > 0){
+			this.hitCoolDown--;
+		}
+		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
 			this.health = this.maxHealth;
@@ -304,22 +299,19 @@ public class PVPPlayer
 			this.isDead = true;
 		}
 		setProperHealth();
-		if((date.getTime()/1000) - cooldown < 15)
+		if(this.combatCoolDown > 0)
 		{
 			this.canRegen = false;
 		}
-		else
+		else{
 			canRegen = true;
-		if(player.getFoodLevel() == 0)
-		{
-			this.canRegen = false;
 		}
 		this.hunger = this.player.getFoodLevel();
 		if(this.hunger < 1 && this.health > 100)
 		{
 			this.sethealth(this.gethealth() - 10);
 		}
-		if((date.getTime() / 1000) - combatCoolDown >= 30)
+		if(combatCoolDown <= 1)
 		{
 			if(inCombat)
 			{
@@ -409,12 +401,12 @@ public class PVPPlayer
 		inCombat = value;
 	}
 
-	public boolean isVulnerable()
+	public boolean canHit()
 	{
-		if(player.getNoDamageTicks() <= 10){
-				return true;
+		if(this.hitCoolDown > 0){
+				return false;
 		}
-		return false;
+		return true;
 		//Date date = new Date();
 		//boolean canhit = (date.getTime() / 1000) - lastDamage > INVULNERABILITY_TIMER ? true:false;
 		//return canhit;

@@ -23,7 +23,7 @@ public class LoadSave
 	
 	//Damage
 	
-	public static double HitCooldown = 0;
+	public static int HitCooldown = 0;
 	public static int Diamond = 0, Iron = 0, Gold = 0, Stone = 0, Wood = 0,Bow = 0, Normal = 0;
 	public static int Sharpness = 0, Multi = 0, Explosion_Mob = 0;
 	public static int Firetick = 0, Voide = 0, Contact = 0, Drowning = 0, Poison = 0, Fall = 0, Wither = 0, Explosion = 0, Lightning = 0;
@@ -39,7 +39,7 @@ public class LoadSave
 		Stone = plugin.getSDamage().getCustomConfig().getInt("Weapon.Stone");
 		Wood = plugin.getSDamage().getCustomConfig().getInt("Weapon.Wood");
 		Normal = plugin.getSDamage().getCustomConfig().getInt("Weapon.Normal");
-		HitCooldown = plugin.getSDamage().getCustomConfig().getDouble("Weapon.HitCooldown");
+		HitCooldown = plugin.getSDamage().getCustomConfig().getInt("Weapon.HitCooldown");
 		
 		
 		Sharpness = plugin.getSDamage().getCustomConfig().getInt("Enchant.Sharpness");
@@ -106,7 +106,7 @@ public class LoadSave
 		player.sendMessage(ChatColor.DARK_GREEN + "Wooden Sword Base: " + ChatColor.RED + LoadSave.Wood);
 		Normal = plugin.getSDamage().getCustomConfig().getInt("Weapon.Normal");
 		player.sendMessage(ChatColor.DARK_GREEN + "Punch Base: " + ChatColor.RED + LoadSave.Normal);
-		HitCooldown = plugin.getSDamage().getCustomConfig().getDouble("Weapon.HitCooldown");
+		HitCooldown = plugin.getSDamage().getCustomConfig().getInt("Weapon.HitCooldown");
 		
 		
 		Sharpness = plugin.getSDamage().getCustomConfig().getInt("Enchant.Sharpness");

@@ -179,7 +179,7 @@ public class PvpBalance extends JavaPlugin
 		    }
 		    else if(everyOther == 2)
 		    {
-		    	everyOther = 0;
+		    	everyOther = 3;
 		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
@@ -194,8 +194,16 @@ public class PvpBalance extends JavaPlugin
 					}
 				}
 		    }
+		    else if(everyOther == 3)
+		    {
+		    	everyOther = 4;
+		    }
+		    else if(everyOther == 4)
+		    {
+		    	everyOther = 0;
+		    }
 		}
-	}, 0L, 3L);
+	}, 0L, 1L);
 		
 	 	logger.info(pdfFile.getName() + " Has Been Enabled!!");
  	}
