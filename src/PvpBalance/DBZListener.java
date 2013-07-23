@@ -42,6 +42,7 @@ import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import Event.PBEntityDamageEntityEvent;
 import Event.PBEntityDamageEvent;
+import Event.PBEntityDeathEvent;
 import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
 
@@ -98,53 +99,40 @@ public class DBZListener implements Listener
 			PVPPlayer pvpDamagee = PvpHandler.getPvpPlayer(damagee);
 			if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
-				if((event.getDamager().getType() == EntityType.SMALL_FIREBALL)){
-					dealtDamage += 75;
-					if(CombatUtil.preventDamageCall(((SmallFireball)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
-					{
-						event.setCancelled(true);
-						return;
-					}
-					else
-					{
-						Entity damager = ((SmallFireball)event.getDamager()).getShooter();
-						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
-						Bukkit.getPluginManager().callEvent(pbdEvent);
-						if(pbdEvent.isCancelled())
-						{
-							event.setCancelled(true);
-							return;
-						}
-						dealtDamage = pbdEvent.getDamage();
-						pvpDamagee.Damage((int)dealtDamage, event.getEntity());
-					}
-				}
-				else if(event.getDamager().getType() == EntityType.FIREBALL){
-					dealtDamage += 175;
-					if(CombatUtil.preventDamageCall(((Fireball)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
-					{
-						event.setCancelled(true);
-						return;
-					}
-					else{
-						Entity damager = ((Fireball)event.getDamager()).getShooter();
-						PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
-						Bukkit.getPluginManager().callEvent(pbdEvent);
-						if(pbdEvent.isCancelled())
-						{
-							event.setCancelled(true);
-							return;
-						}
-						dealtDamage = pbdEvent.getDamage();
-						pvpDamagee.Damage((int)dealtDamage ,event.getEntity() );
-					}
-				}
-				else if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
+				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) || !DungeonAPI.canhit(event))
 				{
 					event.setCancelled(true);
 					return;
 				}
-				if(event.getDamager().getType() == EntityType.ARROW){
+				else if((event.getDamager().getType() == EntityType.SMALL_FIREBALL))
+				{
+					Entity damager = ((SmallFireball)event.getDamager()).getShooter();
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(pbdEvent.isCancelled())
+					{
+						event.setCancelled(true);
+						return;
+					}
+					dealtDamage = pbdEvent.getDamage();
+					pvpDamagee.Damage((int)dealtDamage, event.getEntity());
+				}
+				else if(event.getDamager().getType() == EntityType.FIREBALL)
+				{
+					dealtDamage += 175;
+					Entity damager = ((Fireball)event.getDamager()).getShooter();
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(pbdEvent.isCancelled())
+					{
+						event.setCancelled(true);
+						return;
+					}
+					dealtDamage = pbdEvent.getDamage();
+					pvpDamagee.Damage((int)dealtDamage ,event.getEntity());
+				}
+				else if(event.getDamager().getType() == EntityType.ARROW)
+				{
 					Arrow arrow = (Arrow)event.getDamager();
 					Entity damager = arrow.getShooter();
 					if(damager instanceof Player && event.getEntity() instanceof Player){
@@ -161,9 +149,10 @@ public class DBZListener implements Listener
 						return;
 					}
 					dealtDamage = pbdEvent.getDamage();
-					if(arrow.getShooter() instanceof Player){
-						PVPPlayer PVPdamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
-						PVPdamager.setCombatCoolDown(80);
+					if(arrow.getShooter() instanceof Player)
+					{
+						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+						pvpDamager.setCombatCoolDown(80);
 					}
 
 					pvpDamagee.setCombatCoolDown(80);
@@ -173,7 +162,7 @@ public class DBZListener implements Listener
 			else if(event.getDamager() instanceof Player && canhit && event.getDamage() > 0)
 			{
 				Player damager = (Player)event.getDamager();
-				PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
+				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 				boolean faction = true;
 				if(plugin.hasFaction())
 				{
@@ -181,7 +170,7 @@ public class DBZListener implements Listener
 				}
 				if(!CombatUtil.preventDamageCall(damager, damagee) && DungeonAPI.canhit(event) && faction)
 				{
-					if(PVPdamager.canHit())
+					if(pvpDamager.canHit())
 					{
 						if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE)){
 							dealtDamage = 20;
@@ -201,15 +190,16 @@ public class DBZListener implements Listener
 							
 						String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + pvpDamagee.gethealth();
 						Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
-						PVPdamager.setHitCoolDown(SaveLoad.LoadSave.HitCooldown);
-						PVPdamager.setCombatCoolDown(80);
+						pvpDamager.setHitCoolDown(SaveLoad.LoadSave.HitCooldown);
+						pvpDamager.setCombatCoolDown(80);
 						pvpDamagee.setCombatCoolDown(80);
-						if(PvpBalance.plugin.isDebug() || PVPdamager.isPvpstats())
+						if(PvpBalance.plugin.isDebug() || pvpDamager.isPvpstats())
 						{
 							damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
 						}
 					}
-					else{
+					else
+					{
 						event.setCancelled(true);
 					}
 				}
@@ -223,7 +213,7 @@ public class DBZListener implements Listener
 				if(event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player)
 				{
 					Player damager = (Player)((Arrow)event.getDamager()).getShooter();
-					PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
+					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 					//dealtDamage = rawDamage * LoadSave.Diamond;
 					dealtDamage = Damage.calcDamage(damager);
 					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
@@ -235,7 +225,7 @@ public class DBZListener implements Listener
 					}
 					dealtDamage = pbdEvent.getDamage();
 					pvpDamagee.Damage((int)dealtDamage ,event.getEntity());
-					PVPdamager.setCombatCoolDown(80);
+					pvpDamager.setCombatCoolDown(80);
 					pvpDamagee.setCombatCoolDown(80);
 					event.setDamage(0D);
 				}
@@ -462,8 +452,15 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				int damage = SaveLoad.LoadSave.Fall;;
+				int damage = SaveLoad.LoadSave.Fall;
 				dealt = dealt + damage;
+				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
+				Bukkit.getPluginManager().callEvent(pbdEvent);
+				if(pbdEvent.isCancelled())
+				{
+					event.setCancelled(true);
+					return;
+				}
 				pvp.Damage(damage);
 				event.setDamage(0f);
 			}
@@ -557,16 +554,26 @@ public class DBZListener implements Listener
 	}
 	
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event)
+	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
 		Player player = event.getEntity();
-		if(PvpHandler.getPvpPlayer(player) == null)
+		/*if(PvpHandler.getPvpPlayer(player) == null)
 		{
 			PVPPlayer newPVP = new PVPPlayer(player);
 			PvpHandler.addPvpPlayer(newPVP);
-		}
-		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(event.getEntity().getPlayer());
+		}*/
+		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		pvpPlayer.setIsDead(true);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final PBEntityDeathEvent pbede = new PBEntityDeathEvent(event.getEntity(), event.getDrops(), event.getDroppedExp());
+				Bukkit.getPluginManager().callEvent(pbede);
+				event.setDroppedExp(pbede.getDropExp());
+			}
+		},1L);
 	}
 	
 	@EventHandler

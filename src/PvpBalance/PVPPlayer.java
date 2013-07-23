@@ -237,7 +237,8 @@ public class PVPPlayer
 			}
 			if(healthLastTick > health)
 			{
-				if(this.combatCoolDown < 40){
+				if(this.combatCoolDown < 40)
+				{
 					this.combatCoolDown = this.combatCoolDown + 20;
 				}
 			}
@@ -248,14 +249,17 @@ public class PVPPlayer
 			player.setFoodLevel(20);
 		}
 	}
+	
 	public void Damage(int dealtDamage)
 	{
-		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god){
+		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
+		{
 			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
-				if(this.combatCoolDown < 40){
-					this.combatCoolDown = this.combatCoolDown + 20;
+				if(this.combatCoolDown < 40)
+				{
+					this.combatCoolDown += 20;
 				}
 			}
 		}
@@ -424,7 +428,8 @@ public class PVPPlayer
 
 	public boolean canHit()
 	{
-		if(this.hitCoolDown > 0){
+		if(this.hitCoolDown > 0)
+		{
 				return false;
 		}
 		return true;

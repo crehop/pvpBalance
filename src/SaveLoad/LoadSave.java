@@ -90,6 +90,7 @@ public class LoadSave
 		
 		protect = plugin.getProtection().getCustomConfig().getInt("Enchant.Protection");
 	}
+	
 	public static void reloadValues(PvpBalance plugin, Player player)
 	{
 		Bow = plugin.getSDamage().getCustomConfig().getInt("Weapon.Bow");
