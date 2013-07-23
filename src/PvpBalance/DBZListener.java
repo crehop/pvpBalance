@@ -174,14 +174,11 @@ public class DBZListener implements Listener
 			{
 				Player damager = (Player)event.getDamager();
 				PVPPlayer PVPdamager = PvpHandler.getPvpPlayer(damager);
-				boolean faction = false;
-				if(!PVPdamager.canHit())
-					faction = true;
+				boolean faction = true;
 				if(plugin.hasFaction())
 				{
 					faction = plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true);
 				}
-				
 				if(!CombatUtil.preventDamageCall(damager, damagee) && DungeonAPI.canhit(event) && faction)
 				{
 					if(PVPdamager.canHit())
