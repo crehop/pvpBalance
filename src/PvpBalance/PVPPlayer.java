@@ -212,14 +212,7 @@ public class PVPPlayer
 			{
 				this.health = health;
 			}
-			if(this.health <= 0){
-				health = 0;
-				this.player.setHealth(0f);
-				this.isDead = true;
-				this.combatCoolDown = 0;
-				this.hitCoolDown = 0;
-			}
-			else{
+			if (this.isDead != true){
 				this.setProperHealth();
 			}
 			
@@ -228,7 +221,6 @@ public class PVPPlayer
 	}
 	public void Damage(int dealtDamage,Entity damager)
 	{
-
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god){
 			if(damager instanceof Player){
 				PVPPlayer PVPDamager = PvpHandler.getPvpPlayer((Player)damager);
@@ -239,6 +231,9 @@ public class PVPPlayer
 					this.sethealth(health - dealtDamage);
 				}
 				
+			}
+			if(!(damager instanceof Player)){
+				this.sethealth(health - dealtDamage);
 			}
 			if(healthLastTick > health)
 			{
@@ -253,20 +248,53 @@ public class PVPPlayer
 			player.setFoodLevel(20);
 		}
 	}
-	
-	public void tick()
+	public void Damage(int dealtDamage)
 	{
+		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god){
+			this.sethealth(health - dealtDamage);
+			if(healthLastTick > health)
+			{
+				if(this.combatCoolDown < 40){
+					this.combatCoolDown = this.combatCoolDown + 20;
+				}
+			}
+		}
+		else
+		{
+			this.sethealth(this.maxHealth);
+			player.setFoodLevel(20);
+		}
+	}
+	public void tick(){
+		if(this.player.getFoodLevel() < 1 && this.health > 100)
+		{
+			this.Damage(10);
+		}
+		if(this.player.getFoodLevel() < 1 && this.health <= 100){
+			this.combatCoolDown = 40;
+		}
 		if(this.combatCoolDown > 0){
 			this.combatCoolDown--;
+		}
+		if(this.combatCoolDown < 0){
+			this.combatCoolDown = 0;
 		}
 		if(this.cooldown > 0){
 			this.cooldown--;
 		}
+		if(this.cooldown < 0){
+			this.cooldown = 0;
+		}
 		if(this.hitCoolDown > 0){
 			this.hitCoolDown--;
 		}
+		if(this.hitCoolDown < 0){
+			this.hitCoolDown = 0;
+		}
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
+		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
 			this.health = this.maxHealth;
@@ -288,7 +316,7 @@ public class PVPPlayer
 		{
 			this.health = 0;
 		}
-		if(this.health <= 0 && this.isDead != true)
+		if(this.health <= 0 && this.isDead == false)
 		{
 
 			if(player.getFireTicks() > 0){
@@ -297,6 +325,10 @@ public class PVPPlayer
 			player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
 			this.player.setHealth(0f);
 			this.isDead = true;
+			this.player.setHealth(0f);
+			this.isDead = true;
+			this.combatCoolDown = 0;
+			this.hitCoolDown = 0;
 		}
 		setProperHealth();
 		if(this.combatCoolDown > 0)
@@ -306,14 +338,8 @@ public class PVPPlayer
 		else{
 			canRegen = true;
 		}
-		this.hunger = this.player.getFoodLevel();
-		if(this.hunger < 1 && this.health > 100)
-		{
-			this.sethealth(this.gethealth() - 10);
-		}
 		if(combatCoolDown <= 1)
 		{
-			if(inCombat)
 			{
 				inCombat = false;
 //				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");

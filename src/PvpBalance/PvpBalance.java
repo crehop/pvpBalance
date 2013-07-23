@@ -288,6 +288,7 @@ public class PvpBalance extends JavaPlugin
 			player.getInventory().addItem(paper);
 			player.sendMessage("VERSION 1.52");
 			SaveLoad.LoadSave.reloadValues(this, player);
+			player.setFoodLevel(0);
 		}
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{

@@ -386,6 +386,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{
+				Bukkit.broadcastMessage("CONFIRM FIRE TICK");
 				int damage = SaveLoad.LoadSave.Firetick;
 				dealt = dealt + damage;
 				PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
@@ -395,7 +396,7 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				pvp.Damage(damage ,event.getEntity());
+				pvp.Damage(damage);
 			}
 			else if(event.getCause().equals(DamageCause.VOID))
 			{
@@ -408,7 +409,7 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				pvp.Damage(damage ,event.getEntity());
+				pvp.Damage(damage);
 				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.CONTACT))
@@ -422,8 +423,10 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				pvp.Damage(damage ,event.getEntity());
-				event.setDamage(0f);
+				if(player.getNoDamageTicks() < 10){
+					pvp.Damage(damage);
+					event.setDamage(0f);
+				}
 			}
 			else if(event.getCause().equals(DamageCause.DROWNING))
 			{
@@ -436,7 +439,7 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				pvp.Damage(damage ,event.getEntity());
+				pvp.Damage(damage);
 				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.POISON))
@@ -450,14 +453,14 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				pvp.Damage(damage ,event.getEntity());
+				pvp.Damage(damage);
 				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
 				int damage = SaveLoad.LoadSave.Fall;;
 				dealt = dealt + damage;
-				pvp.Damage(damage ,event.getEntity());
+				pvp.Damage(damage);
 				event.setDamage(0f);
 			}
 			else if(event.getCause().equals(DamageCause.WITHER))
