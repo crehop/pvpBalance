@@ -87,7 +87,6 @@ public class PvpBalance extends JavaPlugin
 							try
 							{
 								PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(all);
-								PVPPlayer.sethealth(PVPPlayer.gethealth());
 					    		// BASIC EFFECT  APLICATIONS ==========================================================================================
 					    		//ON FIRE
 					    		if(all.getFireTicks() > 1){
@@ -107,13 +106,11 @@ public class PvpBalance extends JavaPlugin
 					    		if(all.getActivePotionEffects().toString().contains("WITHER"))
 					    		{
 					    			Effects.effectWither(all);
-					    			PVPPlayer.sethealth(PVPPlayer.gethealth() - 10);
 					    		}	
 					    		//POISONED
 					    		if(all.getActivePotionEffects().toString().contains("POISON"))
 					    		{
 					    			Effects.effectPoison(all);
-					    			PVPPlayer.sethealth(PVPPlayer.gethealth() - 10);
 					    		}
 					    		//BLIND
 					    		if(all.getActivePotionEffects().toString().contains("Blindness"))
@@ -128,7 +125,6 @@ public class PvpBalance extends JavaPlugin
 					    		//REGENERATING
 					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
 					    		{
-					    			PVPPlayer.sethealth(PVPPlayer.gethealth() + 20);
 					    			Effects.effectHealthPlayers(all, (float) 0.3, 30);
 					    		    for (PotionEffect effect : all.getActivePotionEffects())
 					    		    {
@@ -140,7 +136,6 @@ public class PvpBalance extends JavaPlugin
 					    		if(all.isSprinting())
 					    		{
 					    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
-					    			PVPPlayer.setHunger(PVPPlayer.getHunger() - 1);
 					    		}
 					    		//LOW HEALTH
 					    		if(all.getHealth() < 9)

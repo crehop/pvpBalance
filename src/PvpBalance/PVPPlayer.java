@@ -5,6 +5,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import Event.PBEntityRegainHealthEvent;
@@ -20,6 +22,7 @@ public class PVPPlayer
 	private int hitCoolDown;
 	private int combatCoolDown;
 	private int hunger;
+	private int lastDamage;
 	private int armorEventLastTick;
 	private boolean inCombat;
 	private boolean isDead;
@@ -43,6 +46,7 @@ public class PVPPlayer
 		this.inCombat = false;
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
+		this.lastDamage = 0;
 		colorUp = false;
 	}
 
@@ -219,7 +223,7 @@ public class PVPPlayer
 		}
 		
 	}
-	public void Damage(int dealtDamage,Entity damager)
+	public void Damage(int dealtDamage,Entity damager,EntityDamageByEntityEvent event)
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god){
 			if(damager instanceof Player){
@@ -227,8 +231,34 @@ public class PVPPlayer
 				if(PVPDamager.canHit() == false){
 					
 				}
+				if(player.getNoDamageTicks() > 10){
+					event.setCancelled(true);
+					return;
+				}
 				else{
-					this.sethealth(health - dealtDamage);
+					if(event.getDamage() > 0){
+						event.setDamage(0f);
+					}
+					if(this.player.getNoDamageTicks() <= 0){
+						this.lastDamage = 0;
+					}
+					if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1){
+						if(this.lastDamage < dealtDamage){
+							this.sethealth(health - (dealtDamage - this.lastDamage));
+							lastDamage = dealtDamage;
+						}
+					}
+					if(this.player.getNoDamageTicks() <= 0){
+						this.lastDamage = dealtDamage;
+						this.sethealth(health - dealtDamage);
+					}
+					if(dealtDamage < this.lastDamage && player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >=1){
+						event.setCancelled(true);
+					}
+					if(player.getNoDamageTicks() > 10){
+						event.setCancelled(true);
+					}
+					
 				}
 				
 			}
@@ -250,8 +280,11 @@ public class PVPPlayer
 		}
 	}
 	
-	public void Damage(int dealtDamage)
+	public void Damage(int dealtDamage, EntityDamageEvent event)
 	{
+		if(event.getDamage() > 0){
+			event.setDamage(0f);
+		}
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
 			this.sethealth(health - dealtDamage);
@@ -272,7 +305,7 @@ public class PVPPlayer
 	public void tick(){
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
-			this.Damage(10);
+			this.sethealth(health - 10);
 		}
 		if(this.player.getFoodLevel() < 1 && this.health <= 100){
 			this.combatCoolDown = 40;
@@ -329,13 +362,10 @@ public class PVPPlayer
 			player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
 			this.player.setHealth(0f);
 			this.isDead = true;
-			this.player.setHealth(0f);
-			this.isDead = true;
 			this.combatCoolDown = 0;
 			this.hitCoolDown = 0;
 		}
-		setProperHealth();
-		if(this.combatCoolDown > 0)
+		if(this.combatCoolDown > 0 || this.isDead == true)
 		{
 			this.canRegen = false;
 		}
