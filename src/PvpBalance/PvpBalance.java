@@ -86,8 +86,8 @@ public class PvpBalance extends JavaPlugin
 			    	{
 							try
 							{
-								PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(all);
-					    		// BASIC EFFECT  APLICATIONS ==========================================================================================
+								//PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(all);
+					    		// BASIC EFFECT APLICATIONS ==========================================================================================
 					    		//ON FIRE
 					    		if(all.getFireTicks() > 1){
 					    			Effects.igniteFirePlayers(all);
