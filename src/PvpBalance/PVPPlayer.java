@@ -156,7 +156,7 @@ public class PVPPlayer
 	
 	public void setMaxHealth(double maxHealth)
 	{
-		if(this.health == this.maxHealth)
+		if(this.health == this.maxHealth && this.combatCoolDown < 1)
 		{
 			this.maxHealth = maxHealth;
 			this.sethealth(this.maxHealth);
