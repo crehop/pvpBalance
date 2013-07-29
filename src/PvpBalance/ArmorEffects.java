@@ -249,7 +249,8 @@ public class ArmorEffects
 						try
 						{
 							ItemMeta itemMeta = null;
-							if(i != null){
+							if(i != null)
+							{
 								if(i.hasItemMeta())
 								{
 									itemMeta = i.getItemMeta();
@@ -270,10 +271,9 @@ public class ArmorEffects
 													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 													if(!meta.getColor().toString().contains("A06540"))
 													{
-														List<String> lore = new ArrayList<String>();
-														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														meta.setLore(lore);
-														item.setItemMeta(meta);
+														List<String> lore = ItemUtils.getLore(item);
+														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														ItemUtils.setLore(item, lore);
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
 															{
 																meta.setColor(Color.fromRGB(254, 255, 255));
@@ -301,10 +301,9 @@ public class ArmorEffects
 													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 													if(!meta.getColor().toString().contains("A06540"))
 													{
-														List<String> lore = new ArrayList<String>();
-														lore.add(0, "Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														meta.setLore(lore);
-														item.setItemMeta(meta);
+														List<String> lore = ItemUtils.getLore(item);
+														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+														ItemUtils.setLore(item, lore);
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
 														{
 															meta.setColor(Color.fromRGB(254, 255, 255));
