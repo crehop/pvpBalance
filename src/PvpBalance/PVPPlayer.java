@@ -1,5 +1,7 @@
 package PvpBalance;
 
+import me.frodenkvist.scoreboardmanager.SMHandler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -222,19 +224,19 @@ public class PVPPlayer
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			if(this.player.getNoDamageTicks() <= 0)
+			if(this.player.getNoDamageTicks() < 10)
 			{
 				this.lastDamage = dealtDamage;
 				this.sethealth(health - dealtDamage);
 			}
-			else if(this.player.getNoDamageTicks() <= 10)
+			/*else if(this.player.getNoDamageTicks() <= 10)
 			{
 				if(this.lastDamage < dealtDamage)
 				{
 					this.sethealth(health - (dealtDamage - this.lastDamage));
 					lastDamage = dealtDamage;
 				}
-			}
+			}*/
 			if(healthLastTick > health)
 			{
 				if(this.combatCoolDown < 40)
@@ -451,5 +453,15 @@ public class PVPPlayer
 		//Date date = new Date();
 		//boolean canhit = (date.getTime() / 1000) - lastDamage > INVULNERABILITY_TIMER ? true:false;
 		//return canhit;
+	}
+	
+	public void update()
+	{
+		Damage.calcArmor(player);
+		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
+		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
+		SMHandler.setHealthBar((health / maxHealth), player);
 	}
 }
