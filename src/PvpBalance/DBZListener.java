@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -330,6 +331,7 @@ public class DBZListener implements Listener
 		{
 			if(isArmor(player.getItemInHand()))
 			{
+				
 					Damage.calcArmor(player);
 					PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
 			}
@@ -443,6 +445,11 @@ public class DBZListener implements Listener
 				event.setDroppedExp(pbede.getDropExp());
 			}
 		},1L);
+	}
+	
+	@EventHandler
+	public void onEntityDeathEvent(EntityDeathEvent event)
+	{
 	}
 	
 	@EventHandler

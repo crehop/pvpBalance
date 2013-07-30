@@ -205,12 +205,15 @@ public class PVPPlayer
 			{
 				health = this.maxHealth;
 			}
-			else
+			if(health < this.health)
 			{
 				this.health = health;
 			}
-			if(!this.isDead)
+			if(health > this.health)
 			{
+				this.health = health;
+			}
+			if (this.isDead != true){
 				this.setProperHealth();
 			}
 			
@@ -279,38 +282,30 @@ public class PVPPlayer
 		}
 	}*/
 	
-	public void tick()
-	{
+	public void tick(){
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
 		}
-		else if(this.player.getFoodLevel() < 1 && this.health <= 100)
-		{
+		if(this.player.getFoodLevel() < 1 && this.health <= 100){
 			this.combatCoolDown = 40;
 		}
-		if(this.combatCoolDown > 0)
-		{
-			--this.combatCoolDown;
+		if(this.combatCoolDown > 0){
+			this.combatCoolDown--;
 		}
-		else if(this.combatCoolDown < 0)
-		{
+		if(this.combatCoolDown < 0){
 			this.combatCoolDown = 0;
 		}
-		if(this.cooldown > 0)
-		{
-			--this.cooldown;
+		if(this.cooldown > 0){
+			this.cooldown--;
 		}
-		else if(this.cooldown < 0)
-		{
+		if(this.cooldown < 0){
 			this.cooldown = 0;
 		}
-		if(this.hitCoolDown > 0)
-		{
-			--this.hitCoolDown;
+		if(this.hitCoolDown > 0){
+			this.hitCoolDown--;
 		}
-		else if(this.hitCoolDown < 0)
-		{
+		if(this.hitCoolDown < 0){
 			this.hitCoolDown = 0;
 		}
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
