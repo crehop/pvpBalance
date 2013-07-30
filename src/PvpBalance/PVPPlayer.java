@@ -206,13 +206,9 @@ public class PVPPlayer
 		{
 			if(health > this.maxHealth)
 			{
-				health = this.maxHealth;
+				this.health = this.maxHealth;
 			}
-			if(health < this.health)
-			{
-				this.health = health;
-			}
-			if(health > this.health)
+			else
 			{
 				this.health = health;
 			}
