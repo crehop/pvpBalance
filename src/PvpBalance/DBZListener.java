@@ -438,9 +438,9 @@ public class DBZListener implements Listener
 				event.setCancelled(true);
 				return;
 			}
-			pvp.damage(damage);
+			pvp.uncheckedDamage(damage);
 			event.setCancelled(true);
-			player.damage(0D);
+			player.damage(0);
 		}
 	}
 	
