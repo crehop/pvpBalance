@@ -41,11 +41,12 @@ public class PvpBalance extends JavaPlugin
 	@Override
  	public void onDisable()
  	{
-		//added to stop combat logging on disable of server
-	 	for(Player player: Bukkit.getServer().getOnlinePlayers()){
-	 		PVPPlayer PvpPlayer = PvpHandler.getPvpPlayer(player);
-	 		PvpPlayer.setCombatCoolDown(0);
-	 	}
+		for(PVPPlayer pp : PvpHandler.getPvpPlayers())
+		{
+			if(pp == null)
+				continue;
+			pp.setCombatCoolDown(0);
+		}
 		PvpHandler.clear();
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 	 	logger.info(pdfFile.getName() + " Has Been Disabled!!");
