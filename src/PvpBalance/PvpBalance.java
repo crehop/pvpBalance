@@ -60,9 +60,7 @@ public class PvpBalance extends JavaPlugin
 	 	{
 	 		if(p == null)
 	 			continue;
-	 		PVPPlayer pp = new PVPPlayer(p);
-	 		pp.update();
-	 		PvpHandler.addPvpPlayer(pp);
+	 		PvpHandler.addPvpPlayer(new PVPPlayer(p));
 	 	}
 	 	
 	 	sDamage = new Save(this, "Damage.yml");
