@@ -288,7 +288,7 @@ public class PvpBalance extends JavaPlugin
 			player.getInventory().addItem(paper);
 			player.sendMessage(ChatColor.GREEN + "[Armor Polish]: Greetings Administrator " + player.getDisplayName() + " a cloth has been provided");
 			player.getInventory().addItem(paper);
-			player.sendMessage("VERSION 1.52");
+			player.sendMessage("VERSION 1.6");
 			SaveLoad.LoadSave.reloadValues(this, player);
 			player.setFoodLevel(0);
 		}
