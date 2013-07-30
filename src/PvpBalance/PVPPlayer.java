@@ -109,16 +109,6 @@ public class PVPPlayer
 		return this.armorEventLastTick;
 	}
 	
-	public int getLastDamage()
-	{
-		return lastDamage;
-	}
-	
-	public void setLastDamage(int lastDamage)
-	{
-		this.lastDamage = lastDamage;
-	}
-	
 	public void setGod(boolean god)
 	{
 		this.god = god;
@@ -217,7 +207,7 @@ public class PVPPlayer
 		{
 			if(health > this.maxHealth)
 			{
-				this.health = this.maxHealth;
+				health = this.maxHealth;
 			}
 			else
 			{
@@ -227,27 +217,29 @@ public class PVPPlayer
 			{
 				this.setProperHealth();
 			}
+			
 		}
 		
 	}
 	
-	public void uncheckedDamage(int dealtDamage)
+	public void damage(int dealtDamage)
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			/*if(this.player.getNoDamageTicks() <= 0)
+			/*if(this.player.getNoDamageTicks() < 10)
 			{
 				this.lastDamage = dealtDamage;
 				this.sethealth(health - dealtDamage);
 			}
-			else if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
+			/*else if(this.player.getNoDamageTicks() <= 10)
 			{
 				if(this.lastDamage < dealtDamage)
 				{
 					this.sethealth(health - (dealtDamage - this.lastDamage));
+					lastDamage = dealtDamage;
 				}
 			}*/
-			//this.sethealth(health - dealtDamage);
+			this.lastDamage = dealtDamage;
 			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
@@ -264,26 +256,9 @@ public class PVPPlayer
 		}
 	}
 	
-	public boolean damage(int dealtDamage)
+	/*public void Damage(int dealtDamage, EntityDamageEvent event)
 	{
-		if(this.player.getNoDamageTicks() <= 0)
-		{
-			this.lastDamage = dealtDamage;
-			this.sethealth(health - dealtDamage);
-		}
-		else if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
-		{
-			if(this.lastDamage < dealtDamage)
-			{
-				this.lastDamage = dealtDamage;
-				this.sethealth(health - (dealtDamage - this.lastDamage));
-			}
-			else
-			{
-				return false;
-			}
-		}
-		/*if(event.getDamage() > 0)
+		if(event.getDamage() > 0)
 		{
 			event.setDamage(0D);
 		}
@@ -291,10 +266,10 @@ public class PVPPlayer
 		{
 			event.setCancelled(true);
 			return;
-		}*/
+		}
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			//this.sethealth(health - dealtDamage);
+			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
 				if(this.combatCoolDown < 40)
@@ -308,8 +283,7 @@ public class PVPPlayer
 			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
-		return true;
-	}
+	}*/
 	
 	public void tick()
 	{
@@ -374,8 +348,7 @@ public class PVPPlayer
 		if(this.health <= 0 && this.isDead == false)
 		{
 
-			if(player.getFireTicks() > 0)
-			{
+			if(player.getFireTicks() > 0){
 				player.setFireTicks(0);
 			}
 			player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
@@ -384,12 +357,11 @@ public class PVPPlayer
 			this.combatCoolDown = 0;
 			this.hitCoolDown = 0;
 		}
-		if(this.combatCoolDown > 0 || this.isDead == true || this.player.getFoodLevel() < 1)
+		if(this.combatCoolDown > 0 || this.isDead == true)
 		{
 			this.canRegen = false;
 		}
-		else
-		{
+		else{
 			canRegen = true;
 		}
 		if(combatCoolDown <= 1)
@@ -453,7 +425,6 @@ public class PVPPlayer
 				realHealth = 20;
 			}
 			player.setHealth(realHealth);
-			SMHandler.setHealthBar((health / maxHealth), player);
 		}
 	}
 	

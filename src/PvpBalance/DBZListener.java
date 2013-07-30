@@ -157,11 +157,7 @@ public class DBZListener implements Listener
 					return;
 				}
 				dealtDamage = pbdEvent.getDamage();
-				if(!pvpDamagee.damage((int)dealtDamage))
-				{
-					event.setCancelled(true);
-					return;
-				}
+				pvpDamagee.damage((int)dealtDamage);
 			}
 			else if(event.getDamager() instanceof Player)
 			{
@@ -198,11 +194,7 @@ public class DBZListener implements Listener
 					return;
 				}
 				dealtDamage = pbdEvent.getDamage();
-				if(!pvpDamagee.damage((int)dealtDamage))
-				{
-					event.setCancelled(true);
-					return;
-				}
+				pvpDamagee.damage((int)dealtDamage);
 				
 				String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + pvpDamagee.gethealth();
 				Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
@@ -239,11 +231,7 @@ public class DBZListener implements Listener
 					return;
 				}
 				dealtDamage = pbdEvent.getDamage();
-				if(!pvpDamagee.damage((int)dealtDamage))
-				{
-					event.setCancelled(true);
-					return;
-				}
+				pvpDamagee.damage((int)dealtDamage);
 			}
 			//Bukkit.broadcastMessage("fork");
 			event.setDamage(0D);
@@ -282,8 +270,7 @@ public class DBZListener implements Listener
 				player.sendMessage(ChatColor.RED + "Welcome Administrator :" + player.getName() + ChatColor.GREEN + " Please Enjoy your stay on the medieval lords server.. a personal Concierge will be with you shortly to handle your every whim");
 				newPVP.setGod(true);
 			}
-			else
-			{
+			else{
 				player.teleport(new Location(player.getWorld(), -730.50, 105, 319.50));
 			}
 		}
