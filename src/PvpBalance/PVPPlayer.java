@@ -3,7 +3,10 @@ package PvpBalance;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import Event.PBEntityRegainHealthEvent;
@@ -220,23 +223,56 @@ public class PVPPlayer
 		}
 		
 	}
-	
-	public void damage(int dealtDamage)
+	public void Damage(int dealtDamage,Entity damager,EntityDamageByEntityEvent event)
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			if(this.player.getNoDamageTicks() <= 0)
+			if(damager instanceof Player)
 			{
-				this.lastDamage = dealtDamage;
-				this.sethealth(health - dealtDamage);
-			}
-			else if(this.player.getNoDamageTicks() <= 10)
-			{
-				if(this.lastDamage < dealtDamage)
+				PVPPlayer PVPDamager = PvpHandler.getPvpPlayer((Player)damager);
+				if(player.getNoDamageTicks() > 10 || !PVPDamager.canHit())
 				{
-					this.sethealth(health - (dealtDamage - this.lastDamage));
-					lastDamage = dealtDamage;
+					event.setCancelled(true);
+					return;
 				}
+				else
+				{
+					if(event.getDamage() > 0)
+					{
+						event.setDamage(0f);
+					}
+					if(this.player.getNoDamageTicks() <= 0)
+					{
+						this.lastDamage = 0;
+					}
+					if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
+					{
+						if(this.lastDamage < dealtDamage)
+						{
+							this.sethealth(health - (dealtDamage - this.lastDamage));
+							lastDamage = dealtDamage;
+						}
+					}
+					if(this.player.getNoDamageTicks() <= 0)
+					{
+						this.lastDamage = dealtDamage;
+						this.sethealth(health - dealtDamage);
+					}
+					if(dealtDamage < this.lastDamage && player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
+					{
+						event.setCancelled(true);
+					}
+					if(player.getNoDamageTicks() > 10)
+					{
+						event.setCancelled(true);
+					}
+					
+				}
+				
+			}
+			if(!(damager instanceof Player))
+			{
+				this.sethealth(health - dealtDamage);
 			}
 			if(healthLastTick > health)
 			{
@@ -253,7 +289,7 @@ public class PVPPlayer
 		}
 	}
 	
-	/*public void Damage(int dealtDamage, EntityDamageEvent event)
+	public void Damage(int dealtDamage, EntityDamageEvent event)
 	{
 		if(event.getDamage() > 0)
 		{
@@ -280,7 +316,7 @@ public class PVPPlayer
 			this.sethealth(this.maxHealth);
 			player.setFoodLevel(20);
 		}
-	}*/
+	}
 	
 	public void tick(){
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
