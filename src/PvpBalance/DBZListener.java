@@ -351,7 +351,7 @@ public class DBZListener implements Listener
 			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 			if(event.getCause().equals(DamageCause.STARVATION))
 			{
-				event.setDamage(0f);
+				event.setDamage(0D);
 				return;
 			}
 			else if(PvpHandler.getPvpPlayer(player).isGod())
@@ -418,7 +418,8 @@ public class DBZListener implements Listener
 				return;
 			}
 			pvp.damage(damage);
-			event.setDamage(0f);
+			event.setCancelled(true);
+			player.damage(0D);
 		}
 	}
 	
