@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -82,11 +81,9 @@ public class DBZListener implements Listener
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onPlayerDamageEvent(EntityDamageByEntityEvent event)
 	{
-		if(event.isCancelled())
-			return;
 		if(!DungeonAPI.canhit(event))
 		{
 			event.setCancelled(true);
@@ -98,12 +95,13 @@ public class DBZListener implements Listener
 			return;
 		}
 		double dealtDamage = 0.0f;
+		
 		Entity e = event.getEntity();
 		if (e instanceof Player)
 		{
 			double rawDamage = event.getDamage();
 			Player damagee = (Player) e;
-			if(damagee.getNoDamageTicks() > 10)
+			if(damagee.getNoDamageTicks() >= 10)
 			{
 				event.setCancelled(true);
 				return;
@@ -343,13 +341,9 @@ public class DBZListener implements Listener
 		//Bukkit.broadcastMessage("issneaking " + player.isSneaking());
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onEntityDamageEvent(EntityDamageEvent event)
 	{
-		if(event.isCancelled())
-			return;
-		if(event instanceof EntityDamageByEntityEvent)
-			return;
 		int damage = 0;
 		if (event.getEntity() instanceof Player)
 		{

@@ -1,6 +1,7 @@
 name: PVPBalance
 main: PvpBalance.PvpBalance
 version: 1.52
+depend: [ScoreboardManager]
 description: >
             The Best plugin EVER!
 commands:

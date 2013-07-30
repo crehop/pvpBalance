@@ -159,8 +159,6 @@ public class PVPPlayer
 	
 	public void setMaxHealth(double maxHealth)
 	{
-		if(maxHealth == this.maxHealth)
-			return;
 		if(this.health == this.maxHealth && this.combatCoolDown < 1)
 		{
 			this.maxHealth = maxHealth;
@@ -226,7 +224,7 @@ public class PVPPlayer
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			/*if(this.player.getNoDamageTicks() < 10)
+			if(this.player.getNoDamageTicks() < 10)
 			{
 				this.lastDamage = dealtDamage;
 				this.sethealth(health - dealtDamage);
@@ -239,8 +237,6 @@ public class PVPPlayer
 					lastDamage = dealtDamage;
 				}
 			}*/
-			this.lastDamage = dealtDamage;
-			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
 				if(this.combatCoolDown < 40)
@@ -287,7 +283,6 @@ public class PVPPlayer
 	
 	public void tick()
 	{
-		//update();
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
@@ -462,7 +457,7 @@ public class PVPPlayer
 	
 	public void update()
 	{
-		Damage.calcArmor(this);
+		Damage.calcArmor(player);
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));
