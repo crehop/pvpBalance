@@ -1,11 +1,18 @@
 package PvpBalance;
 
+import me.ThaH3lper.com.DungeonAPI;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 
 //Handles damage control
@@ -466,5 +473,21 @@ public class Damage
 		}
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;
+	}
+	
+	public static boolean canHit(Entity damagee, Entity damager)
+	{
+		if(CombatUtil.preventDamageCall(damager, damagee))
+			return false;
+		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, DamageCause.CUSTOM, 1D);
+		if(!DungeonAPI.canhit(event))
+			return false;
+		if(PvpBalance.plugin.hasFaction())
+		{
+			if(!PvpBalance.plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true))
+				return false;
+		}
+		return true;
+			
 	}
 }
