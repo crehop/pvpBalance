@@ -60,6 +60,32 @@ public class ArmorEffects
 						}
 					}
 				}
+				else if(item.getItemMeta().getLore().size() > 1){
+					if(item.getItemMeta().getLore().get(1).toString().contains(CODE_ARMOR))
+					{
+						if(meta.getColor().toString().contains("A06540"))
+							continue;
+						
+						int nr1 = (Fade.type(item)-1);
+						if(metas[nr1] != null)
+						{
+							meta.setColor(metas[nr1].clone().getColor());
+							item.setItemMeta(meta);
+						}
+						else
+						{
+							switch(item.getTypeId())
+							{
+							case 298:
+							case 299:
+							case 300:
+							case 301:
+								metas[nr1] = glow(item,pvpPlayer);
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -277,7 +303,6 @@ public class ArmorEffects
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
 															{
 																meta.setColor(Color.fromRGB(254, 255, 255));
-																item.setItemMeta(meta);
 																item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 															}
 													}
@@ -307,7 +332,6 @@ public class ArmorEffects
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
 														{
 															meta.setColor(Color.fromRGB(254, 255, 255));
-															item.setItemMeta(meta);
 															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 														}
 													}

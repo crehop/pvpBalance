@@ -129,6 +129,10 @@ public class PvpBalance extends JavaPlugin
 					    		{
 					    			Effects.effectSpeedPlayers(all, SPEED, AMOUNT);
 					    		}
+					    		if(all.getActivePotionEffects().toString().contains("SLOW"))
+					    		{
+					    			Effects.effectSlow(all);
+					    		}
 					    		//REGENERATING
 					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
 					    		{

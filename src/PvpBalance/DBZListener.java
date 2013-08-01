@@ -122,8 +122,14 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
+				else if((event.getDamager().getType() == EntityType.WITHER_SKULL))
+				{
+					event.setDamage(0f);
+					dealtDamage += 85;
+				}
 				else if((event.getDamager().getType() == EntityType.SMALL_FIREBALL))
 				{
+					dealtDamage += 65;
 				}
 				else if(event.getDamager().getType() == EntityType.FIREBALL)
 				{
@@ -141,7 +147,6 @@ public class DBZListener implements Listener
 					{
 						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
 					}
-					else
 					{
 						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
 						pvpDamager.setCombatCoolDown(80);
