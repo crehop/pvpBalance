@@ -147,7 +147,7 @@ public class DBZListener implements Listener
 					{
 						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
 					}
-					if(damager instanceof Player)
+					else
 					{
 						dealtDamage = Damage.calcDamage((Player) damager);
 						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
