@@ -147,11 +147,12 @@ public class DBZListener implements Listener
 					{
 						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
 					}
+					if(damager instanceof Player)
 					{
+						dealtDamage = Damage.calcDamage((Player) damager);
 						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
 						pvpDamager.setCombatCoolDown(80);
 					}
-
 					pvpDamagee.setCombatCoolDown(80);
 				}
 				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
@@ -445,7 +446,7 @@ public class DBZListener implements Listener
 			}
 			pvp.uncheckedDamage(damage);
 			event.setCancelled(true);
-			player.damage(0);
+			player.damage(0f);
 		}
 	}
 	
