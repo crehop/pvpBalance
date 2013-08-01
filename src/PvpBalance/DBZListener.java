@@ -144,12 +144,11 @@ public class DBZListener implements Listener
 						dealtDamage = SaveLoad.LoadSave.Bow;
 					}
 					if(!(damager instanceof Player))
-					{
+					{	
 						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
 					}
 					else
 					{
-						dealtDamage = Damage.calcDamage((Player) damager);
 						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
 						pvpDamager.setCombatCoolDown(80);
 					}
