@@ -93,7 +93,6 @@ public class PvpBalance extends JavaPlugin
 			    	{
 							try
 							{
-								//PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(all);
 					    		// BASIC EFFECT APLICATIONS ==========================================================================================
 					    		//ON FIRE
 					    		if(all.getFireTicks() > 1){
@@ -122,7 +121,7 @@ public class PvpBalance extends JavaPlugin
 					    		//BLIND
 					    		if(all.getActivePotionEffects().toString().contains("Blindness"))
 					    		{
-					    			Effects.effectPoison(all);
+					    			Effects.effectBlind(all);
 					    		}
 					    		//SPEED POT
 					    		if(all.getActivePotionEffects().toString().contains("SPEED"))

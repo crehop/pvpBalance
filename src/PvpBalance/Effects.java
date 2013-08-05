@@ -26,7 +26,7 @@ public class Effects
 	{	
 		try
 		{
-			ParticleEffect.sendCrackToPlayer(true, 295, (byte) 0, player, player.getLocation().add(0, 1.3, 0), 0.2f, 0.2f, 0.2f, 100);
+			ParticleEffect.sendCrackToLocation(true, 295, (byte) 0, player.getLocation().add(0, 1.3, 0), 0.2f, 0.2f, 0.2f, 100);
 		}
 		catch (Exception e)
 		{
@@ -39,7 +39,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.TOWN_AURA, player.getLocation().add(0, 1, 0),0.2f,0.5f,0.2f, (float)0.02, 200);
+			ParticleEffect.sendToLocation(ParticleEffect.TOWN_AURA, player.getLocation().add(0, 2, 0),0.1f,0.1f,0.1f, (float)0.01, 100);
 		}
 		catch (Exception e)
 		{
@@ -77,7 +77,6 @@ public class Effects
 	
 	public static void effectSharpnessPlayers(Player player)
 	{
-		float enchantsP = 0;
 		float enchantsO = 0;
 		enchantsO += (float)player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL);
 		enchantsO += (float)player.getItemInHand().getEnchantmentLevel(Enchantment.KNOCKBACK)*2;
@@ -85,7 +84,7 @@ public class Effects
 		enchantsO += (float)player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_INFINITE)*3;
 		enchantsO += (float)player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_FIRE)*2;
 		enchantsO += (float)player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE);
-		float amount = enchantsO + enchantsP;
+		float amount = enchantsO;
 		try
 		{
 			ParticleEffect.sendToLocation(ParticleEffect.PORTAL, player.getLocation().add(0, 0.2, 0),0.2f,0.2f,0.2f, (float)0.15f, (int)amount*5);

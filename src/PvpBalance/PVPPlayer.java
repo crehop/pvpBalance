@@ -392,24 +392,18 @@ public class PVPPlayer
 		{
 			canRegen = true;
 		}
-		if(combatCoolDown <= 1)
+		if(combatCoolDown < 1 && this.inCombat == true)
 		{
 			{
 				inCombat = false;
-//				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
+			//	player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
 		}
-		else
+		else if(combatCoolDown >= 1 && !inCombat)
 		{
-			if(!inCombat)
-			{
-				inCombat = true;
-//				player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
-//						+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
-			}
-		}
-		if(PvpBalance.plugin.isDebug())
-		{
+			inCombat = true;
+			//player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
+			//		+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
 		}
 		if(health < maxHealth && this.canRegen)
 		{
@@ -484,9 +478,6 @@ public class PVPPlayer
 				return false;
 		}
 		return true;
-		//Date date = new Date();
-		//boolean canhit = (date.getTime() / 1000) - lastDamage > INVULNERABILITY_TIMER ? true:false;
-		//return canhit;
 	}
 	
 	public void update()
