@@ -7,9 +7,6 @@ import PvpBalance.PvpBalance;
 
 public class LoadSave
 {
-	
-	
-
 	PvpBalance plugin;
 	
 	//Protection

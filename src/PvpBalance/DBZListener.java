@@ -445,11 +445,11 @@ public class DBZListener implements Listener
 			}
 			pvp.uncheckedDamage(damage);
 			event.setCancelled(true);
-			player.damage(0f);
+			player.damage(0D);
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
 		Player player = event.getEntity();
