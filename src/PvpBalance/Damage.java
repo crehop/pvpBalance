@@ -2,6 +2,7 @@ package PvpBalance;
 
 import me.ThaH3lper.com.DungeonAPI;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -470,6 +471,10 @@ public class Damage
 					}
 				break;
 			}
+		}
+		
+		if(me.crehop.com.Subscribers.isSubscriber(player.getName()) == true){
+			armor += (armor/10);
 		}
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;

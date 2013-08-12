@@ -178,6 +178,9 @@ public class PVPPlayer
 			if(this.armorEventLastTick == 1)
 			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
+				if(me.crehop.com.Subscribers.isSubscriber(this.player.getName())){
+					player.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "SUBSCTIPTION BONUS 10% ADDED!!" + ChatColor.DARK_AQUA + "]");
+				}
 			}
 		}
 		else
@@ -187,6 +190,9 @@ public class PVPPlayer
 			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.RED + "Due to recent combat you will gain life to your new max");
+				if(me.crehop.com.Subscribers.isSubscriber(this.player.getName())){
+					player.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "SUBSCTIPTION BONUS 10% ADDED!!" + ChatColor.DARK_AQUA + "]");
+				}
 			}
 
 		}
