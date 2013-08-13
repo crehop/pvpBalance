@@ -115,7 +115,30 @@ public class DBZListener implements Listener
 				event.setCancelled(true);
 				return;
 			}
-			if(event.getCause().equals(DamageCause.PROJECTILE))
+			if(event.getDamager() instanceof Arrow)
+			{
+				Arrow arrow = (Arrow)event.getDamager();
+				Entity damager = arrow.getShooter();
+				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee))
+				{
+					event.setCancelled(true);
+					return;
+				}
+				if(damager instanceof Player && event.getEntity() instanceof Player)
+				{
+					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+					dealtDamage = Damage.calcDamage((Player)damager);
+					pvpDamagee.damage((int)dealtDamage);
+					pvpDamager.setCombatCoolDown(80);
+					pvpDamagee.setCombatCoolDown(80);
+				}
+				if(!(damager instanceof Player))
+				{	
+					dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
+				}
+				pvpDamagee.setCombatCoolDown(80);
+			}
+			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
 				if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee))
 				{
@@ -134,25 +157,6 @@ public class DBZListener implements Listener
 				else if(event.getDamager().getType() == EntityType.FIREBALL)
 				{
 					dealtDamage += 175;
-				}
-				else if(event.getDamager().getType() == EntityType.ARROW)
-				{
-					Arrow arrow = (Arrow)event.getDamager();
-					Entity damager = arrow.getShooter();
-					if(damager instanceof Player && event.getEntity() instanceof Player)
-					{
-						dealtDamage = SaveLoad.LoadSave.Bow;
-					}
-					if(!(damager instanceof Player))
-					{	
-						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
-					}
-					else
-					{
-						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
-						pvpDamager.setCombatCoolDown(80);
-					}
-					pvpDamagee.setCombatCoolDown(80);
 				}
 				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -187,7 +191,7 @@ public class DBZListener implements Listener
 					event.setCancelled(true);
 					return;
 				}
-				if(damager.getItemInHand().getType().equals(Material.BOW) && !event.getCause().equals(DamageCause.PROJECTILE))
+				if(damager.getItemInHand().getType().equals(Material.BOW) && !(event.getDamager() instanceof Arrow))
 				{
 					dealtDamage = 20;
 				}
@@ -250,7 +254,6 @@ public class DBZListener implements Listener
 					return;
 				}
 			}
-			//Bukkit.broadcastMessage("fork");
 			event.setDamage(0D);
 			event.setCancelled(false);
 		}
