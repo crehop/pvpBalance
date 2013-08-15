@@ -1,6 +1,7 @@
 package Util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -40,6 +41,21 @@ public class ItemUtils
 		if(temp == null)
 			temp = new ArrayList<String>();
 		temp.add(addChatColor(lore));
+		im.setLore(temp);
+		item.setItemMeta(im);
+		
+		return item;
+	}
+	
+	public static ItemStack addLore(ItemStack item, List<String> lore)
+	{
+		ItemMeta im = item.getItemMeta();
+		List<String> temp = im.getLore();
+		Iterator<String> itr = lore.iterator();
+		while(itr.hasNext())
+		{
+			temp.add(addChatColor(itr.next()));
+		}
 		im.setLore(temp);
 		item.setItemMeta(im);
 		

@@ -60,7 +60,8 @@ public class ArmorEffects
 						}
 					}
 				}
-				else if(item.getItemMeta().getLore().size() > 1){
+				else if(item.getItemMeta().getLore().size() > 1)
+				{
 					if(item.getItemMeta().getLore().get(1).toString().contains(CODE_ARMOR))
 					{
 						if(meta.getColor().toString().contains("A06540"))
@@ -262,7 +263,8 @@ public class ArmorEffects
 		boolean alreadyRemoved = false;
 		boolean correctItemInHand = false;
 		ItemStack item = null;
-		if(player.getItemInHand() != null){
+		if(player.getItemInHand() != null)
+		{
 		 	item = player.getItemInHand();
 			if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_LEGGINGS)
 		 	{
@@ -292,19 +294,20 @@ public class ArmorEffects
 											i.setAmount(i.getAmount() - 1);
 											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
 											{
-												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER)){
+												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
+												{
 													ItemMeta metah = item.getItemMeta();
 													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 													if(!meta.getColor().toString().contains("A06540"))
 													{
-														List<String> lore = ItemUtils.getLore(item);
+														List<String> lore = new ArrayList<String>();
 														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														ItemUtils.setLore(item, lore);
+														ItemUtils.addLore(item, ItemUtils.getLore(item));
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
-															{
-																meta.setColor(Color.fromRGB(254, 255, 255));
-																item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-															}
+														{
+															meta.setColor(Color.fromRGB(254, 255, 255));
+															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														}
 													}
 													else
 													{
@@ -326,9 +329,9 @@ public class ArmorEffects
 													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
 													if(!meta.getColor().toString().contains("A06540"))
 													{
-														List<String> lore = ItemUtils.getLore(item);
+														List<String> lore = new ArrayList<String>();
 														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														ItemUtils.setLore(item, lore);
+														ItemUtils.addLore(item, ItemUtils.getLore(item));
 														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
 														{
 															meta.setColor(Color.fromRGB(254, 255, 255));
