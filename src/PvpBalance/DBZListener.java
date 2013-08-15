@@ -356,7 +356,7 @@ public class DBZListener implements Listener
 			if(isArmor(player.getItemInHand()))
 			{
 					Damage.calcArmor(player);
-					PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
+					PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
 			}
 
 		}
@@ -390,7 +390,9 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{
-				damage = SaveLoad.LoadSave.Firetick;
+				pvp.uncheckedDamage(SaveLoad.LoadSave.Firetick);
+				event.setCancelled(true);
+				return;
 			}
 			else if(event.getCause().equals(DamageCause.VOID))
 			{
@@ -402,19 +404,27 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.DROWNING))
 			{
-				damage = SaveLoad.LoadSave.Drowning;
+				pvp.uncheckedDamage(SaveLoad.LoadSave.Drowning);
+				event.setCancelled(true);
+				return;
 			}
 			else if(event.getCause().equals(DamageCause.POISON))
 			{
-				damage = SaveLoad.LoadSave.Poison;
+				pvp.uncheckedDamage(SaveLoad.LoadSave.Poison);
+				event.setCancelled(true);
+				return;
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				damage = SaveLoad.LoadSave.Fall;
+				pvp.uncheckedDamage(SaveLoad.LoadSave.Fall);
+				event.setCancelled(true);
+				return;
 			}
 			else if(event.getCause().equals(DamageCause.WITHER))
 			{
-				damage = SaveLoad.LoadSave.Wither;
+				pvp.uncheckedDamage(SaveLoad.LoadSave.Wither);
+				event.setCancelled(true);
+				return;
 			}
 
 			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
@@ -488,7 +498,7 @@ public class DBZListener implements Listener
     				PVPPlayer newPVP = new PVPPlayer(player);
     				PvpHandler.addPvpPlayer(newPVP);
     			}
-    			PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
+    			PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
     		}
     	}
 	    if(event.getSlotType() == SlotType.ARMOR)
@@ -499,7 +509,7 @@ public class DBZListener implements Listener
 				PVPPlayer newPVP = new PVPPlayer(player);
 				PvpHandler.addPvpPlayer(newPVP);
 			}
-	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(2);
+	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
 	    }
 	}
 	@EventHandler
