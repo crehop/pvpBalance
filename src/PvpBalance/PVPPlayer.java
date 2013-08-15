@@ -241,19 +241,6 @@ public class PVPPlayer
 	{
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			/*if(this.player.getNoDamageTicks() <= 0)
-			{
-				this.lastDamage = dealtDamage;
-				this.sethealth(health - dealtDamage);
-			}
-			else if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
-			{
-				if(this.lastDamage < dealtDamage)
-				{
-					this.sethealth(health - (dealtDamage - this.lastDamage));
-				}
-			}*/
-			//this.sethealth(health - dealtDamage);
 			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
@@ -289,15 +276,6 @@ public class PVPPlayer
 				return false;
 			}
 		}
-		/*if(event.getDamage() > 0)
-		{
-			event.setDamage(0D);
-		}
-		if(player.getNoDamageTicks() > 10)
-		{
-			event.setCancelled(true);
-			return;
-		}*/
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
 			//this.sethealth(health - dealtDamage);
@@ -319,7 +297,7 @@ public class PVPPlayer
 	
 	public void tick()
 	{
-		//update();
+		Bukkit.broadcastMessage(this.player.getNoDamageTicks() + "");
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
@@ -367,10 +345,11 @@ public class PVPPlayer
 			this.inCombat = false;
 			this.combatCoolDown = 0;
 			this.armorEventLastTick = 0;
+			return;
 		}
 		if(this.armorEventLastTick > 0)
 		{
-			this.armorEventLastTick--;
+			this.armorEventLastTick = 0;
 			Damage.calcArmor(player);
 		}
 		if(player.getHealth() <= 0)
@@ -402,18 +381,15 @@ public class PVPPlayer
 		{
 			{
 				inCombat = false;
-			//	player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are no longer in combat and may log off safely");
 			}
 		}
 		else if(combatCoolDown >= 1 && !inCombat)
 		{
 			inCombat = true;
-			//player.sendMessage(ChatColor.RED + "WARNING: you have entered combat if you log out within the next "
-			//		+ ChatColor.YELLOW + "= 20 Seconds =" + ChatColor.RED + " you will be automaticly killed and your loot will drop");
 		}
 		if(health < maxHealth && this.canRegen)
 		{
-			if(inCombat)
+			if(this.inCombat == true)
 			{
 				int heal = 15;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
@@ -488,7 +464,6 @@ public class PVPPlayer
 	
 	public void update()
 	{
-		Damage.calcArmor(this);
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));

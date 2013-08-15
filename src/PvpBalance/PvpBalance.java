@@ -185,6 +185,82 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 2)
 		    {
 		    	everyOther = 3;
+		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
+		    	{
+						try
+						{
+				    		// BASIC EFFECT APLICATIONS ==========================================================================================
+				    		//ON FIRE
+				    		if(all.getFireTicks() > 1){
+				    			Effects.igniteFirePlayers(all);
+				    		}	    
+				    		//ENCHANTED SWORD
+				    		if(all.getItemInHand().containsEnchantment(Enchantment.DAMAGE_ALL) || all.getItemInHand().containsEnchantment(Enchantment.ARROW_DAMAGE))
+				    		{
+				    			Effects.effectSharpnessPlayers(all);
+				    		}
+				    		//CONFUSED
+				    		if(all.getActivePotionEffects().toString().contains("CONFUSION"))
+				    		{
+				    			Effects.effectConfuse(all);
+				    		}
+				    		//WITHERED
+				    		if(all.getActivePotionEffects().toString().contains("WITHER"))
+				    		{
+				    			Effects.effectWither(all);
+				    		}	
+				    		//POISONED
+				    		if(all.getActivePotionEffects().toString().contains("POISON"))
+				    		{
+				    			Effects.effectPoison(all);
+				    		}
+				    		//BLIND
+				    		if(all.getActivePotionEffects().toString().contains("Blindness"))
+				    		{
+				    			Effects.effectBlind(all);
+				    		}
+				    		//SPEED POT
+				    		if(all.getActivePotionEffects().toString().contains("SPEED"))
+				    		{
+				    			Effects.effectSpeedPlayers(all, SPEED, AMOUNT);
+				    		}
+				    		if(all.getActivePotionEffects().toString().contains("SLOW"))
+				    		{
+				    			Effects.effectSlow(all);
+				    		}
+				    		//REGENERATING
+				    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
+				    		{
+				    			Effects.effectHealthPlayers(all, (float) 0.3, 30);
+				    		    for (PotionEffect effect : all.getActivePotionEffects())
+				    		    {
+				    		        all.removePotionEffect(effect.getType());
+				    		    }
+				    			all.sendMessage(ChatColor.GREEN + "ALL EFFECTS CLENSED!");
+				    		}
+				    		//SPRINTING
+				    		if(all.isSprinting())
+				    		{
+				    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
+				    		}
+				    		//LOW HEALTH
+				    		if(all.getHealth() < 9)
+				    		{
+				    			Effects.bleed(all);
+				    		}
+				    		//PVP ABILITIES ====================================================================================
+						
+				    }
+					catch (Exception e1)
+					{
+						e1.printStackTrace();
+						logger.info("Main Effect!");
+					}
+		    	}
+		    }
+		    else if(everyOther == 3)
+		    {
+		    	everyOther = 0;
 		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
@@ -199,16 +275,8 @@ public class PvpBalance extends JavaPlugin
 					}
 				}
 		    }
-		    else if(everyOther == 3)
-		    {
-		    	everyOther = 4;
-		    }
-		    else if(everyOther == 4)
-		    {
-		    	everyOther = 0;
-		    }
 		}
-	}, 0L, 1L);
+	}, 0L, 5L);
 		
 	 	logger.info(pdfFile.getName() + " Has Been Enabled!!");
  	}
