@@ -244,9 +244,9 @@ public class PVPPlayer
 			this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
-				if(this.combatCoolDown < 40)
+				if(this.combatCoolDown < 10)
 				{
-					this.combatCoolDown = this.combatCoolDown + 20;
+					this.combatCoolDown = this.combatCoolDown + 5;
 				}
 			}
 		}
@@ -281,9 +281,9 @@ public class PVPPlayer
 			//this.sethealth(health - dealtDamage);
 			if(healthLastTick > health)
 			{
-				if(this.combatCoolDown < 40)
+				if(this.combatCoolDown < 10)
 				{
-					this.combatCoolDown += 20;
+					this.combatCoolDown += 5;
 				}
 			}
 		}
@@ -297,14 +297,13 @@ public class PVPPlayer
 	
 	public void tick()
 	{
-		Bukkit.broadcastMessage(this.player.getNoDamageTicks() + "");
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
 		}
 		else if(this.player.getFoodLevel() < 1 && this.health <= 100)
 		{
-			this.combatCoolDown = 40;
+			this.combatCoolDown = 20;
 		}
 		if(this.combatCoolDown > 0)
 		{
@@ -332,7 +331,7 @@ public class PVPPlayer
 		}
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
-		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));
+		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
@@ -391,7 +390,7 @@ public class PVPPlayer
 		{
 			if(this.inCombat == true)
 			{
-				int heal = 15;
+				int heal = 45;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())
@@ -400,7 +399,7 @@ public class PVPPlayer
 			}
 			else
 			{
-				int heal = 25;
+				int heal = 64;
 				PBEntityRegainHealthEvent pberh = new PBEntityRegainHealthEvent(player, heal, RegainReason.CUSTOM);
 				Bukkit.getPluginManager().callEvent(pberh);
 				if(pberh.isCancelled())

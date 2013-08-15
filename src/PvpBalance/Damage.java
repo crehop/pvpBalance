@@ -2,8 +2,6 @@ package PvpBalance;
 
 import me.ThaH3lper.com.DungeonAPI;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -64,7 +62,6 @@ public class Damage
 	
 	public static int calcArmor(Player player)
 	{
-		Bukkit.broadcastMessage("CHECKING ARMOR");
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		int armor = 500;
 		for(ItemStack i:player.getInventory().getArmorContents())

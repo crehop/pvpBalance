@@ -129,14 +129,14 @@ public class DBZListener implements Listener
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
 					dealtDamage = Damage.calcDamage((Player)damager);
 					pvpDamagee.damage((int)dealtDamage);
-					pvpDamager.setCombatCoolDown(80);
-					pvpDamagee.setCombatCoolDown(80);
+					pvpDamager.setCombatCoolDown(20);
+					pvpDamagee.setCombatCoolDown(20);
 				}
 				if(!(damager instanceof Player))
 				{	
 					dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
 				}
-				pvpDamagee.setCombatCoolDown(80);
+				pvpDamagee.setCombatCoolDown(20);
 			}
 			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
@@ -216,8 +216,8 @@ public class DBZListener implements Listener
 				String message = "SIDEBAR,Health," + ChatColor.RED + "Enemy:" + ChatColor.RESET + "," + pvpDamagee.gethealth();
 				Bukkit.getMessenger().dispatchIncomingMessage(damager, "Scoreboard", message.getBytes());
 				pvpDamager.setHitCoolDown(SaveLoad.LoadSave.HitCooldown);
-				pvpDamager.setCombatCoolDown(80);
-				pvpDamagee.setCombatCoolDown(80);
+				pvpDamager.setCombatCoolDown(20);
+				pvpDamagee.setCombatCoolDown(20);
 				if(PvpBalance.plugin.isDebug() || pvpDamager.isPvpstats())
 				{
 					damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
@@ -230,8 +230,8 @@ public class DBZListener implements Listener
 					Player damager = (Player)((Arrow)event.getDamager()).getShooter();
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 					dealtDamage = Damage.calcDamage(damager);
-					pvpDamager.setCombatCoolDown(80);
-					pvpDamagee.setCombatCoolDown(80);
+					pvpDamager.setCombatCoolDown(20);
+					pvpDamagee.setCombatCoolDown(20);
 				}
 				else
 				{
@@ -416,9 +416,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				pvp.uncheckedDamage(SaveLoad.LoadSave.Fall);
-				event.setCancelled(true);
-				return;
+				damage = SaveLoad.LoadSave.Fall;
 			}
 			else if(event.getCause().equals(DamageCause.WITHER))
 			{
