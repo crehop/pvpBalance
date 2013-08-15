@@ -305,7 +305,8 @@ public class DBZListener implements Listener
 		}
 		PvpHandler.addPvpPlayer(newPVP);
 		Damage.calcArmor(event.getPlayer());
-		newPVP.sethealth(newPVP.getMaxHealth());
+		if(player.getHealth() > 0)
+			newPVP.sethealth(newPVP.getMaxHealth());
 	}
 	
 	@EventHandler
@@ -491,6 +492,7 @@ public class DBZListener implements Listener
 		}*/
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		pvpPlayer.setIsDead(true);
+		//player.teleport(player.getWorld().getSpawnLocation());
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
 		{
 			@Override
