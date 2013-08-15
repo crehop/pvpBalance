@@ -399,6 +399,9 @@ public class DBZListener implements Listener
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{
 				pvp.uncheckedDamage(SaveLoad.LoadSave.Firetick);
+				int prevNoDamageTicks = player.getNoDamageTicks();
+				player.damage(0D);
+				player.setNoDamageTicks(prevNoDamageTicks);
 				event.setCancelled(true);
 				return;
 			}
@@ -413,12 +416,18 @@ public class DBZListener implements Listener
 			else if(event.getCause().equals(DamageCause.DROWNING))
 			{
 				pvp.uncheckedDamage(SaveLoad.LoadSave.Drowning);
+				int prevNoDamageTicks = player.getNoDamageTicks();
+				player.damage(0D);
+				player.setNoDamageTicks(prevNoDamageTicks);
 				event.setCancelled(true);
 				return;
 			}
 			else if(event.getCause().equals(DamageCause.POISON))
 			{
 				pvp.uncheckedDamage(SaveLoad.LoadSave.Poison);
+				int prevNoDamageTicks = player.getNoDamageTicks();
+				player.damage(0D);
+				player.setNoDamageTicks(prevNoDamageTicks);
 				event.setCancelled(true);
 				return;
 			}
@@ -429,6 +438,9 @@ public class DBZListener implements Listener
 			else if(event.getCause().equals(DamageCause.WITHER))
 			{
 				pvp.uncheckedDamage(SaveLoad.LoadSave.Wither);
+				int prevNoDamageTicks = player.getNoDamageTicks();
+				player.damage(0D);
+				player.setNoDamageTicks(prevNoDamageTicks);
 				event.setCancelled(true);
 				return;
 			}
