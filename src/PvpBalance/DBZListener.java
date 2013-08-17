@@ -2,6 +2,8 @@ package PvpBalance;
 
 import java.util.Random;
 
+import me.ThaH3lper.com.DungeonAPI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,7 +30,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -65,6 +66,7 @@ public class DBZListener implements Listener
 		{
 			quitPlayer.setHealth(0f);
 		}
+<<<<<<< HEAD
 		if(pp.isInPVP())
 		{
 			pp.sethealth(0);
@@ -74,6 +76,8 @@ public class DBZListener implements Listener
 		{
 			pp.getParty().leave(pp);
 		}
+=======
+>>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 		PvpHandler.removePvpPlayer(pp);
 	}
 	
@@ -95,7 +99,7 @@ public class DBZListener implements Listener
 	{
 		//if(event.isCancelled())
 		//	return;
-		if(!Damage.partyCanHit(event.getEntity(), event.getDamager()))
+		if(!DungeonAPI.canhit(event))
 		{
 			event.setCancelled(true);
 			return;
@@ -532,7 +536,6 @@ public class DBZListener implements Listener
 	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
 	    }
 	}
-	
 	@EventHandler
 	public void shotBow(EntityShootBowEvent event){
 		if(event.getEntity() instanceof Player){
@@ -542,12 +545,6 @@ public class DBZListener implements Listener
 				player.sendMessage(ChatColor.RED + "You must pull the bow all the way back to fire!");
 			}
 		}
-	}
-	
-	@EventHandler
-	public void onPlayerItemBreakEvent(PlayerItemBreakEvent event)
-	{
-		Damage.calcArmor(event.getPlayer());
 	}
 	
 	private boolean isArmor(ItemStack is)
