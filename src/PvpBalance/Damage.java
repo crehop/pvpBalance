@@ -1,8 +1,12 @@
 package PvpBalance;
 
+<<<<<<< HEAD
+=======
+import me.ThaH3lper.com.DungeonAPI;
+
+>>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -264,6 +268,12 @@ public class Damage
 			}
 		}
 		
+<<<<<<< HEAD
+=======
+		if(me.crehop.com.Subscribers.isSubscriber(player.getName()) == true){
+			armor += (armor/10);
+		}
+>>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;
 	}
@@ -272,9 +282,9 @@ public class Damage
 	{
 		if(CombatUtil.preventDamageCall(damager, damagee))
 			return false;
-		if(!partyCanHit(damagee, damager))
-			return false;
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, DamageCause.CUSTOM, 1D);
+		if(!DungeonAPI.canhit(event))
+			return false;
 		if(PvpBalance.plugin.hasFaction())
 		{
 			if(!PvpBalance.plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true))
@@ -282,92 +292,5 @@ public class Damage
 		}
 		return true;
 			
-	}
-	
-	public static boolean partyCanHit(Entity eDamagee, Entity eDamager)
-	{
-		if (!(eDamagee instanceof Player))
-			return true;
-		if ((eDamager instanceof Player))
-		{
-			Player player = (Player)eDamagee;
-			Player damager = (Player)eDamager;
-			PVPPlayer dpDamager = PvpHandler.getPvpPlayer(damager);
-			if (dpDamager.isInParty())
-			{
-				PVPPlayer dp = PvpHandler.getPvpPlayer(player);
-				if (dpDamager.getParty().isMember(dp))
-				{
-					return false;
-				}
-				if (dp.justLeft())
-				{
-					if (dp.getGhostParty().isMember(dpDamager))
-					{
-						return false;
-					}
-				}
-			}
-			else if (dpDamager.justLeft())
-			{
-				PVPPlayer dp = PvpHandler.getPvpPlayer(player);
-				if (dpDamager.getGhostParty().isMember(dp))
-				{
-					return false;
-				}
-				if (dp.justLeft())
-				{
-					if (dpDamager.getGhostParty().equals(dp.getGhostParty()))
-					{
-						return false;
-					}
-				}
-			}
-		}
-		else if ((eDamager instanceof Arrow))
-		{
-			Arrow a = (Arrow)eDamager;
-			if ((a.getShooter() instanceof Player))
-			{
-				Player player = (Player)eDamagee;
-				Player damager = (Player)a.getShooter();
-				PVPPlayer dpDamager = PvpHandler.getPvpPlayer(damager);
-				if (dpDamager.isInParty())
-				{
-					PVPPlayer dp = PvpHandler.getPvpPlayer(player);
-					if (dpDamager.getParty().isMember(dp))
-					{
-						a.remove();
-						return false;
-					}
-					if (dp.justLeft())
-					{
-						if (dp.getGhostParty().isMember(dpDamager))
-						{
-							a.remove();
-							return false;
-						}
-					}
-				}
-				else if (dpDamager.justLeft())
-				{
-					PVPPlayer dp = PvpHandler.getPvpPlayer(player);
-					if (dpDamager.getGhostParty().isMember(dp))
-					{
-						a.remove();
-						return false;
-					}
-					if (dp.justLeft())
-					{
-						if (dpDamager.getGhostParty().equals(dp.getGhostParty()))
-						{
-							a.remove();
-							return false;
-						}
-					}
-				}
-			}
-		}
-		return true;
 	}
 }
