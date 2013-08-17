@@ -1,10 +1,6 @@
 package PvpBalance;
 
-<<<<<<< HEAD
-=======
-import me.ThaH3lper.com.DungeonAPI;
 
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -267,13 +263,6 @@ public class Damage
 				break;
 			}
 		}
-		
-<<<<<<< HEAD
-=======
-		if(me.crehop.com.Subscribers.isSubscriber(player.getName()) == true){
-			armor += (armor/10);
-		}
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;
 	}
@@ -283,8 +272,8 @@ public class Damage
 		if(CombatUtil.preventDamageCall(damager, damagee))
 			return false;
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, DamageCause.CUSTOM, 1D);
-		if(!DungeonAPI.canhit(event))
-			return false;
+		//if(!DungeonAPI.canhit(event))
+		//	return false;
 		if(PvpBalance.plugin.hasFaction())
 		{
 			if(!PvpBalance.plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true))
