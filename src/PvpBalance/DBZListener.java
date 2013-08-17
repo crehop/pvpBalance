@@ -64,16 +64,7 @@ public class DBZListener implements Listener
 		{
 			quitPlayer.setHealth(0f);
 		}
-		//if(pp.isInPVP())
-		//{
-		//	pp.sethealth(0);
-		//	quitevent.getPlayer().setHealth(0f);
-		//}
-		//if(pp.isInParty())
-		//{
-		//	pp.getParty().leave(pp);
-		//}
-		//PvpHandler.removePvpPlayer(pp);
+		PvpHandler.removePvpPlayer(pp);
 	}
 	
 	@EventHandler
