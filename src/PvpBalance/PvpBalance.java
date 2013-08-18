@@ -265,9 +265,6 @@ public class PvpBalance extends JavaPlugin
 					try
 					{
 						all.tick();
-						if(all.getPlayer().isOnline() == false){
-							PvpHandler.removePvpPlayer(all);
-						}
 					}
 					catch (Exception e1)
 					{
