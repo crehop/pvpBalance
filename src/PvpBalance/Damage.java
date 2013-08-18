@@ -1,7 +1,5 @@
 package PvpBalance;
 
-import me.crehop.com.Subscribers;
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -266,9 +264,6 @@ public class Damage
 			}
 		}
 		
-		if(Subscribers.isSubscriber(player.getName()) == true){
-			armor += (armor/10);
-		}
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;
 	}
