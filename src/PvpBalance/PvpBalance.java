@@ -73,7 +73,14 @@ public class PvpBalance extends JavaPlugin
 	 	{
 	 		faction = true;
 	 	}
+	 	
+<<<<<<< HEAD
+	 	//getCommand("party").setExecutor(new CommandParty(this));
+	 	
+=======
+>>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
+	 	
 	 	Damage.LoadSave = LoadSave;
 	 	getServer().getPluginManager().registerEvents(new DBZListener(this, LoadSave), this);
 	 	

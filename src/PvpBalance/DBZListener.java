@@ -2,6 +2,8 @@ package PvpBalance;
 
 import java.util.Random;
 
+import me.ThaH3lper.com.DungeonAPI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -64,16 +66,19 @@ public class DBZListener implements Listener
 		{
 			quitPlayer.setHealth(0f);
 		}
-		//if(pp.isInPVP())
-		//{
-		//	pp.sethealth(0);
-		//	quitevent.getPlayer().setHealth(0f);
-		//}
-		//if(pp.isInParty())
-		//{
-		//	pp.getParty().leave(pp);
-		//}
-		//PvpHandler.removePvpPlayer(pp);
+<<<<<<< HEAD
+		if(pp.isInPVP())
+		{
+			pp.sethealth(0);
+			quitevent.getPlayer().setHealth(0f);
+		}
+		if(pp.isInParty())
+		{
+			pp.getParty().leave(pp);
+		}
+=======
+>>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
+		PvpHandler.removePvpPlayer(pp);
 	}
 	
 	@EventHandler
@@ -94,11 +99,11 @@ public class DBZListener implements Listener
 	{
 		//if(event.isCancelled())
 		//	return;
-		//if(!DungeonAPI.canhit(event))
-		//{
-		//	event.setCancelled(true);
-		//	return;
-		//}
+		if(!DungeonAPI.canhit(event))
+		{
+			event.setCancelled(true);
+			return;
+		}
 		if(event.getDamage() <= 0)
 		{
 			event.setCancelled(true);
@@ -368,6 +373,10 @@ public class DBZListener implements Listener
 			}
 
 		}
+		//Bukkit.broadcastMessage("useiteminhand " +  event.useItemInHand());
+		//Bukkit.broadcastMessage("isblockinhand " +  event.isBlockInHand());
+		//Bukkit.broadcastMessage("getaction " + event.getAction());
+		//Bukkit.broadcastMessage("issneaking " + player.isSneaking());
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
