@@ -79,7 +79,7 @@ public class PvpBalance extends JavaPlugin
 	 		faction = true;
 	 	}
 	 	
-	 	//getCommand("party").setExecutor(new CommandParty(this));
+	 	getCommand("party").setExecutor(new CommandParty(this));
 	 	
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
 	 	
