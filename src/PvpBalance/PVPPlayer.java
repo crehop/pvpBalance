@@ -1,10 +1,7 @@
 package PvpBalance;
 
-<<<<<<< HEAD
 import java.util.Date;
 
-=======
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 import me.frodenkvist.scoreboardmanager.SMHandler;
 
 import org.bukkit.Bukkit;
@@ -14,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import Event.PBEntityRegainHealthEvent;
+import Party.Invite;
+import Party.Party;
 
 
 public class PVPPlayer
@@ -35,6 +34,14 @@ public class PVPPlayer
 	private boolean pvpstats;
 	private boolean colorUp;
 	//private final double INVULNERABILITY_TIMER = 1D;
+	private long defencePotionTimer = 0L;
+	private long offencePotionTimer = 0L;
+	private long pvpTimer = 0L;
+	private long portalTimer = 0L;
+	private Party party;
+	private Invite invite;
+	private Party ghostParty;
+	private boolean partyChat;
 	
 	public PVPPlayer(Player player)
 	{
@@ -183,12 +190,6 @@ public class PVPPlayer
 			if(this.armorEventLastTick == 1)
 			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
-<<<<<<< HEAD
-=======
-				if(me.crehop.com.Subscribers.isSubscriber(this.player.getName())){
-					player.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "SUBSCTIPTION BONUS 10% ADDED!!" + ChatColor.DARK_AQUA + "]");
-				}
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 			}
 		}
 		else
@@ -198,12 +199,6 @@ public class PVPPlayer
 			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.RED + "Due to recent combat you will gain life to your new max");
-<<<<<<< HEAD
-=======
-				if(me.crehop.com.Subscribers.isSubscriber(this.player.getName())){
-					player.sendMessage(ChatColor.DARK_AQUA + "[" + ChatColor.GOLD + "SUBSCTIPTION BONUS 10% ADDED!!" + ChatColor.DARK_AQUA + "]");
-				}
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 			}
 
 		}
@@ -479,5 +474,166 @@ public class PVPPlayer
 		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown/4));
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
 		SMHandler.setHealthBar((health / maxHealth), player);
+	}
+	
+	public void setDefencePotionTimer(long time)
+	{
+		this.defencePotionTimer = time;
+	}
+	 
+	public void setOffencePotionTimer(long time)
+	{
+		this.offencePotionTimer = time;
+	}
+	   
+	public void setPortalTimer(long time)
+	{
+		this.portalTimer= time;
+	}
+	   
+	public long getPortalTimer()
+	{
+		return this.portalTimer;
+	}
+	 
+	public long getOffencePotionTimer()
+	{
+		return this.offencePotionTimer;
+	}
+	 
+	public long getDefencePotionTimer()
+	{
+		return this.defencePotionTimer;
+	}
+	 
+	public String getName()
+	{
+		return this.player.getName();
+	}
+	 
+	public long getPvpTimer()
+	{
+		return this.pvpTimer;
+	}
+	 
+	public void setPvpTimer(long timer)
+	{
+		this.pvpTimer = timer;
+	}
+	 
+	public boolean isInPVP()
+	{
+		Date d = new Date();
+		if((d.getTime() - this.pvpTimer) / 1000L <= PvpHandler.getPvpTimer())
+		{
+			return true;
+		}
+		return false;
+	}
+	 
+	public boolean isInParty()
+	{
+		if(this.party == null)
+		{
+			return false;
+		}
+		return true;
+	}
+	 
+	public boolean isLeader()
+	{
+		if (this.party == null)
+			return false;
+		return this.party.isLeader(this);
+	}
+	 
+	public void sendMessage(String s)
+	{
+		this.player.sendMessage(s);
+	}
+	 
+	public Party getParty()
+	{
+		return this.party;
+	}
+	 
+	public void setInvite(Invite invite)
+	{
+		this.invite = invite;
+	}
+	 
+	public void setParty(Party p)
+	{
+		this.party = p;
+	}
+	 
+	public boolean hasInvite()
+	{
+		return this.invite != null;
+	}
+	 
+	public void sendInvite(PVPPlayer target)
+	{
+		Invite invite = new Invite(this);
+		target.setInvite(invite);
+		target.sendMessage(ChatColor.AQUA + this.player.getName() + ChatColor.GOLD + " Has Invited You To His Party");
+		target.sendMessage(ChatColor.GOLD + "Type " + ChatColor.AQUA + "/party accept " + ChatColor.GOLD + " To Accept Or " + ChatColor.AQUA + "/party decline" + ChatColor.GOLD + " To Decline");
+	}
+	 
+	public void accept()
+	{
+		if (this.invite != null)
+		{
+			this.invite.accept(this);
+			this.invite = null;
+		}
+	}
+	 
+	public void decline()
+	{
+		if (this.invite != null)
+		{
+			this.invite.decline(this);
+			this.invite = null;
+		}
+	}
+	 
+	public boolean canAccept()
+	{
+		if (this.invite.getParty() == null)
+			return true;
+		if (this.invite.isPartyFull())
+			return false;
+		return true;
+	}
+	 
+	public boolean hasGhostParty()
+	{
+		return this.ghostParty != null;
+	}
+	 
+	public void setGhostParty(Party p)
+	{
+		this.ghostParty = p;
+	}
+	 
+	public boolean justLeft()
+	{
+		return this.ghostParty != null;
+	}
+	 
+	public Party getGhostParty()
+	{
+		return this.ghostParty;
+	}
+	 
+	public void setPartyChat(boolean value)
+	{
+		this.partyChat = value;
+	}
+	 
+	public boolean usesPartyChat()
+	{
+		return this.partyChat;
 	}
 }
