@@ -1,4 +1,5 @@
 package PvpBalance;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,6 +18,8 @@ import org.bukkit.potion.PotionEffect;
 
 import com.massivecraft.factions.P;
 
+import Party.CommandParty;
+import Party.PartyListener;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
 import Util.ItemUtils;
@@ -64,6 +67,8 @@ public class PvpBalance extends JavaPlugin
 	 		PvpHandler.addPvpPlayer(pp);
 	 	}
 	 	
+	 	PvpHandler.load();
+	 	
 	 	sDamage = new Save(this, "Damage.yml");
 	 	protection = new Save(this, "Protection.yml");
 	 	LoadSave  = new LoadSave(this);
@@ -74,15 +79,15 @@ public class PvpBalance extends JavaPlugin
 	 		faction = true;
 	 	}
 	 	
-<<<<<<< HEAD
 	 	//getCommand("party").setExecutor(new CommandParty(this));
 	 	
-=======
->>>>>>> parent of 45fd277... Added Party System, Added Check On ItemBreak Update Health
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
 	 	
 	 	Damage.LoadSave = LoadSave;
+	 	
 	 	getServer().getPluginManager().registerEvents(new DBZListener(this, LoadSave), this);
+	 	getServer().getPluginManager().registerEvents(new PartyListener(), this);
+	 	getServer().getPluginManager().registerEvents(new PvpListener(), this);
 	 	
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 
