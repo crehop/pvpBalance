@@ -17,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
 import com.massivecraft.factions.P;
+
+import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
@@ -76,7 +78,7 @@ public class PvpBalance extends JavaPlugin
 	 	{
 	 		faction = true;
 	 	}
-	 	//getCommand("party").setExecutor(new CommandParty(this));
+	 	getCommand("party").setExecutor(new CommandParty(this));
 	 	
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
 	 	
