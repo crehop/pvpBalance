@@ -48,7 +48,7 @@ public class Damage
 		else if(player.getItemInHand().getType() == Material.BOW)
 		{
 			damage += SaveLoad.LoadSave.Bow;
-			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * SaveLoad.LoadSave.Sharpness;
+			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * (SaveLoad.LoadSave.Sharpness * 2);
 		}
 		damage += player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL) * SaveLoad.LoadSave.Sharpness;
 		if(player.getActivePotionEffects().toString().contains("WEAK")){

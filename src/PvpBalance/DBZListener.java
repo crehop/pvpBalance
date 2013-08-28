@@ -68,7 +68,7 @@ public class DBZListener implements Listener
 		if(pp.isInPVP())
 		{
 			pp.sethealth(0);
-			quitevent.getPlayer().setHealth(0);
+			quitevent.getPlayer().setHealth(0D);
 		}
 		if(pp.isInParty())
 		{
