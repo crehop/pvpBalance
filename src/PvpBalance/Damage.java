@@ -65,7 +65,67 @@ public class Damage
 		int armor = 500;
 		for(ItemStack i:player.getInventory().getArmorContents())
 		{
-			int check = i.getTypeId();
+			int check = 0;
+			if(i.getType() == Material.DIAMOND_HELMET){
+				check = 310;
+			}
+			else if(i.getType() == Material.DIAMOND_CHESTPLATE){
+				check = 311;
+			}
+			else if(i.getType() == Material.DIAMOND_LEGGINGS){
+				check = 312;
+			}
+			else if(i.getType() == Material.DIAMOND_BOOTS){
+				check = 313;
+			}
+			else if(i.getType() == Material.GOLD_HELMET){
+				check = 314;
+			}
+			else if(i.getType() == Material.GOLD_CHESTPLATE){
+				check = 315;
+			}
+			else if(i.getType() == Material.GOLD_LEGGINGS){
+				check = 316;
+			}
+			else if(i.getType() == Material.GOLD_BOOTS){
+				check = 317;
+			}
+			else if(i.getType() == Material.IRON_HELMET){
+				check = 306;
+			}
+			else if(i.getType() == Material.IRON_CHESTPLATE){
+				check = 307;
+			}
+			else if(i.getType() == Material.IRON_LEGGINGS){
+				check = 308;
+			}
+			else if(i.getType() == Material.IRON_BOOTS){
+				check = 309;
+			}
+			else if(i.getType() == Material.CHAINMAIL_HELMET){
+				check = 302;
+			}
+			else if(i.getType() == Material.CHAINMAIL_CHESTPLATE){
+				check = 303;
+			}
+			else if(i.getType() == Material.CHAINMAIL_LEGGINGS){
+				check = 304;
+			}
+			else if(i.getType() == Material.CHAINMAIL_BOOTS){
+				check = 305;
+			}
+			else if(i.getType() == Material.LEATHER_HELMET){
+				check = 298;
+			}
+			else if(i.getType() == Material.LEATHER_CHESTPLATE){
+				check = 299;
+			}
+			else if(i.getType() == Material.LEATHER_LEGGINGS){
+				check = 300;
+			}
+			else if(i.getType() == Material.LEATHER_BOOTS){
+				check = 301;
+			}
 			int protection = i.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) * SaveLoad.LoadSave.protect;
 			armor += protection;
 			switch(check)
@@ -275,11 +335,6 @@ public class Damage
 		if(!partyCanHit(damagee, damager))
 			return false;
 		EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, DamageCause.CUSTOM, 1D);
-		if(PvpBalance.plugin.hasFaction())
-		{
-			if(!PvpBalance.plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true))
-				return false;
-		}
 		return true;
 			
 	}

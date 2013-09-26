@@ -3,6 +3,7 @@ package PvpBalance;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -28,7 +29,8 @@ public class ArmorEffects
 		{
 			if(item == null)
 				continue;
-			if(item.hasItemMeta() && (item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301))
+			if(item.hasItemMeta() && (item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
+					item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS))
 			{
 				PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 				if(pvpPlayer == null)
@@ -36,7 +38,7 @@ public class ArmorEffects
 				LeatherArmorMeta meta = (LeatherArmorMeta)item.getItemMeta();
 				if(ItemUtils.getLore(item) == null || ItemUtils.getLore(item).isEmpty())
 					return;
-				if(item.getItemMeta().getLore().get(0).toString().contains(CODE_ARMOR))
+				if(item.getItemMeta().getLore().toString().contains(CODE_ARMOR))
 				{
 					if(meta.getColor().toString().contains("A06540"))
 						continue;
@@ -49,12 +51,8 @@ public class ArmorEffects
 					}
 					else
 					{
-						switch(item.getTypeId())
-						{
-						case 298:
-						case 299:
-						case 300:
-						case 301:
+						if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
+								item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS){
 							metas[nr] = glow(item,pvpPlayer);
 							break;
 						}
@@ -62,7 +60,7 @@ public class ArmorEffects
 				}
 				else if(item.getItemMeta().getLore().size() > 1)
 				{
-					if(item.getItemMeta().getLore().get(1).toString().contains(CODE_ARMOR))
+					if(item.getItemMeta().getLore().toString().contains(CODE_ARMOR))
 					{
 						if(meta.getColor().toString().contains("A06540"))
 							continue;
@@ -75,12 +73,8 @@ public class ArmorEffects
 						}
 						else
 						{
-							switch(item.getTypeId())
-							{
-							case 298:
-							case 299:
-							case 300:
-							case 301:
+							if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
+									item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS){
 								metas[nr1] = glow(item,pvpPlayer);
 								break;
 							}
@@ -190,7 +184,7 @@ public class ArmorEffects
 				blue = 0;
 			}
 		}
-		else if(Fade.type(item) == 5 || item.getItemMeta().getLore().get(1) == "Polished Prized")
+		else if(Fade.type(item) == 5 || item.getItemMeta().getLore().toString().contains("Polished Prized"))
 		{
 			if(item.hasItemMeta() == true && item.getItemMeta().getLore().size() == 1)
 			{
@@ -292,7 +286,8 @@ public class ArmorEffects
 											alreadyRemoved = true;
 											hasCloth = true;
 											i.setAmount(i.getAmount() - 1);
-											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+											if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
+													item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS && hasCloth == true)
 											{
 												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
 												{
@@ -301,12 +296,15 @@ public class ArmorEffects
 													if(!meta.getColor().toString().contains("A06540"))
 													{
 														List<String> lore = new ArrayList<String>();
-														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														ItemUtils.addLore(item, ItemUtils.getLore(item));
-														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
-														{
-															meta.setColor(Color.fromRGB(254, 255, 255));
-															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														lore = meta.getLore();
+														if(lore.size() != 0){
+															lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+															ItemUtils.setLore(item, lore);
+															if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+															{
+																meta.setColor(Color.fromRGB(254, 255, 255));
+																item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+															}
 														}
 													}
 													else
@@ -321,21 +319,25 @@ public class ArmorEffects
 											alreadyRemoved = true;
 											hasCloth = true;
 											player.getInventory().removeItem(i);
-											if(item.getTypeId() == 298 || item.getTypeId() == 299 || item.getTypeId() == 300 || item.getTypeId() == 301 && hasCloth == true)
+											if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
+													item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS && hasCloth == true)
 											{
 												if(i.getItemMeta().getLore().get(0).toString().contains(CODE_PAPER))
 												{
 													ItemMeta metah = item.getItemMeta();
-													LeatherArmorMeta meta = (LeatherArmorMeta) metah;
+													LeatherArmorMeta meta = (LeatherArmorMeta)metah;
 													if(!meta.getColor().toString().contains("A06540"))
 													{
 														List<String> lore = new ArrayList<String>();
-														lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
-														ItemUtils.addLore(item, ItemUtils.getLore(item));
-														if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
-														{
-															meta.setColor(Color.fromRGB(254, 255, 255));
-															item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+														lore = meta.getLore();
+														if(lore.size() != 0){
+															lore.add("Polished " + ChatColor.MAGIC + " " + CODE_ARMOR);
+															ItemUtils.setLore(item, lore);
+															if(meta.getColor().getBlue() == 255 && meta.getColor().getGreen() == 255 && meta.getColor().getRed() == 255)
+															{
+																meta.setColor(Color.fromRGB(254, 255, 255));
+																item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+															}
 														}
 													}
 													else

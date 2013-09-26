@@ -16,8 +16,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
-import com.massivecraft.factions.P;
-
 import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
@@ -34,7 +32,6 @@ public class PvpBalance extends JavaPlugin
 	private static int everyOther = 0;
 	private boolean debug = false;
 	
-	private P factions;
 	private boolean faction = false;
 	
 	private Save sDamage, protection;
@@ -72,13 +69,7 @@ public class PvpBalance extends JavaPlugin
 	 	sDamage = new Save(this, "Damage.yml");
 	 	protection = new Save(this, "Protection.yml");
 	 	LoadSave  = new LoadSave(this);
-	 	
-	 	factions = (P) Bukkit.getPluginManager().getPlugin("Factions");
-	 	if(factions != null)
-	 	{
-	 		faction = true;
-	 	}
-	 	getCommand("party").setExecutor(new CommandParty(this));
+	    getCommand("party").setExecutor(new CommandParty(this));
 	 	
 	 	Bukkit.getMessenger().registerOutgoingPluginChannel(this, "Scoreboard");
 	 	
@@ -305,10 +296,6 @@ public class PvpBalance extends JavaPlugin
 		return faction;
 	}
 	
-	public P getFactions()
-	{
-		return factions;
-	}
 	
 	public Save getSDamage()
 	{

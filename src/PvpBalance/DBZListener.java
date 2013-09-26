@@ -4,8 +4,10 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -30,11 +32,13 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
@@ -47,6 +51,7 @@ import SaveLoad.LoadSave;
 
 public class DBZListener implements Listener
 {
+	static int tick = 0;
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
 	
@@ -185,10 +190,6 @@ public class DBZListener implements Listener
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 				boolean faction = true;
-				if(plugin.hasFaction())
-				{
-					faction = plugin.getFactions().entityListener.canDamagerHurtDamagee(event, true);
-				}
 				if(CombatUtil.preventDamageCall(damager, damagee) || !faction)
 				{
 					event.setCancelled(true);
@@ -327,7 +328,13 @@ public class DBZListener implements Listener
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 	}
-	
+	//JUMP SKILL!
+	//@EventHandler
+	//public void playerMoveEvent(PlayerMoveEvent event){
+	//	if(event.getPlayer().isSneaking() == true && event.getPlayer().getLocation().subtract(0, 1, 0).getBlock().getType() == Material.AIR && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
+	//		Skills.SuperJump.Jump(event.getPlayer(), 0.9);
+	//	}
+	//}
 	@EventHandler
 	public void regenEvent(EntityRegainHealthEvent event)
 	{
@@ -554,7 +561,68 @@ public class DBZListener implements Listener
 	{
 		if(is == null)
 			return false;
-		switch(is.getTypeId())
+		int check = 0;
+		if(is.getType() == Material.DIAMOND_HELMET){
+			check = 310;
+		}
+		else if(is.getType() == Material.DIAMOND_CHESTPLATE){
+			check = 311;
+		}
+		else if(is.getType() == Material.DIAMOND_LEGGINGS){
+			check = 312;
+		}
+		else if(is.getType() == Material.DIAMOND_BOOTS){
+			check = 313;
+		}
+		else if(is.getType() == Material.GOLD_HELMET){
+			check = 314;
+		}
+		else if(is.getType() == Material.GOLD_CHESTPLATE){
+			check = 315;
+		}
+		else if(is.getType() == Material.GOLD_LEGGINGS){
+			check = 316;
+		}
+		else if(is.getType() == Material.GOLD_BOOTS){
+			check = 317;
+		}
+		else if(is.getType() == Material.IRON_HELMET){
+			check = 306;
+		}
+		else if(is.getType() == Material.IRON_CHESTPLATE){
+			check = 307;
+		}
+		else if(is.getType() == Material.IRON_LEGGINGS){
+			check = 308;
+		}
+		else if(is.getType() == Material.IRON_BOOTS){
+			check = 309;
+		}
+		else if(is.getType() == Material.CHAINMAIL_HELMET){
+			check = 302;
+		}
+		else if(is.getType() == Material.CHAINMAIL_CHESTPLATE){
+			check = 303;
+		}
+		else if(is.getType() == Material.CHAINMAIL_LEGGINGS){
+			check = 304;
+		}
+		else if(is.getType() == Material.CHAINMAIL_BOOTS){
+			check = 305;
+		}
+		else if(is.getType() == Material.LEATHER_HELMET){
+			check = 298;
+		}
+		else if(is.getType() == Material.LEATHER_CHESTPLATE){
+			check = 299;
+		}
+		else if(is.getType() == Material.LEATHER_LEGGINGS){
+			check = 300;
+		}
+		else if(is.getType() == Material.LEATHER_BOOTS){
+			check = 301;
+		}
+		switch(check)
 		{
 		case 298:
 		case 299:
