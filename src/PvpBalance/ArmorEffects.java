@@ -40,9 +40,9 @@ public class ArmorEffects
 					return;
 				if(item.getItemMeta().getLore().toString().contains(CODE_ARMOR))
 				{
-					if(meta.getColor().toString().contains("A06540"))
+					if(meta.getColor().toString().contains("A06540")){
 						continue;
-					
+					}
 					int nr = (Fade.type(item)-1);
 					if(metas[nr] != null)
 					{
@@ -54,7 +54,7 @@ public class ArmorEffects
 						if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
 								item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS){
 							metas[nr] = glow(item,pvpPlayer);
-							break;
+							continue;
 						}
 					}
 				}
@@ -62,9 +62,9 @@ public class ArmorEffects
 				{
 					if(item.getItemMeta().getLore().toString().contains(CODE_ARMOR))
 					{
-						if(meta.getColor().toString().contains("A06540"))
+						if(meta.getColor().toString().contains("A06540")){
 							continue;
-						
+						}
 						int nr1 = (Fade.type(item)-1);
 						if(metas[nr1] != null)
 						{
@@ -76,7 +76,7 @@ public class ArmorEffects
 							if(item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE ||
 									item.getType() == Material.LEATHER_HELMET|| item.getType() == Material.LEATHER_LEGGINGS){
 								metas[nr1] = glow(item,pvpPlayer);
-								break;
+								continue;
 							}
 						}
 					}
