@@ -61,7 +61,19 @@ public class Effects
 			PvpBalance.logger.info("Effect SlowPlayer!");
 		}
 	}
-	
+	public static void effectSuperJump(Player player)
+	{
+		try
+		{
+			//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+			ParticleEffect.sendToLocation(ParticleEffect.CLOUD, player.getLocation().subtract(0, 0.1, 0) ,0.4f,-0.4f,0.4f, (float)0.004, 100);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect SlowPlayer!");
+		}
+	}
 	public static void effectWither(Player player)
 	{
 		try

@@ -19,21 +19,25 @@ public class PVPPlayer
 {
 	private Player player;
 	private double health;
+	private double stamina;
 	private double healthLastTick;
 	private double maxHealth;
+	private double maxStamina;
 	private double cooldown;
 	private int hitCoolDown;
+	private int skillCoolDown;
 	private int combatCoolDown;
 	private int hunger;
 	private int lastDamage;
 	private int armorEventLastTick;
+	private int healthPercent;
 	private boolean inCombat;
 	private boolean isDead;
 	private boolean canRegen;
 	private boolean god;
 	private boolean pvpstats;
 	private boolean colorUp;
-	//private final double INVULNERABILITY_TIMER = 1D;
+	private boolean canUseSkill;
 	private long defencePotionTimer = 0L;
 	private long offencePotionTimer = 0L;
 	private long pvpTimer = 0L;
@@ -50,6 +54,9 @@ public class PVPPlayer
 		this.canRegen = true;
 		this.healthLastTick = 500;
 		this.maxHealth = 500;
+		this.maxStamina = 100;
+		this.stamina = 100;
+		this.skillCoolDown = 0;
 		this.cooldown = 0;
 		this.isDead = false;
 		this.hitCoolDown = 0;
@@ -60,7 +67,34 @@ public class PVPPlayer
 		this.lastDamage = 0;
 		colorUp = false;
 	}
-
+	public double getStamina()
+	{
+		return this.stamina;
+	}
+	public double getMaxStamina()
+	{
+		return this.maxStamina;
+	}
+	public void setStamina(int stamina)
+	{
+		this.stamina = stamina;
+	}
+	public void setMaxStamina(int maxStamina)
+	{
+		this.maxStamina = maxStamina;
+	}
+	public boolean canUseSkill()
+	{
+		return this.canUseSkill;
+	}
+	public int getSkillCooldown()
+	{
+		return this.skillCoolDown;
+	}
+	public void setSkillCooldown(int skillCoolDown)
+	{
+		this.skillCoolDown = skillCoolDown;
+	}
 	public Player getPlayer()
 	{
 		return this.player;
@@ -158,7 +192,10 @@ public class PVPPlayer
 		}
 		
 	}
-	
+	public void setCanUseSkill(boolean canUseSkill)
+	{
+		this.canUseSkill = canUseSkill;
+	}
 	public void setHitCoolDown(int hitCoolDown)
 	{
 		this.hitCoolDown = hitCoolDown;
@@ -181,8 +218,6 @@ public class PVPPlayer
 	
 	public void setMaxHealth(double maxHealth)
 	{
-		if(maxHealth == this.maxHealth)
-			return;
 		if(this.health == this.maxHealth && this.combatCoolDown < 1)
 		{
 			this.maxHealth = maxHealth;
@@ -303,6 +338,13 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(player.getPlayer().getAllowFlight() == false && player.getWorld().getName().contains("world") && this.skillCoolDown == 0){
+			player.setAllowFlight(true);
+		}
+		if(player.isFlying() == true && player.getGameMode() == GameMode.SURVIVAL && player.getWorld().getName().contains("world")){
+			player.setAllowFlight(false);
+			player.setFlying(false);
+		}
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
@@ -335,10 +377,32 @@ public class PVPPlayer
 		{
 			this.hitCoolDown = 0;
 		}
+		if(this.skillCoolDown > 0)
+		{
+			--this.skillCoolDown;
+			if(this.canUseSkill == true){
+				this.setCanUseSkill(false);
+			}
+		}
+		else if(this.skillCoolDown == 0){
+			if(this.canUseSkill == false)
+			{
+				this.setCanUseSkill(true);
+			}
+		}
+		else if(this.skillCoolDown < 0)
+		{
+			this.skillCoolDown = 0;
+		}
+		
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
-		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
+		String message2 = ("SIDEBAR,Health," + ChatColor.YELLOW + "Stamina:" + ChatColor.RESET + "," + (int)this.stamina);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
+		String message3 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message3.getBytes());
+		String message4 = ("SIDEBAR,Health," + ChatColor.RED + "Till Skill:" + ChatColor.RESET + "," + ((int)this.skillCoolDown));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message4.getBytes());
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
 			this.health = this.maxHealth;
@@ -412,6 +476,9 @@ public class PVPPlayer
 					return;
 				this.sethealth(health + heal);
 			}
+		}
+		if(this.canRegen == true && this.getStamina() < this.getMaxStamina()){
+			this.setStamina((int)this.getStamina() + 1);
 		}
 		if(health > maxHealth)
 		{

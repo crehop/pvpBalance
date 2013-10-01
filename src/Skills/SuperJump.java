@@ -7,6 +7,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import PvpBalance.Effects;
+import PvpBalance.ParticleEffect;
+
 public class SuperJump {
 	public static void Jump(Player player,double d){
         float hForce = 20 / 10.0F;
@@ -27,5 +30,8 @@ public class SuperJump {
 				lplayer.playSound(lplayer.getLocation(), Sound.HORSE_JUMP, 3.0F, 0.533F);
 			}
 		}
+		Effects.effectSuperJump(player);
+		Effects.effectSuperJump(player);
+		Effects.effectSuperJump(player);
 	}
 }

@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -329,10 +330,33 @@ public class DBZListener implements Listener
 		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 	}
 	//JUMP SKILL!
-	//@EventHandler
-	//public void playerMoveEvent(PlayerMoveEvent event){
-	//	if(event.getPlayer().isSneaking() == true && event.getPlayer().getLocation().subtract(0, 1, 0).getBlock().getType() == Material.AIR && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
+	@EventHandler
+	public void playerToggleFlightEvent(PlayerToggleFlightEvent event)
+	{
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
+		if(pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+			Skills.SuperJump.Jump(event.getPlayer(), 0.9);
+			pvp.setSkillCooldown(5);
+			pvp.setCanUseSkill(false);
+			pvp.setStamina((int) (pvp.getStamina() - 10));
+			event.setCancelled(true);
+			pvp.getPlayer().setAllowFlight(false);
+			pvp.getPlayer().setFlying(false);
+		}
+		if(event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+			event.setCancelled(true);
+			event.getPlayer().setAllowFlight(false);
+			event.getPlayer().setFlying(false);
+		}
+	}
+	//public void playerMoveEvent(PlayerMoveEvent event)
+	//{
+	//	PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
+	//	if(pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().isSneaking() == true && event.getTo().getY()-event.getFrom().getY()>=0.1 && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
 	//		Skills.SuperJump.Jump(event.getPlayer(), 0.9);
+	//		pvp.setSkillCooldown(5);
+	//		pvp.setCanUseSkill(false);
+	//		pvp.setStamina((int) (pvp.getStamina() - 10));
 	//	}
 	//}
 	@EventHandler
@@ -376,10 +400,6 @@ public class DBZListener implements Listener
 			}
 
 		}
-		//Bukkit.broadcastMessage("useiteminhand " +  event.useItemInHand());
-		//Bukkit.broadcastMessage("isblockinhand " +  event.isBlockInHand());
-		//Bukkit.broadcastMessage("getaction " + event.getAction());
-		//Bukkit.broadcastMessage("issneaking " + player.isSneaking());
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
