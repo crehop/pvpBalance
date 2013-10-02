@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -32,14 +31,14 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
@@ -48,6 +47,8 @@ import Event.PBEntityDamageEvent;
 import Event.PBEntityDeathEvent;
 import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
+import Skills.PileDrive;
+import Skills.SuperSpeed;
 
 
 public class DBZListener implements Listener
@@ -187,11 +188,11 @@ public class DBZListener implements Listener
 				}
 			}
 			else if(event.getDamager() instanceof Player)
-			{
+			{/////////////////////////////////////////////////////////////////////////////////
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
-				boolean faction = true;
-				if(CombatUtil.preventDamageCall(damager, damagee) || !faction)
+				PileDrive.pileDrive(pvpDamager.getPlayer(), pvpDamagee.getPlayer());
+				if(CombatUtil.preventDamageCall(damager, damagee))
 				{
 					event.setCancelled(true);
 					return;
@@ -336,7 +337,7 @@ public class DBZListener implements Listener
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
 		if(pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
 			Skills.SuperJump.Jump(event.getPlayer(), 0.9);
-			pvp.setSkillCooldown(5);
+			pvp.setSkillCooldown(7);
 			pvp.setCanUseSkill(false);
 			pvp.setStamina((int) (pvp.getStamina() - 10));
 			event.setCancelled(true);
@@ -347,6 +348,45 @@ public class DBZListener implements Listener
 			event.setCancelled(true);
 			event.getPlayer().setAllowFlight(false);
 			event.getPlayer().setFlying(false);
+		}
+	}
+	@EventHandler
+	public void playerToggleSprintEvent(PlayerToggleSprintEvent event)
+	{
+		Player player = event.getPlayer();
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		pvp.setWasSprinting(2);
+		pvp.setCanUseSkill(true);
+		if(pvp.getUsedSpeedSkill() == true)
+		{
+			pvp.setUsedSpeedSkill(false);
+			pvp.setCanUseSkill(false);
+			SuperSpeed.speedOff(player);
+		}
+	}
+	@EventHandler
+	public void playerToggleSneakEvent(PlayerToggleSneakEvent event)
+	{
+		Player player = event.getPlayer();
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		if(pvp.wasFirstToggle() == true)
+		{
+			pvp.setFirstToggle(false);
+			return;
+		}
+		else if(pvp.getWasSprinting() > 0 && pvp.canUseSkill() == true && pvp.getStamina() > 5 && pvp.getUsedSpeedSkill() == false){
+			event.setCancelled(true);
+			player.setSneaking(false);
+			SuperSpeed.speedOn(player);
+			pvp.setUsedSpeedSkill(true);
+			pvp.setFirstToggle(true);
+			return;
+		}
+		else if(pvp.getUsedSpeedSkill() == true && pvp.wasFirstToggle() == false)
+		{
+			pvp.setUsedSpeedSkill(false);
+			pvp.setCanUseSkill(false);
+			SuperSpeed.speedOff(player);
 		}
 	}
 	//public void playerMoveEvent(PlayerMoveEvent event)
@@ -400,7 +440,28 @@ public class DBZListener implements Listener
 			}
 
 		}
+		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
+			if(player.getItemInHand().getType() == Material.DIAMOND_SWORD || player.getItemInHand().getType()== Material.IRON_SWORD
+				|| player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.WOOD_SWORD
+				|| player.getItemInHand().getType() == Material.IRON_AXE || player.getItemInHand().getType() == Material.GOLD_AXE
+				|| player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.DIAMOND_AXE
+				|| player.getItemInHand().getType() == Material.IRON_HOE || player.getItemInHand().getType() == Material.GOLD_HOE
+				|| player.getItemInHand().getType() == Material.WOOD_HOE || player.getItemInHand().getType() == Material.DIAMOND_HOE){
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+				if(pvp.getComboReady() < 7)
+				{
+					pvp.setComboReady(pvp.getComboReady() + 2);
+					if(pvp.getComboReady() >= 6 && pvp.getStamina() >= 50){
+						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "PILEDRIVE READY HIT PLAYER TO ACTIVATE!");
+					}
+					if(pvp.getComboReady() >=6 && pvp.getStamina() < 50){
+						player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "PILEDRIVE NEEDS 50 STAMINA!");
+					}
+				}
+			}
+		}
 	}
+	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamageEvent(EntityDamageEvent event)
@@ -566,7 +627,7 @@ public class DBZListener implements Listener
 			Player player = (Player) event.getEntity();
 			if(event.getForce() < 0.95){
 				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED + "You must pull the bow all the way back to fire!");
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU MUST PULL ALL THE WAY BACK TO FIRE BOW!");
 			}
 		}
 	}
