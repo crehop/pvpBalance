@@ -124,7 +124,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.SMOKE, player.getLocation(),0.2f,0.1f,0.2f, (float)0.03, 30);
+			ParticleEffect.sendToLocation(ParticleEffect.SMOKE, player.getLocation(),0.3f,0.2f,0.3f, (float)0.03, 70);
 		}
 		catch (Exception e)
 		{

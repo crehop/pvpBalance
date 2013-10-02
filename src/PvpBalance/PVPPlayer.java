@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import Event.PBEntityRegainHealthEvent;
 import Party.Invite;
 import Party.Party;
+import Skills.SuperSpeed;
 
 
 public class PVPPlayer
@@ -24,20 +25,24 @@ public class PVPPlayer
 	private double maxHealth;
 	private double maxStamina;
 	private double cooldown;
+	private double healthPercent;
+	private int comboReady;
 	private int hitCoolDown;
 	private int skillCoolDown;
 	private int combatCoolDown;
 	private int hunger;
+	private int stun;
 	private int lastDamage;
 	private int armorEventLastTick;
-	private int healthPercent;
+	private int wasSprinting;
 	private boolean inCombat;
 	private boolean isDead;
 	private boolean canRegen;
 	private boolean god;
 	private boolean pvpstats;
 	private boolean colorUp;
-	private boolean canUseSkill;
+	private boolean canUseSkill; 
+	private boolean firstToggle;
 	private long defencePotionTimer = 0L;
 	private long offencePotionTimer = 0L;
 	private long pvpTimer = 0L;
@@ -46,6 +51,8 @@ public class PVPPlayer
 	private Invite invite;
 	private Party ghostParty;
 	private boolean partyChat;
+	private boolean isStunned;
+	private boolean usedSpeedSkill;
 	
 	public PVPPlayer(Player player)
 	{
@@ -65,7 +72,69 @@ public class PVPPlayer
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
 		this.lastDamage = 0;
+		this.wasSprinting = 0;
+		this.usedSpeedSkill = false;
+		this.isStunned = false;
+		this.healthPercent = 100.0;
+		this.comboReady = 0;
 		colorUp = false;
+	}
+	public int getComboReady()
+	{
+		return this.comboReady;
+	}
+	public void setComboReady(int comboReady)
+	{
+		this.comboReady = comboReady;
+	}
+	public double getHealthPercent()
+	{
+		return this.healthPercent;
+	}
+	public void setHealthPercent(double percent)
+	{
+		this.health = this.health / percent;
+		this.healthPercent = percent;
+	}
+	public boolean getUsedSpeedSkill()
+	{
+		return this.usedSpeedSkill;
+	}
+	public void setUsedSpeedSkill(boolean usedSpeedSkill)
+	{
+		this.usedSpeedSkill = usedSpeedSkill;
+	}
+	public boolean wasFirstToggle()
+	{
+		return this.firstToggle;
+	}
+	public void setFirstToggle(boolean firstToggle)
+	{
+		this.firstToggle = firstToggle;
+	}
+	public int getWasSprinting()
+	{
+		return this.wasSprinting;
+	}
+	public void setWasSprinting(int wasSprinting)
+	{
+		this.wasSprinting = wasSprinting;
+	}
+	public int getStun()
+	{
+		return this.stun;
+	}
+	public void setStun(int stun)
+	{
+		this.stun = stun;
+	}
+	public boolean isStunned()
+	{
+		return this.isStunned;
+	}
+	public void setIsStunned(boolean isStunned)
+	{
+		this.isStunned = isStunned;
 	}
 	public double getStamina()
 	{
@@ -338,6 +407,18 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(this.getComboReady() > 0 && this.comboReady < 9){
+			this.comboReady--;
+		}
+		if(this.getComboReady() >= 10 && this.comboReady < 99)
+		{
+			this.comboReady-= 10;
+		}
+		if(this.getComboReady() >= 100 && this.comboReady < 999)
+		{
+			this.comboReady-= 100;
+		}
+		this.healthPercent = this.health / this.maxHealth;
 		if(player.getPlayer().getAllowFlight() == false && player.getWorld().getName().contains("world") && this.skillCoolDown == 0){
 			player.setAllowFlight(true);
 		}
@@ -394,7 +475,25 @@ public class PVPPlayer
 		{
 			this.skillCoolDown = 0;
 		}
-		
+		if(this.wasSprinting > 0)
+		{
+			--this.wasSprinting;
+		}
+		else if(this.wasSprinting < 0)
+		{
+			this.wasSprinting = 0;
+		}
+		if(player.isSprinting() == true){
+			this.wasSprinting = 2;
+		}
+		if(this.usedSpeedSkill == true){
+			this.setStamina((int)stamina - 5);
+			if(this.stamina <= 4)
+			{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.RED + "YOUR OUT OF STAMINA AND STOP SPRINTING!");
+				SuperSpeed.speedOff(player);
+			}
+		}
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 		String message2 = ("SIDEBAR,Health," + ChatColor.YELLOW + "Stamina:" + ChatColor.RESET + "," + (int)this.stamina);
@@ -442,7 +541,7 @@ public class PVPPlayer
 		{
 			this.canRegen = false;
 		}
-		else
+		else 
 		{
 			canRegen = true;
 		}
