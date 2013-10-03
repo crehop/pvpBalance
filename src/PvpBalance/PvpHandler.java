@@ -2,8 +2,10 @@ package PvpBalance;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -21,17 +23,34 @@ public class PvpHandler
 		{
 			if(pp == null)
 				continue;
-			if(pp.getPlayer().equals(player))
+			if(pp.getPlayer() == player)
 				return pp;
 		}
 		return null;
 	}
-	
-	public static boolean addPvpPlayer(PVPPlayer pp)
+	public static boolean isInList(PVPPlayer pp)
 	{
-		return players.add(pp);
+		for(PVPPlayer pp1 : players)
+		{
+			if(pp1 == null)
+			{
+				continue;
+			}
+			if(pp1.getPlayer().getDisplayName() == pp.getPlayer().getDisplayName())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
+	public static void addPvpPlayer(PVPPlayer pp)
+	{
+		if(isInList(pp) == false){
+			players.add(pp);
+		}
+		
+	}
 	public static boolean removePvpPlayer(PVPPlayer pp)
 	{
 		return players.remove(pp);

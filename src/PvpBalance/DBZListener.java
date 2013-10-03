@@ -188,10 +188,9 @@ public class DBZListener implements Listener
 				}
 			}
 			else if(event.getDamager() instanceof Player)
-			{/////////////////////////////////////////////////////////////////////////////////
+			{
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
-				PileDrive.pileDrive(pvpDamager.getPlayer(), pvpDamagee.getPlayer());
 				if(CombatUtil.preventDamageCall(damager, damagee))
 				{
 					event.setCancelled(true);
@@ -208,7 +207,13 @@ public class DBZListener implements Listener
 				}
 				else
 				{
-					dealtDamage = Damage.calcDamage(damager) + new Random().nextInt(Damage.calcDamage(damager) / 10);
+					if(pvpDamager.canUsePileDrive()){
+						PileDrive.pileDrive(damagee,damager);
+					}
+					else
+					{
+						dealtDamage = Damage.calcDamage(damager) + new Random().nextInt(Damage.calcDamage(damager) / 10);
+					}
 				}
 				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, damager, (int)dealtDamage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -247,9 +252,6 @@ public class DBZListener implements Listener
 				else
 				{
 					dealtDamage = rawDamage * SaveLoad.LoadSave.Multi;
-					if(PvpBalance.plugin.isDebug())
-					{
-					}
 				}
 				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -389,16 +391,6 @@ public class DBZListener implements Listener
 			SuperSpeed.speedOff(player);
 		}
 	}
-	//public void playerMoveEvent(PlayerMoveEvent event)
-	//{
-	//	PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
-	//	if(pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().isSneaking() == true && event.getTo().getY()-event.getFrom().getY()>=0.1 && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
-	//		Skills.SuperJump.Jump(event.getPlayer(), 0.9);
-	//		pvp.setSkillCooldown(5);
-	//		pvp.setCanUseSkill(false);
-	//		pvp.setStamina((int) (pvp.getStamina() - 10));
-	//	}
-	//}
 	@EventHandler
 	public void regenEvent(EntityRegainHealthEvent event)
 	{
@@ -451,10 +443,11 @@ public class DBZListener implements Listener
 				if(pvp.getComboReady() < 7)
 				{
 					pvp.setComboReady(pvp.getComboReady() + 2);
-					if(pvp.getComboReady() >= 6 && pvp.getStamina() >= 50){
+					if(pvp.getComboReady() >= 6 && pvp.getStamina() >= 51 && pvp.canUsePileDrive() == false){
 						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "PILEDRIVE READY HIT PLAYER TO ACTIVATE!");
+						pvp.setCanUsePileDrive(true);
 					}
-					if(pvp.getComboReady() >=6 && pvp.getStamina() < 50){
+					if(pvp.getComboReady() >=6 && pvp.getStamina() < 51){
 						player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "PILEDRIVE NEEDS 50 STAMINA!");
 					}
 				}

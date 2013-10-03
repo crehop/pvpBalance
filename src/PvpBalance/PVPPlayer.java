@@ -35,6 +35,7 @@ public class PVPPlayer
 	private int lastDamage;
 	private int armorEventLastTick;
 	private int wasSprinting;
+	private boolean canUsePileDrive;
 	private boolean inCombat;
 	private boolean isDead;
 	private boolean canRegen;
@@ -146,7 +147,19 @@ public class PVPPlayer
 	}
 	public void setStamina(int stamina)
 	{
-		this.stamina = stamina;
+		if(stamina < 0)
+		{
+			this.stamina = 0;
+		}
+		else if(this.getMaxStamina() < stamina)
+		{
+			this.stamina = this.getMaxStamina();
+		}
+		else
+		{
+			this.stamina = stamina;
+		}
+		
 	}
 	public void setMaxStamina(int maxStamina)
 	{
@@ -407,8 +420,16 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(this.getComboReady() == 0 && this.canUsePileDrive() == true)
+		{
+			this.setCanUsePileDrive(false);
+			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO PILEDRIVE!");
+		}
 		if(this.getComboReady() > 0 && this.comboReady < 9){
 			this.comboReady--;
+			if(this.getComboReady() >= 6){
+				this.setCanUsePileDrive(true);
+			}
 		}
 		if(this.getComboReady() >= 10 && this.comboReady < 99)
 		{
@@ -801,5 +822,13 @@ public class PVPPlayer
 	public boolean usesPartyChat()
 	{
 		return this.partyChat;
+	}
+	public boolean canUsePileDrive() 
+	{
+		return canUsePileDrive;
+	}
+	public void setCanUsePileDrive(boolean canUsePileDrive)
+	{
+		this.canUsePileDrive = canUsePileDrive;
 	}
 }

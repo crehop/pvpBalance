@@ -261,7 +261,6 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 3)
 		    {
 		    	everyOther = 0;
-		    	//TICK PVPPLAYERS TO ITERATE COOLDOWNS
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
 					try
