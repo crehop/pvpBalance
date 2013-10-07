@@ -26,6 +26,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -142,6 +143,10 @@ public class DBZListener implements Listener
 				if(damager instanceof Player && event.getEntity() instanceof Player)
 				{
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+					if(pvpDamager.isUsingGrappleShot() == true)
+					{
+						pvpDamager.setGrapplePlayer(damagee);
+					}
 					dealtDamage = Damage.calcDamage((Player)damager);
 					pvpDamagee.damage((int)dealtDamage);
 					pvpDamager.setCombatCoolDown(20);
@@ -332,6 +337,19 @@ public class DBZListener implements Listener
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 	}
+	@EventHandler
+	public void projectileHitEvent(ProjectileHitEvent event)
+	{
+		if(event.getEntity().getShooter() instanceof Player){
+			Player player = (Player)event.getEntity().getShooter();
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			if(pvp.isUsingGrappleShot() == true)
+			{
+				pvp.setGrappleEnd(event.getEntity().getLocation());
+			}
+		}
+		
+	}
 	//JUMP SKILL!
 	@EventHandler
 	public void playerToggleFlightEvent(PlayerToggleFlightEvent event)
@@ -439,16 +457,32 @@ public class DBZListener implements Listener
 				|| player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.DIAMOND_AXE
 				|| player.getItemInHand().getType() == Material.IRON_HOE || player.getItemInHand().getType() == Material.GOLD_HOE
 				|| player.getItemInHand().getType() == Material.WOOD_HOE || player.getItemInHand().getType() == Material.DIAMOND_HOE){
-			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 				if(pvp.getComboReady() < 7)
 				{
 					pvp.setComboReady(pvp.getComboReady() + 2);
 					if(pvp.getComboReady() >= 6 && pvp.getStamina() >= 51 && pvp.canUsePileDrive() == false){
 						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "PILEDRIVE READY HIT PLAYER TO ACTIVATE!");
 						pvp.setCanUsePileDrive(true);
+						pvp.setCanUseGrappleShot(false);
 					}
 					if(pvp.getComboReady() >=6 && pvp.getStamina() < 51){
 						player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "PILEDRIVE NEEDS 50 STAMINA!");
+					}
+				}
+			}
+			if(player.getItemInHand().getType() == Material.BOW){
+				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+				if(pvp.getComboReady() < 7)
+				{
+					pvp.setComboReady(pvp.getComboReady() + 2);
+					if(pvp.getComboReady() >= 7 && pvp.getStamina() >= 25){
+						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "GRAPLE READY SHOOT ARROW TO ACTIVATE!");
+						pvp.setCanUsePileDrive(false);
+						pvp.setCanUseGrappleShot(true);
+					}
+					if(pvp.getComboReady() >= 7 && pvp.getStamina() < 25){
+						player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GRAPPLE NEEDS 25 STAMINA!");
 					}
 				}
 			}
@@ -613,14 +647,31 @@ public class DBZListener implements Listener
 	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
 	    }
 	}
-	
 	@EventHandler
 	public void shotBow(EntityShootBowEvent event){
 		if(event.getEntity() instanceof Player){
 			Player player = (Player) event.getEntity();
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			pvp.setComboReady(pvp.getComboReady() - 2);
 			if(event.getForce() < 0.95){
 				event.setCancelled(true);
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU MUST PULL ALL THE WAY BACK TO FIRE BOW!");
+				return;
+			}
+			if(pvp.canUseGrappleShot() == true)
+			{
+				if(pvp.getStamina() < 25)
+				{
+					player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT USE GRAPPLE SHOT NOT ENOUGH STAMINA (25)!");
+				}
+				else if(pvp.getStamina() > 25 && pvp.getSkillCooldown() == 0){
+					player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU USE GRAPPLE SHOT!");
+					pvp.setGrappleArrow((Arrow)event.getProjectile());
+					pvp.setSkillCooldown(5);
+					pvp.setGrappleStart(pvp.getPlayer().getLocation());
+					pvp.setGrappleEnd(null);
+					pvp.setIsUsingGrappleShot(true);
+				}
 			}
 		}
 	}

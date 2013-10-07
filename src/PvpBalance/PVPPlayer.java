@@ -7,9 +7,10 @@ import me.frodenkvist.scoreboardmanager.SMHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-
 import Event.PBEntityRegainHealthEvent;
 import Party.Invite;
 import Party.Party;
@@ -26,6 +27,10 @@ public class PVPPlayer
 	private double maxStamina;
 	private double cooldown;
 	private double healthPercent;
+	private Arrow grappleArrow;
+	private Location grappleStart;
+	private Location grappleEnd;
+	private Player hitByGrapple;
 	private int comboReady;
 	private int hitCoolDown;
 	private int skillCoolDown;
@@ -35,6 +40,8 @@ public class PVPPlayer
 	private int lastDamage;
 	private int armorEventLastTick;
 	private int wasSprinting;
+	private boolean canUseGrappleShot;
+	private boolean isUsingGrappleShot;
 	private boolean canUsePileDrive;
 	private boolean inCombat;
 	private boolean isDead;
@@ -80,13 +87,65 @@ public class PVPPlayer
 		this.comboReady = 0;
 		colorUp = false;
 	}
+	public boolean isUsingGrappleShot()
+	{
+		return this.isUsingGrappleShot;
+	}
+	public void setIsUsingGrappleShot(boolean isUsingGrappleShot)
+	{
+		this.isUsingGrappleShot = isUsingGrappleShot;
+	}
+	public Player getPlayerHitByGrapple()
+	{
+		return this.hitByGrapple;
+	}
+	public void setGrapplePlayer(Player player)
+	{
+		this.hitByGrapple = player;
+	}
+	public Arrow getGrappleArrow()
+	{
+		return this.grappleArrow;
+	}
+	public void setGrappleArrow(Arrow grappleArrow)
+	{
+		this.grappleArrow = grappleArrow;
+	}
+	public void setCanUseGrappleShot(boolean canUseGrappleShot)
+	{
+		this.canUseGrappleShot = canUseGrappleShot;
+	}
+	public boolean canUseGrappleShot()
+	{
+		return this.canUseGrappleShot;
+	}
+	public Location getGrappleStart()
+	{
+		return this.grappleStart;
+	}
+	public Location getGrappleEnd()
+	{
+		return this.grappleEnd;
+	}
+	public void setGrappleStart(Location grappleStart)
+	{
+		this.grappleStart = grappleStart;
+	}
+	public void setGrappleEnd(Location grappleEnd)
+	{
+		this.grappleEnd = grappleEnd;
+	}
 	public int getComboReady()
 	{
 		return this.comboReady;
 	}
 	public void setComboReady(int comboReady)
 	{
-		this.comboReady = comboReady;
+		int modifiedComboReady = comboReady;
+		if(modifiedComboReady < 0){
+			modifiedComboReady = 0;
+		}
+		this.comboReady = modifiedComboReady;
 	}
 	public double getHealthPercent()
 	{
@@ -420,10 +479,22 @@ public class PVPPlayer
 	
 	public void tick()
 	{
-		if(this.getComboReady() == 0 && this.canUsePileDrive() == true)
+		if(this.getComboReady() == 0 && this.canUsePileDrive() == true || this.getComboReady() == 0 && this.canUseGrappleShot == true)
 		{
-			this.setCanUsePileDrive(false);
-			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO PILEDRIVE!");
+			if(this.canUseGrappleShot==true)
+			{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO GRAPPLE-SHOT!");
+				this.setCanUseGrappleShot(false);
+				this.setCanUsePileDrive(false);
+			}
+			if(this.canUsePileDrive==true)
+			{
+				this.setCanUsePileDrive(false);
+				this.setCanUseGrappleShot(false);
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO PILEDRIVE!");
+			}
+			
+			
 		}
 		if(this.getComboReady() > 0 && this.comboReady < 9){
 			this.comboReady--;
@@ -431,13 +502,14 @@ public class PVPPlayer
 				this.setCanUsePileDrive(true);
 			}
 		}
+		this.checkForGrapple();
 		if(this.getComboReady() >= 10 && this.comboReady < 99)
 		{
-			this.comboReady-= 10;
+			this.setComboReady(this.getComboReady() - 10);
 		}
 		if(this.getComboReady() >= 100 && this.comboReady < 999)
 		{
-			this.comboReady-= 100;
+			this.setComboReady(this.getComboReady()- 100);
 		}
 		this.healthPercent = this.health / this.maxHealth;
 		if(player.getPlayer().getAllowFlight() == false && player.getWorld().getName().contains("world") && this.skillCoolDown == 0){
@@ -597,7 +669,7 @@ public class PVPPlayer
 				this.sethealth(health + heal);
 			}
 		}
-		if(this.canRegen == true && this.getStamina() < this.getMaxStamina()){
+		if(this.getStamina() < this.getMaxStamina()){
 			this.setStamina((int)this.getStamina() + 1);
 		}
 		if(health > maxHealth)
@@ -830,5 +902,21 @@ public class PVPPlayer
 	public void setCanUsePileDrive(boolean canUsePileDrive)
 	{
 		this.canUsePileDrive = canUsePileDrive;
+	}
+	public void checkForGrapple()
+	{
+		if(this.isUsingGrappleShot == true)
+		{
+			if(this.getGrappleStart() != null && this.getGrappleEnd() != null && this.hitByGrapple == null)
+			{
+				Skills.GrappleShot.grappleShotBlockHit(getPlayer(), this.getGrappleEnd().getBlock(), this);
+				this.setCanUsePileDrive(false);
+			}
+			if(this.getGrappleStart() != null && this.hitByGrapple != null)
+			{
+				Skills.GrappleShot.grappleShotPlayerHit(this.hitByGrapple, this.getPlayer(), this);
+				this.setCanUsePileDrive(false);
+			}
+		}
 	}
 }

@@ -7,6 +7,19 @@ import org.bukkit.entity.Player;
 public class Effects
 {
 	Player[] onlinePlayerList = Bukkit.getServer().getOnlinePlayers();
+	public static void magicWhiteSwirls(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.SPELL , player.getLocation(),0.2f,0.2f,0.2f, (float)0.02, 160);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
 	
 	public static void igniteFirePlayers(Player player)
 	{
