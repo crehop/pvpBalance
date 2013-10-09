@@ -6,9 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -18,25 +18,92 @@ import PvpBalance.PVPPlayer;
 import PvpBalance.PvpHandler;
 
 public class PileDrive {
+	public static boolean clear(Player damagee)
+	{
+		int check = 0;
+		if(correctType(damagee.getLocation().add(1, 0, 0).getBlock()) == true)
+		{
+			if(check > 0)
+			{
+			}
+		}
+		else
+		{
+			check += 10;
+		}
+		if(correctType(damagee.getLocation().subtract(1, 0, 0).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 1;
+		}
+		if(correctType(damagee.getLocation().add(0, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 1;
+		}
+		if(correctType(damagee.getLocation().subtract(0, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 1;
+		}
+		if(correctType(damagee.getLocation().add(1, 0, 0).subtract(0, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 10;
+		}
+		if(correctType(damagee.getLocation().add(1, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 10;
+		}
+		if(correctType(damagee.getLocation().subtract(1, 0, 0).add(0, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 10;
+		}
+		if(correctType(damagee.getLocation().subtract(1, 0, 1).getBlock()) == true)
+		{
+		}
+		else
+		{
+			check += 10;
+		}
+		if(check == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	public static boolean correctType(Block check)
+	{
+		if(check.getType() == Material.AIR || check.getType() == Material.LONG_GRASS || check.getType() == Material.RED_ROSE || check.getType() == Material.YELLOW_FLOWER || check.getType() == Material.GRASS)
+		{
+			return true;
+		}
+		return false;
+	}
 	public static void pileDrive(Player damagee, Player damager){
 
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(damagee);
 		PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 		if(pvpDamager.getStamina() >= 51)
 		{
-			Block aboveStanding = damagee.getLocation().getBlock();
-			int x = aboveStanding.getX()/1;
-			int y = (aboveStanding.getY()/1);
-			int z = aboveStanding.getZ()/1;
-			Location spot = new Location(damagee.getWorld(),x,y,z);
 			PotionEffect potionEffect = new PotionEffect(PotionEffectType.CONFUSION, 140, 2);
 			PotionEffect potionEffect2 = new PotionEffect(PotionEffectType.BLINDNESS, 80, 2);
 			PotionEffect potionEffect3 = new PotionEffect(PotionEffectType.SLOW, 100, 2);
-			if(damagee.getEyeLocation().subtract(0, 1, 0).getBlock().getType() == Material.AIR)
-			{
-				damagee.teleport(spot);
-			}
-			damagee.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + " " + damager.getName().toUpperCase() + " USED PILEDRIVE ON YOU!" );
+			damagee.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + " " + damager.getName().toUpperCase() + " USED PILEDRIVE ON YOU! PRESS SHIFT TO STAND UP!" );
 			damagee.addPotionEffect(potionEffect);
 			damagee.addPotionEffect(potionEffect2);
 			damagee.addPotionEffect(potionEffect3);
@@ -51,7 +118,14 @@ public class PileDrive {
 				fireworkPlayer.playFirework(damagee.getWorld(), damagee.getEyeLocation(), bonk);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}	
+			}
+			if(clear(damagee) == true)
+			{
+				Chicken chicken = damagee.getWorld().spawn(damagee.getLocation(), Chicken.class);
+				chicken.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 100000));
+				chicken.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 100000));
+				chicken.setPassenger(damagee);
+			}
 		}
 
 	}

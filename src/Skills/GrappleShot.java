@@ -16,9 +16,10 @@ import PvpBalance.PVPPlayer;
 public class GrappleShot {
 		public static void grappleShotPlayerHit(Player damagee, Player damager,PVPPlayer pvp)
 		{
+			pvp.setStamina((int) (pvp.getStamina() - 25));
 			pvp.getPlayer().sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU FIRE A GRAPPLE SHOT AND PULL " + damagee.getDisplayName() + " TO YOU!");
-			Vector direction = damager.getLocation().add(0, 5, 0).toVector().subtract(damagee.getLocation().toVector()).normalize();
-			direction.multiply(2.5);
+			Vector direction = damager.getLocation().add(0, 6, 0).toVector().subtract(damagee.getLocation().toVector()).normalize();
+			direction.multiply(3);
 			damagee.setVelocity(direction);
 			FireworkEffectPlayer player = new FireworkEffectPlayer();
 			FireworkEffect pulled = FireworkEffect.builder().with(Type.CREEPER).withColor(Color.RED).withFade(Color.GRAY).build();
@@ -38,10 +39,11 @@ public class GrappleShot {
 		}
 		public static void grappleShotBlockHit(Player shooter, Block hit,PVPPlayer pvp)
 		{
+			pvp.setStamina((int) (pvp.getStamina() - 25));
 			pvp.getPlayer().sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU FIRE A GRAPPLE SHOT AND PULL YOURSELF TO THE BLOCK!");
 			Location delta = shooter.getLocation().add(hit.getLocation().add(0, 5, 0));
 		    Vector direction = delta.getDirection();
-		    direction.multiply(2.6);
+		    direction.multiply(3);
 	        shooter.setVelocity(direction);
 			Effects.magicWhiteSwirls(shooter);
 			Effects.magicWhiteSwirls(shooter);

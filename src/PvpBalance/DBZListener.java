@@ -21,6 +21,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -37,6 +38,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -63,6 +65,14 @@ public class DBZListener implements Listener
 		this.LoadSave = LoadSave;
 		plugin = instance;
 	}	
+	@EventHandler
+	public void vehicleDismountEvent(VehicleExitEvent event)
+	{
+		if(event.getExited().getType().equals(EntityType.CHICKEN))
+		{
+			event.getExited().remove();
+		}
+	}
 		
 	@EventHandler	
 	public void playerQuit(PlayerQuitEvent quitevent)
@@ -350,6 +360,15 @@ public class DBZListener implements Listener
 		}
 		
 	}
+	@EventHandler
+	public void entityDeath(EntityDeathEvent event)
+	{
+		if(event.getEntityType().equals(EntityType.CHICKEN))
+		{
+			event.getDrops().clear();
+			event.getEntity().remove();
+		}
+	}
 	//JUMP SKILL!
 	@EventHandler
 	public void playerToggleFlightEvent(PlayerToggleFlightEvent event)
@@ -498,6 +517,10 @@ public class DBZListener implements Listener
 		if(event instanceof EntityDamageByEntityEvent)
 			return;
 		int damage = 0;
+		if(event.getCause() == DamageCause.SUFFOCATION && event.getEntityType() == EntityType.CHICKEN && event.getEntity().getPassenger() != null)
+		{
+			event.setCancelled(true);
+		}
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player)event.getEntity();
@@ -575,7 +598,7 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.SUFFOCATION))
 			{
-				damage = 100;
+				damage = 1;
 			}
 			//THIS MUST BE LAST ==================================================================================
 			else if(!(event.getCause().equals(DamageCause.PROJECTILE)) && !(event.getCause().equals(DamageCause.ENTITY_ATTACK)))
