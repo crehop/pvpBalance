@@ -11,6 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import Event.PBEntityRegainHealthEvent;
 import Party.Invite;
 import Party.Party;
@@ -40,6 +43,7 @@ public class PVPPlayer
 	private int lastDamage;
 	private int armorEventLastTick;
 	private int wasSprinting;
+	private int tackleTimer;
 	private boolean canUseGrappleShot;
 	private boolean isUsingGrappleShot;
 	private boolean canUsePileDrive;
@@ -86,6 +90,21 @@ public class PVPPlayer
 		this.healthPercent = 100.0;
 		this.comboReady = 0;
 		colorUp = false;
+	}
+	public int tackleTimer()
+	{
+		return this.tackleTimer;
+	}
+	public void setTackleTimer(int tackleTimer)
+	{
+		if(tackleTimer < 0)
+		{
+			this.tackleTimer = 0;
+		}
+		else
+		{
+			this.tackleTimer = tackleTimer;
+		}
 	}
 	public boolean isUsingGrappleShot()
 	{
@@ -479,6 +498,24 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(this.tackleTimer > 0)
+		{
+			if(this.getPlayer().getPassenger() != null && this.getPlayer().getPassenger() instanceof Player)
+			{
+				PVPPlayer rider = PvpHandler.getPvpPlayer((Player)this.getPlayer().getPassenger());
+				rider.setStamina((int)rider.getStamina() - 10);
+				if(rider.getStamina() < 7)
+				{
+					Bukkit.broadcastMessage("STAMINA EVENT");
+					this.getPlayer().getPassenger().eject();
+				}
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 500, 3));
+			}
+			else
+			{
+				this.setTackleTimer(0);
+			}
+		}
 		if(this.getComboReady() == 0 && this.canUsePileDrive() == true || this.getComboReady() == 0 && this.canUseGrappleShot == true)
 		{
 			if(this.canUseGrappleShot==true)

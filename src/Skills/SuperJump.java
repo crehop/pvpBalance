@@ -8,14 +8,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import PvpBalance.Effects;
+import PvpBalance.PvpHandler;
 
 public class SuperJump {
 	public static void Jump(Player player,double d){
-		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "DOUBLE JUMP!");
+		String doubleJump = "DOUBLE JUMP!";
         float hForce = 15 / 10.0F;
         float vForce = 12 / 10.0F;
         Vector direction = player.getLocation().getDirection();
         Vector forward = direction.multiply(3);
+        if(PvpHandler.getPvpPlayer(player).getUsedSpeedSkill() == true)
+        {
+        	doubleJump = "SPRINTING DOUBLE JUMP!";
+        	forward.multiply(2.5);
+        }
         Vector v = player.getLocation().toVector().subtract(player.getLocation().add(0,3,0).toVector());
         v.add(forward);
         v.setY(5);
@@ -33,5 +39,6 @@ public class SuperJump {
 		Effects.effectSuperJump(player);
 		Effects.effectSuperJump(player);
 		Effects.effectSuperJump(player);
+		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + doubleJump);
 	}
 }

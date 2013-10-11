@@ -12,7 +12,7 @@ public class SuperSpeed {
 	
 	public static void speedOn(Player player)
 	{
-		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU SPRINT! PRESS CROUCH AGAIN TO STOP!");
+		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU SPRINT! PRESS "+ ChatColor.AQUA + "" + ChatColor.BOLD + "SNEAK" + ChatColor.GREEN + "" + ChatColor.BOLD + " AGAIN TO STOP!");
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		pvp.setUsedSpeedSkill(true);
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 500, 3));

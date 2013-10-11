@@ -33,6 +33,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -52,6 +53,7 @@ import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
 import Skills.PileDrive;
 import Skills.SuperSpeed;
+import Skills.Tackle;
 
 
 public class DBZListener implements Listener
@@ -73,6 +75,21 @@ public class DBZListener implements Listener
 			event.getExited().remove();
 		}
 	}
+	//@EventHandler
+	//public void playerMoveEvent(PlayerMoveEvent event)
+	//{
+	//	if(event.getTo().getY()-event.getFrom().getY()>=0.2 && event.getPlayer().isSneaking() == true ){
+	//		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
+	//		if(pvp.getStamina() > 30 && event.getPlayer().getGameMode() == GameMode.SURVIVAL && pvp.canUseSkill() == true)
+	//		{
+	//			pvp.setSkillCooldown(5);
+	//			pvp.setCanUseSkill(false);
+	//			pvp.setStamina((int) (pvp.getStamina() - 10));
+	//			Tackle.tackle(event.getPlayer());
+	//	 	}
+	//	}
+	// }
+
 		
 	@EventHandler	
 	public void playerQuit(PlayerQuitEvent quitevent)
