@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import PvpBalance.Damage;
 import PvpBalance.PVPPlayer;
+import PvpBalance.PvpBalance;
 import PvpBalance.PvpHandler;
 
 public class PileDrive {
@@ -23,13 +24,10 @@ public class PileDrive {
 		int check = 0;
 		if(correctType(damagee.getLocation().add(1, 0, 0).getBlock()) == true)
 		{
-			if(check > 0)
-			{
-			}
 		}
 		else
 		{
-			check += 10;
+			check += 1;
 		}
 		if(correctType(damagee.getLocation().subtract(1, 0, 0).getBlock()) == true)
 		{
@@ -71,7 +69,7 @@ public class PileDrive {
 		}
 		else
 		{
-			check += 10;
+			check += 1;
 		}
 		if(correctType(damagee.getLocation().subtract(1, 0, 1).getBlock()) == true)
 		{
@@ -125,6 +123,7 @@ public class PileDrive {
 				chicken.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 100000));
 				chicken.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 100000));
 				chicken.setPassenger(damagee);
+				PvpBalance.chickenList().add(chicken);
 			}
 		}
 

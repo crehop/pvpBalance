@@ -460,6 +460,18 @@ public class PVPPlayer
 	
 	public boolean damage(int dealtDamage)
 	{
+		for(PotionEffect effect:this.getPlayer().getActivePotionEffects())
+		{
+			if(effect.getType() == PotionEffectType.DAMAGE_RESISTANCE)
+			{
+				int level = effect.getAmplifier();
+				dealtDamage = dealtDamage - level * 12;
+				if(dealtDamage < 0)
+				{
+					dealtDamage = 0;
+				}
+			}
+		}
 		if(this.player.getNoDamageTicks() <= 0)
 		{
 			this.lastDamage = dealtDamage;
@@ -506,7 +518,6 @@ public class PVPPlayer
 				rider.setStamina((int)rider.getStamina() - 10);
 				if(rider.getStamina() < 7)
 				{
-					Bukkit.broadcastMessage("STAMINA EVENT");
 					this.getPlayer().getPassenger().eject();
 				}
 				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 500, 3));

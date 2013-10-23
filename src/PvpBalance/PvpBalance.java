@@ -10,11 +10,11 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 
 import Party.CommandParty;
 import Party.PartyListener;
@@ -31,7 +31,7 @@ public class PvpBalance extends JavaPlugin
 	private final int AMOUNT = 300;
 	private static int everyOther = 0;
 	private boolean debug = false;
-	
+	private static List<Chicken> chickens = new ArrayList<Chicken>();
 	private boolean faction = false;
 	
 	private Save sDamage, protection;
@@ -136,16 +136,8 @@ public class PvpBalance extends JavaPlugin
 					    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
 					    		{
 					    			Effects.effectHealthPlayers(all, (float) 0.3, 30);
-					    		    for (PotionEffect effect : all.getActivePotionEffects())
-					    		    {
-					    		        all.removePotionEffect(effect.getType());
-					    		    }
-					    			all.sendMessage(ChatColor.GREEN + "ALL EFFECTS CLENSED!");
-					    		}
-					    		//SPRINTING
-					    		if(all.isSprinting())
-					    		{
-					    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
+					    			PVPPlayer pvp = PvpHandler.getPvpPlayer(all);
+					    			pvp.sethealth(pvp.gethealth() + SaveLoad.LoadSave.Regen);
 					    		}
 					    		//LOW HEALTH
 					    		if(all.getHealth() < 9)
@@ -180,10 +172,79 @@ public class PvpBalance extends JavaPlugin
 							e1.printStackTrace();
 							logger.info("Main ArmorEffect!");
 					}
+		    		
 				}
+		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
+		    	{
+						try
+						{
+				    		// BASIC EFFECT APLICATIONS ==========================================================================================
+				    		//ON FIRE
+				    		if(all.getFireTicks() > 1){
+				    			Effects.igniteFirePlayers(all);
+				    		}	    
+				    		//ENCHANTED SWORD
+				    		if(all.getItemInHand().containsEnchantment(Enchantment.DAMAGE_ALL) || all.getItemInHand().containsEnchantment(Enchantment.ARROW_DAMAGE))
+				    		{
+				    			Effects.effectSharpnessPlayers(all);
+				    		}
+				    		//CONFUSED
+				    		if(all.getActivePotionEffects().toString().contains("CONFUSION"))
+				    		{
+				    			Effects.effectConfuse(all);
+				    		}
+				    		//WITHERED
+				    		if(all.getActivePotionEffects().toString().contains("WITHER"))
+				    		{
+				    			Effects.effectWither(all);
+				    		}	
+				    		//POISONED
+				    		if(all.getActivePotionEffects().toString().contains("POISON"))
+				    		{
+				    			Effects.effectPoison(all);
+				    		}
+				    		//BLIND
+				    		if(all.getActivePotionEffects().toString().contains("Blindness"))
+				    		{
+				    			Effects.effectBlind(all);
+				    		}
+				    		//SPEED POT
+				    		if(all.getActivePotionEffects().toString().contains("SPEED"))
+				    		{
+				    			Effects.effectSpeedPlayers(all, SPEED, AMOUNT);
+				    		}
+				    		if(all.getActivePotionEffects().toString().contains("SLOW"))
+				    		{
+				    			Effects.effectSlow(all);
+				    		}
+				    		//REGENERATING
+				    		//SPRINTING
+				    		//LOW HEALTH
+				    		if(all.getHealth() < 9)
+				    		{
+				    			Effects.bleed(all);
+				    		}
+				    		//PVP ABILITIES ====================================================================================
+						
+				    }
+					catch (Exception e1)
+					{
+						e1.printStackTrace();
+						logger.info("Main Effect!");
+					}
+		    	}
 		    }
+		    //CLEANUP
 		    else if(everyOther == 2)
 		    {
+		    	for(Chicken chick:chickens)
+		    	{
+		    		if(chick.getPassenger() == null)
+		    		{
+		    			chick.remove();
+		    		    PvpBalance.chickenList().remove(chick);
+		    		}
+		    	}
 		    	everyOther = 3;
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
@@ -229,20 +290,7 @@ public class PvpBalance extends JavaPlugin
 				    			Effects.effectSlow(all);
 				    		}
 				    		//REGENERATING
-				    		if(all.getActivePotionEffects().toString().contains("REGENERATION"))
-				    		{
-				    			Effects.effectHealthPlayers(all, (float) 0.3, 30);
-				    		    for (PotionEffect effect : all.getActivePotionEffects())
-				    		    {
-				    		        all.removePotionEffect(effect.getType());
-				    		    }
-				    			all.sendMessage(ChatColor.GREEN + "ALL EFFECTS CLENSED!");
-				    		}
 				    		//SPRINTING
-				    		if(all.isSprinting())
-				    		{
-				    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
-				    		}
 				    		//LOW HEALTH
 				    		if(all.getHealth() < 9)
 				    		{
@@ -273,6 +321,69 @@ public class PvpBalance extends JavaPlugin
 						logger.info("Main Tick!");
 					}
 				}
+		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
+		    	{
+						try
+						{
+				    		// BASIC EFFECT APLICATIONS ==========================================================================================
+				    		//ON FIRE
+				    		if(all.getFireTicks() > 1){
+				    			Effects.igniteFirePlayers(all);
+				    		}	    
+				    		//ENCHANTED SWORD
+				    		if(all.getItemInHand().containsEnchantment(Enchantment.DAMAGE_ALL) || all.getItemInHand().containsEnchantment(Enchantment.ARROW_DAMAGE))
+				    		{
+				    			Effects.effectSharpnessPlayers(all);
+				    		}
+				    		//CONFUSED
+				    		if(all.getActivePotionEffects().toString().contains("CONFUSION"))
+				    		{
+				    			Effects.effectConfuse(all);
+				    		}
+				    		//WITHERED
+				    		if(all.getActivePotionEffects().toString().contains("WITHER"))
+				    		{
+				    			Effects.effectWither(all);
+				    		}	
+				    		//POISONED
+				    		if(all.getActivePotionEffects().toString().contains("POISON"))
+				    		{
+				    			Effects.effectPoison(all);
+				    		}
+				    		//BLIND
+				    		if(all.getActivePotionEffects().toString().contains("Blindness"))
+				    		{
+				    			Effects.effectBlind(all);
+				    		}
+				    		//SPEED POT
+				    		if(all.getActivePotionEffects().toString().contains("SPEED"))
+				    		{
+				    			Effects.effectSpeedPlayers(all, SPEED, AMOUNT);
+				    		}
+				    		if(all.getActivePotionEffects().toString().contains("SLOW"))
+				    		{
+				    			Effects.effectSlow(all);
+				    		}
+				    		//REGENERATING
+				    		//SPRINTING
+				    		if(all.isSprinting())
+				    		{
+				    			Effects.effectSprintPlayers(all, SPEED, (int)SPEED*5);
+				    		}
+				    		//LOW HEALTH
+				    		if(all.getHealth() < 9)
+				    		{
+				    			Effects.bleed(all);
+				    		}
+				    		//PVP ABILITIES ====================================================================================
+						
+				    }
+					catch (Exception e1)
+					{
+						e1.printStackTrace();
+						logger.info("Main Effect!");
+					}
+		    	}
 		    }
 		}
 	}, 0L, 5L);
@@ -389,6 +500,10 @@ public class PvpBalance extends JavaPlugin
 			}
 		}
         return true;
+	}
+	public static List<Chicken> chickenList()
+	{
+		return PvpBalance.chickens;
 	}
 
 }

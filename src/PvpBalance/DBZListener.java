@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -33,7 +34,6 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -51,9 +51,9 @@ import Event.PBEntityDamageEvent;
 import Event.PBEntityDeathEvent;
 import Event.PBEntityRegainHealthEvent;
 import SaveLoad.LoadSave;
+import Skills.Incapacitate;
 import Skills.PileDrive;
 import Skills.SuperSpeed;
-import Skills.Tackle;
 
 
 public class DBZListener implements Listener
@@ -78,7 +78,7 @@ public class DBZListener implements Listener
 	//@EventHandler
 	//public void playerMoveEvent(PlayerMoveEvent event)
 	//{
-	//	if(event.getTo().getY()-event.getFrom().getY()>=0.2 && event.getPlayer().isSneaking() == true ){
+	//	if(event.getTo().getY()-event.getFrom().getY()>=0.2 && event.getPlayer().isBlocking() == true){
 	//		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
 	//		if(pvp.getStamina() > 30 && event.getPlayer().getGameMode() == GameMode.SURVIVAL && pvp.canUseSkill() == true)
 	//		{
@@ -88,7 +88,7 @@ public class DBZListener implements Listener
 	//			Tackle.tackle(event.getPlayer());
 	//	 	}
 	//	}
-	// }
+	//}
 
 		
 	@EventHandler	
@@ -239,11 +239,25 @@ public class DBZListener implements Listener
 				}
 				else
 				{
-					if(pvpDamager.canUsePileDrive()){
+					if(pvpDamagee.getPlayer().isBlocking() == true && pvpDamagee.getStamina() > 10){
+						pvpDamagee.setStamina((int)pvpDamagee.getStamina() - 10);
+						pvpDamagee.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "YOU BLOCK THE ATTACK! AND TAKE HALF DAMAGE!");
+						dealtDamage = Damage.calcDamage(damager) / 2;
+						Skills.Block.block(pvpDamager.getPlayer());
+						
+					}
+					else if(pvpDamager.canUsePileDrive() && damager.isSneaking() == false){
 						PileDrive.pileDrive(damagee,damager);
+					}
+					else if(pvpDamager.canUsePileDrive() && damager.isSneaking() == true){
+						Incapacitate.Incapacitate(damagee, damager);
 					}
 					else
 					{
+						if(pvpDamagee.getPlayer().isBlocking() == true)
+						{
+							pvpDamagee.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "NOT ENOUGH STAMINA TO BLOCK!");
+						}
 						dealtDamage = Damage.calcDamage(damager) + new Random().nextInt(Damage.calcDamage(damager) / 10);
 					}
 				}
@@ -498,7 +512,7 @@ public class DBZListener implements Listener
 				{
 					pvp.setComboReady(pvp.getComboReady() + 2);
 					if(pvp.getComboReady() >= 6 && pvp.getStamina() >= 51 && pvp.canUsePileDrive() == false){
-						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "PILEDRIVE READY HIT PLAYER TO ACTIVATE!");
+						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "COMBO READY! HIT PLAYER TO PILEDRIVE, SNEAK HIT TO INCAPACITATE!");
 						pvp.setCanUsePileDrive(true);
 						pvp.setCanUseGrappleShot(false);
 					}
@@ -554,7 +568,24 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FIRE_TICK))
 			{
-				pvp.uncheckedDamage(SaveLoad.LoadSave.Firetick);
+				int theDamage = SaveLoad.LoadSave.Firetick;
+				for(PotionEffect effect:pvp.getPlayer().getActivePotionEffects())
+				{
+					if(effect.getType() == PotionEffectType.FIRE_RESISTANCE)
+					{
+						int level = effect.getAmplifier();
+						theDamage = theDamage / level;
+					}
+				}
+				for(ItemStack item:pvp.getPlayer().getInventory().getArmorContents())
+				{
+					theDamage = theDamage - item.getEnchantmentLevel(Enchantment.PROTECTION_FIRE)/2;
+				}
+				if(theDamage < 0)
+				{
+					theDamage = 0;
+				}
+				pvp.uncheckedDamage(theDamage);
 				int prevNoDamageTicks = player.getNoDamageTicks();
 				player.damage(0D);
 				player.setNoDamageTicks(prevNoDamageTicks);
@@ -571,7 +602,21 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.DROWNING))
 			{
-				pvp.uncheckedDamage(SaveLoad.LoadSave.Drowning);
+				int theDamage = SaveLoad.LoadSave.Firetick;
+				for(PotionEffect effect:pvp.getPlayer().getActivePotionEffects())
+				{
+					if(effect.getType() == PotionEffectType.POISON)
+					{
+						int level = effect.getAmplifier();
+						theDamage = theDamage * level;
+					}
+					if(effect.getType() == PotionEffectType.DAMAGE_RESISTANCE)
+					{
+						int level = effect.getAmplifier();
+						theDamage = theDamage / level;
+					}
+				}
+				pvp.uncheckedDamage(theDamage);
 				int prevNoDamageTicks = player.getNoDamageTicks();
 				player.damage(0D);
 				player.setNoDamageTicks(prevNoDamageTicks);

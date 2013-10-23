@@ -34,7 +34,19 @@ public class Effects
 		}
 		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
 	}
-	
+	public static void blockedPlayer(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.EXPLODE, player.getLocation().add(0, 1, 0),0.2f,0.2f,0.2f, (float)0.02, 13);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
 	public static void effectPoison(Player player)
 	{	
 		try
@@ -150,7 +162,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.HEART, player.getLocation(),0f,1f,0f, (float)0.02, 10);
+			ParticleEffect.sendToLocation(ParticleEffect.HEART, player.getLocation().add(0,2.2,0),0f,0f,0f, (float)0.01, 3);
 		}
 		catch (Exception e)
 		{
