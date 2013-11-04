@@ -36,6 +36,7 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -67,6 +68,14 @@ public class DBZListener implements Listener
 		this.LoadSave = LoadSave;
 		plugin = instance;
 	}	
+	@EventHandler
+	public void vehicleDismountEvent(PlayerTeleportEvent event)
+	{
+		if(!event.getPlayer().hasPermission("essentials.kick"))
+		{
+			Effects.teleportGreen(event.getPlayer());
+		}
+	}
 	@EventHandler
 	public void vehicleDismountEvent(VehicleExitEvent event)
 	{
