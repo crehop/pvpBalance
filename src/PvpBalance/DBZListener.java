@@ -173,10 +173,15 @@ public class DBZListener implements Listener
 				Entity damager = arrow.getShooter();
 				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee))
 				{
-					event.setCancelled(true);
-					return;
+					if(pvpDamagee.isInCombat() == true){
+						pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "YOU ARE IN COMBAT AND CANNOT BE SAFE UNTIL OUT OF COMBAT!");
+					}
+					else{
+						event.setCancelled(true);
+						return;
+					}
 				}
-				if(damager instanceof Player && event.getEntity() instanceof Player)
+				if(damager instanceof Player)
 				{
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
 					if(pvpDamager.isUsingGrappleShot() == true)
@@ -198,8 +203,13 @@ public class DBZListener implements Listener
 			{
 				if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee))
 				{
-					event.setCancelled(true);
-					return;
+					if(pvpDamagee.isInCombat() == true){
+						pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "YOU ARE IN COMBAT AND CANNOT BE SAFE UNTIL OUT OF COMBAT!");
+					}
+					else{
+						event.setCancelled(true);
+						return;
+					}
 				}
 				else if((event.getDamager().getType() == EntityType.WITHER_SKULL))
 				{
@@ -234,8 +244,13 @@ public class DBZListener implements Listener
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 				if(CombatUtil.preventDamageCall(damager, damagee))
 				{
-					event.setCancelled(true);
-					return;
+					if(pvpDamagee.isInCombat() == true){
+						pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "YOU ARE IN COMBAT AND CANNOT BE SAFE UNTIL OUT OF COMBAT!");
+					}
+					else{
+						event.setCancelled(true);
+						return;
+					}
 				}
 				if(!pvpDamager.canHit())
 				{
