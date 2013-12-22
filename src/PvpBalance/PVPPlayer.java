@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -55,6 +56,7 @@ public class PVPPlayer
 	private boolean colorUp;
 	private boolean canUseSkill; 
 	private boolean firstToggle;
+	private boolean newbZone;
 	private long defencePotionTimer = 0L;
 	private long offencePotionTimer = 0L;
 	private long pvpTimer = 0L;
@@ -137,6 +139,20 @@ public class PVPPlayer
 	public boolean canUseGrappleShot()
 	{
 		return this.canUseGrappleShot;
+	}
+	public void setIsNewbZone(boolean newbZone)
+	{
+		this.newbZone = newbZone;
+	}
+	public boolean isNewbZone()
+	{
+		return this.newbZone;
+	}
+	public int getCombatCooldown(){
+		return this.combatCoolDown;
+	}
+	public void setCombatCooldown(int combatCooldown){
+		this.combatCoolDown = combatCooldown;
 	}
 	public Location getGrappleStart()
 	{
@@ -443,13 +459,6 @@ public class PVPPlayer
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
 			this.sethealth(health - dealtDamage);
-			if(healthLastTick > health)
-			{
-				if(this.combatCoolDown < 10)
-				{
-					this.combatCoolDown = this.combatCoolDown + 5;
-				}
-			}
 		}
 		else
 		{
@@ -491,14 +500,6 @@ public class PVPPlayer
 		}
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			//this.sethealth(health - dealtDamage);
-			if(healthLastTick > health)
-			{
-				if(this.combatCoolDown < 10)
-				{
-					this.combatCoolDown += 5;
-				}
-			}
 		}
 		else
 		{
@@ -510,6 +511,23 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType() == Material.GLASS){
+			if(this.isNewbZone() == false){
+				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
+				this.setIsNewbZone(true);
+			}
+		}
+		else{
+			if(this.isNewbZone() == true){
+				this.setIsNewbZone(false);
+				player.sendMessage(ChatColor.RED + "YOU ARE LEAVING THE NEWBIE ZONE GEAR/DAMAGE UNLIMITED!");
+			}
+			
+		}
+
+		if(this.player.getLocation().subtract(0,1,0).getBlock().getType() == Material.BEDROCK){
+			Skills.SuperSpeed.pathspeedOn(player);
+		}
 		if(this.tackleTimer > 0)
 		{
 			if(this.getPlayer().getPassenger() != null && this.getPlayer().getPassenger() instanceof Player)
@@ -639,7 +657,7 @@ public class PVPPlayer
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
 		String message2 = ("SIDEBAR,Health," + ChatColor.YELLOW + "Stamina:" + ChatColor.RESET + "," + (int)this.stamina);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
-		String message3 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
+		String message3 = ("SIDEBAR,Health," + ChatColor.RED + "Attackable:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message3.getBytes());
 		String message4 = ("SIDEBAR,Health," + ChatColor.RED + "Till Skill:" + ChatColor.RESET + "," + ((int)this.skillCoolDown));
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message4.getBytes());

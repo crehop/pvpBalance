@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -67,7 +68,13 @@ public class DBZListener implements Listener
 	{
 		this.LoadSave = LoadSave;
 		plugin = instance;
-	}	
+	}
+	@EventHandler
+	public void antiCobblestone(BlockBreakEvent event){
+		if(event.getBlock().getType() == Material.COBBLESTONE){
+			event.getBlock().setType(Material.AIR);
+		}
+	}
 	@EventHandler
 	public void vehicleDismountEvent(PlayerTeleportEvent event)
 	{
@@ -171,10 +178,14 @@ public class DBZListener implements Listener
 			{
 				Arrow arrow = (Arrow)event.getDamager();
 				Entity damager = arrow.getShooter();
-				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee))
+				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
+				}
+				else if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				{
+					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
 				if(damager instanceof Player && event.getEntity() instanceof Player)
 				{
@@ -196,10 +207,14 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
-				if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee))
+				if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee)  && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
+				}
+				else if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				{
+					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
 				else if((event.getDamager().getType() == EntityType.WITHER_SKULL))
 				{
@@ -232,10 +247,14 @@ public class DBZListener implements Listener
 			{
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
-				if(CombatUtil.preventDamageCall(damager, damagee))
+				if(CombatUtil.preventDamageCall(damager, damagee) && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
+				}
+				else if(CombatUtil.preventDamageCall(damager, damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				{
+					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
 				if(!pvpDamager.canHit())
 				{
@@ -643,7 +662,8 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.FALL))
 			{
-				damage = SaveLoad.LoadSave.Fall;
+				event.setCancelled(true);
+				return;
 			}
 			else if(event.getCause().equals(DamageCause.WITHER))
 			{
@@ -685,6 +705,10 @@ public class DBZListener implements Listener
 				return;
 			}
 			pvp.uncheckedDamage(damage);
+			if(pvp.getCombatCooldown() < 10)
+			{
+				pvp.setCombatCooldown(pvp.getCombatCooldown() + 5);
+			}
 			event.setCancelled(true);
 			player.damage(0D);
 		}

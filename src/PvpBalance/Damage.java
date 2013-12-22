@@ -1,5 +1,7 @@
 package PvpBalance;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -21,40 +23,64 @@ public class Damage
 	public static SaveLoad.LoadSave LoadSave;
 
 	//ADDED++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	public static int calcDamage(Player player)
-	{
-		//Random rand = new Random();
-		int damage = 25;
-		if(player.getItemInHand().getType() == Material.DIAMOND_SWORD  || player.getItemInHand().getType() == Material.DIAMOND_AXE || player.getItemInHand().getType() == Material.DIAMOND_HOE)
-		{
-			damage += SaveLoad.LoadSave.Diamond;
-		}
-		else if(player.getItemInHand().getType() == Material.IRON_SWORD || player.getItemInHand().getType() == Material.IRON_AXE || player.getItemInHand().getType() == Material.IRON_HOE)
-		{
-			damage += SaveLoad.LoadSave.Iron;
-		}
-		else if(player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.GOLD_AXE || player.getItemInHand().getType() == Material.GOLD_HOE)
-		{
-			damage += SaveLoad.LoadSave.Gold;
-		}
-		else if(player.getItemInHand().getType() == Material.STONE_SWORD || player.getItemInHand().getType() == Material.STONE_AXE || player.getItemInHand().getType() == Material.STONE_HOE)
-		{
-			damage += SaveLoad.LoadSave.Stone;
-		}
-		else if(player.getItemInHand().getType() == Material.WOOD_SWORD || player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.WOOD_HOE)
-		{
-			damage += SaveLoad.LoadSave.Wood;
-		}
-		else if(player.getItemInHand().getType() == Material.BOW)
-		{
-			damage += SaveLoad.LoadSave.Bow;
-			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * (SaveLoad.LoadSave.Sharpness * 2);
-		}
-		damage += player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL) * SaveLoad.LoadSave.Sharpness;
-		if(player.getActivePotionEffects().toString().contains("WEAK")){
-			damage = (damage/4) * 3;
-		}
-		return damage;
+	public static int calcDamage(Player player){
+			int damage = 25;
+			if(player.getItemInHand().getType() == Material.DIAMOND_SWORD  || player.getItemInHand().getType() == Material.DIAMOND_AXE || player.getItemInHand().getType() == Material.DIAMOND_HOE)
+			{
+				damage += SaveLoad.LoadSave.Diamond;
+			}
+			else if(player.getItemInHand().getType() == Material.IRON_SWORD || player.getItemInHand().getType() == Material.IRON_AXE || player.getItemInHand().getType() == Material.IRON_HOE)
+			{
+				damage += SaveLoad.LoadSave.Iron;
+			}
+			else if(player.getItemInHand().getType() == Material.GOLD_SWORD || player.getItemInHand().getType() == Material.GOLD_AXE || player.getItemInHand().getType() == Material.GOLD_HOE)
+			{
+				damage += SaveLoad.LoadSave.Gold;
+			}
+			else if(player.getItemInHand().getType() == Material.STONE_SWORD || player.getItemInHand().getType() == Material.STONE_AXE || player.getItemInHand().getType() == Material.STONE_HOE)
+			{
+				damage += SaveLoad.LoadSave.Stone;
+			}
+			else if(player.getItemInHand().getType() == Material.WOOD_SWORD || player.getItemInHand().getType() == Material.WOOD_AXE || player.getItemInHand().getType() == Material.WOOD_HOE)
+			{
+				damage += SaveLoad.LoadSave.Wood;
+			}
+			else if(player.getItemInHand().getType() == Material.BOW)
+			{
+				damage += SaveLoad.LoadSave.Bow;
+				damage += player.getItemInHand().getEnchantmentLevel(Enchantment.ARROW_DAMAGE) * (SaveLoad.LoadSave.Sharpness * 2);
+			}
+			damage += player.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL) * SaveLoad.LoadSave.Sharpness;
+			if(player.getActivePotionEffects().toString().contains("WEAK")){
+				damage = (damage/4) * 3;
+			}
+			if(PvpHandler.getPvpPlayer(player).isNewbZone() == true){
+				if(damage > 25 + SaveLoad.LoadSave.Diamond + (SaveLoad.LoadSave.Sharpness *2)){
+					damage = 25 + SaveLoad.LoadSave.Diamond + (SaveLoad.LoadSave.Sharpness *2);
+					player.sendMessage(ChatColor.RED + "Your sword is too powerful for this area! damage reduced!!");
+				}
+				boolean check = false;
+				for(ItemStack i:player.getInventory().getArmorContents())
+				{
+					if(i.getType() == Material.LEATHER_HELMET){
+							check = true;
+					}
+					else if(i.getType() == Material.LEATHER_CHESTPLATE){
+							check = true;
+					}
+					else if(i.getType() == Material.LEATHER_LEGGINGS){
+							check = true;
+					}
+					else if(i.getType() == Material.LEATHER_BOOTS){
+							check = true;
+					}
+				}
+				if(check == true){
+					player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEWBIE AREA! YOU CANNOT WEAR EPIC IN THIS AREA DAMAGE REDUCED TO 0!! REMOVE YOUR EPIC/LEATHER ARMOR");
+					return 0;
+				}
+			}
+			return damage;
 		
 	//END ADDED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	}

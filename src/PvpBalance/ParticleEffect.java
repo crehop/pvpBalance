@@ -1,13 +1,15 @@
 package PvpBalance;
-        import java.lang.reflect.Field;
-        import java.lang.reflect.Method;
-        import java.util.HashMap;
-        import java.util.Map;
-        import java.util.Map.Entry;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
          
+import net.minecraft.server.v1_7_R1.PacketPlayOutWorldParticles;
+
         import org.bukkit.Bukkit;
-        import org.bukkit.Location;
-        import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
          
         public enum ParticleEffect {
          
@@ -130,7 +132,7 @@ package PvpBalance;
             }
          
             private static Object getPacket63WorldParticles() throws Exception {
-                Class<?> packet = Class.forName(getPackageName() + ".Packet63WorldParticles");
+                Class<?> packet = Class.forName(getPackageName() + ".PacketPlayOutWorldParticles");
                 return packet.getConstructors()[0].newInstance();
             }
          

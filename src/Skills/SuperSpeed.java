@@ -25,4 +25,8 @@ public class SuperSpeed {
 		player.setSprinting(false);
 		player.removePotionEffect(PotionEffectType.SPEED);
 	}
+	public static void pathspeedOn(Player player)
+	{
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 4));
+	}
 }

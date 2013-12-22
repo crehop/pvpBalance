@@ -1,6 +1,5 @@
 package Skills;
 
-import me.frodenkvist.armoreditor.FireworkEffectPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -14,6 +13,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import PvpBalance.Damage;
+import PvpBalance.FireworkEffectPlayer;
 import PvpBalance.PVPPlayer;
 import PvpBalance.PvpBalance;
 import PvpBalance.PvpHandler;
@@ -40,7 +40,7 @@ public class PileDrive {
 		{
 		}
 		else
-		{
+		{ 
 			check += 1;
 		}
 		if(correctType(damagee.getLocation().subtract(0, 0, 1).getBlock()) == true)
