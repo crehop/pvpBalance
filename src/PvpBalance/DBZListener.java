@@ -69,9 +69,9 @@ public class DBZListener implements Listener
 		this.LoadSave = LoadSave;
 		plugin = instance;
 	}
-	@EventHandler
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void antiCobblestone(BlockBreakEvent event){
-		if(event.getBlock().getType() == Material.COBBLESTONE){
+		if(event.isCancelled() == false && event.getBlock().getType() == Material.COBBLESTONE){
 			event.getBlock().setType(Material.AIR);
 		}
 	}

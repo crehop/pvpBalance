@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -77,7 +78,7 @@ public class Damage
 				}
 				if(check == true){
 					player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEWBIE AREA! YOU CANNOT WEAR EPIC IN THIS AREA DAMAGE REDUCED TO 0!! REMOVE YOUR EPIC/LEATHER ARMOR");
-					return 0;
+					damage = 25;
 				}
 			}
 			return damage;
