@@ -70,9 +70,15 @@ public class DBZListener implements Listener
 		plugin = instance;
 	}
 	@EventHandler (priority = EventPriority.HIGHEST)
-	public void antiCobblestone(BlockBreakEvent event){
+	public void antiDestruction(BlockBreakEvent event){
 		if(event.isCancelled() == false && event.getBlock().getType() == Material.COBBLESTONE){
 			event.getBlock().setType(Material.AIR);
+		}
+		if(Util.WildernessProtection.checkForWilderness(event.getPlayer()) == true && event.getPlayer().hasPermission("towny.claimed.alltown.destroy.*") == false){
+			if(Util.WildernessProtection.checkForProtectedBlock(event.getBlock()) == true){
+				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "SURFACE PROTECTION please find stone or a cave to start mining! if you need tools say /ekit mining!");
+				event.setCancelled(true);
+			}
 		}
 	}
 	@EventHandler

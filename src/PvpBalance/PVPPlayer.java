@@ -511,6 +511,9 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
+			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
+		}
 		if(this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType() == Material.GLASS){
 			if(this.isNewbZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
