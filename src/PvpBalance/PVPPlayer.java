@@ -67,6 +67,7 @@ public class PVPPlayer
 	private boolean partyChat;
 	private boolean isStunned;
 	private boolean usedSpeedSkill;
+	public boolean flyZone;
 	
 	public PVPPlayer(Player player)
 	{
@@ -92,6 +93,7 @@ public class PVPPlayer
 		this.healthPercent = 100.0;
 		this.comboReady = 0;
 		colorUp = false;
+		this.flyZone = false;
 	}
 	public int tackleTimer()
 	{
@@ -527,6 +529,21 @@ public class PVPPlayer
 			}
 			
 		}
+		if(this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType() == Material.ENDER_STONE){
+			if(this.flyZone == false){
+				this.flyZone = true;
+				player.sendMessage(ChatColor.RED + "YOU FEEL WEIGHTLESS!");
+				player.setAllowFlight(true);
+				player.setFlying(true);
+			}
+		}
+		else{
+			if(this.flyZone == true){
+				this.flyZone = false;
+				player.sendMessage(ChatColor.RED + "YOU NO LONGER FEEL WEIGHTLESS AND COME CRASHING DOWN!");
+			}
+			
+		}
 
 		if(this.player.getLocation().subtract(0,1,0).getBlock().getType() == Material.BEDROCK){
 			Skills.SuperSpeed.pathspeedOn(player);
@@ -584,7 +601,10 @@ public class PVPPlayer
 		if(player.getPlayer().getAllowFlight() == false && player.getWorld().getName().contains("world") && this.skillCoolDown == 0){
 			player.setAllowFlight(true);
 		}
-		if(player.isFlying() == true && player.getGameMode() == GameMode.SURVIVAL && player.getWorld().getName().contains("world")){
+		if(this.flyZone == true){
+			player.setAllowFlight(true);
+		}
+		if(this.flyZone == false && player.isFlying() == true && player.getGameMode() == GameMode.SURVIVAL && player.getWorld().getName().contains("world")){
 			player.setAllowFlight(false);
 			player.setFlying(false);
 		}

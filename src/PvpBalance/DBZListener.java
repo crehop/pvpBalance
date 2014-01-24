@@ -439,7 +439,7 @@ public class DBZListener implements Listener
 	public void playerToggleFlightEvent(PlayerToggleFlightEvent event)
 	{
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
-		if(pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+		if(pvp.flyZone == false && pvp.getStamina() > 10 && pvp.canUseSkill() == true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
 			Skills.SuperJump.Jump(event.getPlayer(), 0.9);
 			pvp.setSkillCooldown(7);
 			pvp.setCanUseSkill(false);
@@ -448,10 +448,15 @@ public class DBZListener implements Listener
 			pvp.getPlayer().setAllowFlight(false);
 			pvp.getPlayer().setFlying(false);
 		}
-		if(event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+		if(pvp.flyZone = false && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
 			event.setCancelled(true);
 			event.getPlayer().setAllowFlight(false);
 			event.getPlayer().setFlying(false);
+		}
+		if(pvp.flyZone = true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+			event.setCancelled(true);
+			event.getPlayer().setAllowFlight(true);
+			event.getPlayer().setFlying(true);
 		}
 	}
 	@EventHandler
@@ -485,12 +490,6 @@ public class DBZListener implements Listener
 			pvp.setUsedSpeedSkill(true);
 			pvp.setFirstToggle(true);
 			return;
-		}
-		else if(pvp.getUsedSpeedSkill() == true && pvp.wasFirstToggle() == false)
-		{
-			pvp.setUsedSpeedSkill(false);
-			pvp.setCanUseSkill(false);
-			SuperSpeed.speedOff(player);
 		}
 	}
 	@EventHandler
@@ -683,15 +682,15 @@ public class DBZListener implements Listener
 
 			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
 			{
-				damage = SaveLoad.LoadSave.Explosion_Mob;
+				damage = 600;
 			}
 			else if(event.getCause().equals(DamageCause.BLOCK_EXPLOSION))
 			{
-				damage = SaveLoad.LoadSave.Explosion;
+				damage = 600;
 			}
 			else if(event.getCause().equals(DamageCause.LIGHTNING))
 			{
-				damage = SaveLoad.LoadSave.Lightning;
+				damage = 600;
 			}
 			else if(event.getCause().equals(DamageCause.SUFFOCATION))
 			{
