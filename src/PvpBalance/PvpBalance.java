@@ -10,7 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -89,6 +92,7 @@ public class PvpBalance extends JavaPlugin
 		    	if(everyOther == 0)
 		    	{
 		    		everyOther = 1;
+		    		fireballEffects();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
 							try
@@ -157,6 +161,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 1)
 		    {
 		    	everyOther = 2;
+	    		fireballEffects();
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
@@ -246,6 +251,7 @@ public class PvpBalance extends JavaPlugin
 		    		}
 		    	}
 		    	everyOther = 3;
+	    		fireballEffects();
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
 						try
@@ -309,6 +315,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 3)
 		    {
 		    	everyOther = 0;
+	    		fireballEffects();
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
 					try
@@ -504,6 +511,35 @@ public class PvpBalance extends JavaPlugin
 	public static List<Chicken> chickenList()
 	{
 		return PvpBalance.chickens;
+	}
+	public void fireballEffects(){
+    	for(Entity e:Bukkit.getWorld("world").getEntities()){
+    		if(e instanceof Fireball){
+    			Fireball shoot = (Fireball)e;
+    			Effects.igniteFireball(e);
+    			for(Entity near:shoot.getNearbyEntities(3, 3, 3)){
+    				if(near instanceof Player && near != shoot.getShooter()){
+    					shoot.teleport(near.getLocation());
+    				}
+    			}
+    		}
+    		if(e instanceof Arrow){
+    			Arrow arrow = (Arrow)e;
+    			if(arrow.isOnGround() == false){
+    				try {
+						ParticleEffect.sendToLocation(ParticleEffect.FIREWORKS_SPARK, arrow.getLocation(),0.01f,0.01f,0.01f, (float)0.0001, 1);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+    			}
+    			if(arrow.isOnGround()){
+    				if(arrow.getTicksLived() > 1200){
+    					arrow.remove();
+    				}
+    			}
+    		}
+        }
 	}
 
 }

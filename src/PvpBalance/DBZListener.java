@@ -1,5 +1,7 @@
 package PvpBalance;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -7,26 +9,34 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -45,6 +55,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
@@ -418,7 +429,7 @@ public class DBZListener implements Listener
 		if(event.getEntity().getShooter() instanceof Player){
 			Player player = (Player)event.getEntity().getShooter();
 			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
-			if(pvp.isUsingGrappleShot() == true)
+			if(pvp != null && pvp.isUsingGrappleShot() == true)
 			{
 				pvp.setGrappleEnd(event.getEntity().getLocation());
 			}
@@ -448,12 +459,12 @@ public class DBZListener implements Listener
 			pvp.getPlayer().setAllowFlight(false);
 			pvp.getPlayer().setFlying(false);
 		}
-		if(pvp.flyZone = false && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+		else if(pvp.flyZone = false && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
 			event.setCancelled(true);
 			event.getPlayer().setAllowFlight(false);
 			event.getPlayer().setFlying(false);
 		}
-		if(pvp.flyZone = true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
+		else if(pvp.flyZone = true && event.getPlayer().getGameMode() == GameMode.SURVIVAL && event.getPlayer().getWorld().getName().contains("world")){
 			event.setCancelled(true);
 			event.getPlayer().setAllowFlight(true);
 			event.getPlayer().setFlying(true);
@@ -466,12 +477,6 @@ public class DBZListener implements Listener
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		pvp.setWasSprinting(2);
 		pvp.setCanUseSkill(true);
-		if(pvp.getUsedSpeedSkill() == true)
-		{
-			pvp.setUsedSpeedSkill(false);
-			pvp.setCanUseSkill(false);
-			SuperSpeed.speedOff(player);
-		}
 	}
 	@EventHandler
 	public void playerToggleSneakEvent(PlayerToggleSneakEvent event)
@@ -490,6 +495,61 @@ public class DBZListener implements Listener
 			pvp.setUsedSpeedSkill(true);
 			pvp.setFirstToggle(true);
 			return;
+		}
+
+		else if(pvp.getUsedSpeedSkill() == true)
+		{
+			pvp.setUsedSpeedSkill(false);
+			pvp.setCanUseSkill(false);
+			SuperSpeed.speedOff(player);
+		}
+	}
+	@EventHandler
+	public static void getExplosion(EntityExplodeEvent event) {
+		List<Block> explosionBlocks = new ArrayList<Block>();
+	    explosionBlocks.addAll(event.blockList());
+	    double height = .04;
+	    int every3 = 0;		
+	    Location loc = event.getLocation();
+	   	for(Block block:explosionBlocks){
+	   		every3++;
+	   		height+= .005;
+	    	if(height > 1){
+	    		height = .05;
+	    	}
+	    	if(every3 == 3){
+	    		every3 = 0;
+	    		continue;
+	    	}
+	    	FallingBlock thrown = block.getLocation().getWorld()
+	                   .spawnFallingBlock(block.getLocation(), block.getType(), (byte) 0);
+	    	thrown.setVelocity(new Vector(0,height,0));
+	    	thrown.setDropItem(false);
+	    	thrown.setTicksLived(100);
+		}
+	    if(!(event.getEntity() instanceof TNTPrimed)){
+	    	TNTPrimed primed = loc.getWorld().spawn(loc, TNTPrimed.class);
+	    	primed.setYield(4);
+	    	primed.setFuseTicks(0);
+			try {
+				ParticleEffect.sendToLocation(ParticleEffect.FLAME, loc,1.8f,0.8f,1.8f, (float)0.041, 3000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+    }
+	@EventHandler
+	public static void blockHitGround(EntityChangeBlockEvent event){
+		if(event.getEntity().getType() == EntityType.FALLING_BLOCK){
+			event.setCancelled(true);
+		}
+
+	}
+	@EventHandler
+	public void antiSnow(EntityBlockFormEvent event){
+		if(event.getEntity().toString() == "CraftSnowman"){
+			event.setCancelled(true);
 		}
 	}
 	@EventHandler

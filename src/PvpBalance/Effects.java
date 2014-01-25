@@ -1,6 +1,8 @@
 package PvpBalance;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 //Will house effect methods
@@ -44,6 +46,19 @@ public class Effects
 		{
 			e.printStackTrace();
 			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
+	public static void igniteFireball(Entity object)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.FLAME, object.getLocation(),0.1f,0.1f,0.1f, (float)0.04, 160);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFireball!");
 		}
 		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
 	}
@@ -236,6 +251,17 @@ public class Effects
 				e.printStackTrace();
 				PvpBalance.logger.info("Effect adminPlayer!");
 			}
+		}
+	}
+	public static void impactEffect(Location location){
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.FLAME, location,0.3f,0.3f,0.3f, (float)0.3, 300);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
 		}
 	}
 }
