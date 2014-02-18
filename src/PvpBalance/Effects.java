@@ -9,6 +9,19 @@ import org.bukkit.entity.Player;
 public class Effects
 {
 	Player[] onlinePlayerList = Bukkit.getServer().getOnlinePlayers();
+	public static void healEffect(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.HEART , player.getLocation().add(0, 1, 0),0.3f,0.62f,0.3f, (float)0.65, 150);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
 	public static void teleportGreen(Player player)
 	{
 		try

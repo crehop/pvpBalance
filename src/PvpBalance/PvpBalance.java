@@ -35,6 +35,7 @@ public class PvpBalance extends JavaPlugin
 	private static int everyOther = 0;
 	private boolean debug = false;
 	private static List<Chicken> chickens = new ArrayList<Chicken>();
+	public static List<Player> particulating = new ArrayList<Player>();
 	private boolean faction = false;
 	
 	private Save sDamage, protection;
@@ -92,6 +93,7 @@ public class PvpBalance extends JavaPlugin
 		    	if(everyOther == 0)
 		    	{
 		    		everyOther = 1;
+		    		particulating();
 		    		fireballEffects();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
@@ -161,6 +163,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 1)
 		    {
 		    	everyOther = 2;
+	    		particulating();
 	    		fireballEffects();
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
@@ -251,6 +254,7 @@ public class PvpBalance extends JavaPlugin
 		    		}
 		    	}
 		    	everyOther = 3;
+	    		particulating();
 	    		fireballEffects();
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
@@ -315,6 +319,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 3)
 		    {
 		    	everyOther = 0;
+	    		particulating();
 	    		fireballEffects();
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
@@ -393,11 +398,21 @@ public class PvpBalance extends JavaPlugin
 		    	}
 		    }
 		}
+
+
 	}, 0L, 5L);
 		
 	 	logger.info(pdfFile.getName() + " Has Been Enabled!!");
  	}
-	
+	private void particulating() {
+		for(Player player:particulating){
+			createParticleEffect(player);
+			if(player.isOnline() == false){
+				particulating.remove(player);
+			}
+		}
+		
+	}
 	public boolean isDebug()
 	{
 		return debug;
@@ -479,6 +494,37 @@ public class PvpBalance extends JavaPlugin
 		else if(commandLabel.equalsIgnoreCase("polish"))
 		{
 			ArmorEffects.polish(player);
+		}		
+		else if(commandLabel.equalsIgnoreCase("effect") && player.hasPermission("pvpbalance.particles2")){
+			player.sendMessage(ChatColor.GREEN + "============= EFFECTS MENU ============");
+			player.sendMessage(ChatColor.GREEN + "say /effecttype to change type");
+			player.sendMessage(ChatColor.GREEN + "say /effectspeed to change speed");
+			player.sendMessage(ChatColor.GREEN + "say /effectcount to change count");
+			player.sendMessage(ChatColor.GREEN + "say /effectheight to change height");
+			player.sendMessage(ChatColor.GREEN + "say /effectreset to set to none");
+		}
+		else if(commandLabel.equalsIgnoreCase("effectreset") && player.hasPermission("pvpbalance.particles2")){
+			PvpBalance.particulating.remove(player);
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			pvp.setParticleCount(0);
+			pvp.setParticleEffect("");
+			pvp.setParticleSpeed(0);
+		}
+		else if(commandLabel.equalsIgnoreCase("effecttype") && player.hasPermission("pvpbalance.particles2")){
+			PlayerParticles.nextParticle(player);
+			player.sendMessage(ChatColor.GREEN + "type changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleEffect());
+		}
+		else if(commandLabel.equalsIgnoreCase("effectheight") && player.hasPermission("pvpbalance.particles2")){
+			PlayerParticles.incrimentParticleHeight(player);
+			player.sendMessage(ChatColor.GREEN + "height changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleHeight());
+		}
+		else if(commandLabel.equalsIgnoreCase("effectspeed") && player.hasPermission("pvpbalance.particles2")){
+			PlayerParticles.incrimentParticleSpeed(player);
+			player.sendMessage(ChatColor.GREEN + "speed changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleSpeed());
+		}
+		else if(commandLabel.equalsIgnoreCase("effectcount") && player.hasPermission("pvpbalance.particles2")){
+			PlayerParticles.incrimentParticleCount(player);
+			player.sendMessage(ChatColor.GREEN + "speed changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleCount());
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpstats"))
 		{
@@ -533,13 +579,31 @@ public class PvpBalance extends JavaPlugin
 						e1.printStackTrace();
 					}
     			}
-    			if(arrow.isOnGround()){
-    				if(arrow.getTicksLived() > 1200){
-    					arrow.remove();
-    				}
+    			if(arrow.getTicksLived() > 1200){
+    				arrow.remove();
     			}
     		}
         }
 	}
-
+	public void createParticleEffect(Player player){
+		if(player.isOnline() == false){
+			particulating.remove(player);
+			return;
+		}
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		if(pvp.getParticleCount() != 0){
+			if(pvp.getParticleEffect() != ""){
+				if(pvp.getEffect() != null){
+					if(pvp.getParticleSpeed() != 0){
+						try {
+							ParticleEffect.sendToLocation(pvp.getEffect(), player.getLocation().add(0, pvp.getParticleHeight(), 0),0.2f,0.2f,0.2f, (float)pvp.getParticleSpeed(), pvp.getParticleCount());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
 }

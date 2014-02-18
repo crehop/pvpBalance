@@ -67,6 +67,11 @@ public class PVPPlayer
 	private boolean partyChat;
 	private boolean isStunned;
 	private boolean usedSpeedSkill;
+	private String particleEffect = "";
+	private double particleHeight = 0.2;
+	private ParticleEffect effect = null;
+	private int particleCount = 0;
+	private double particleSpeed = 0;
 	public boolean flyZone;
 	
 	public PVPPlayer(Player player)
@@ -1007,5 +1012,35 @@ public class PVPPlayer
 				this.setCanUsePileDrive(false);
 			}
 		}
+	}
+	public String getParticleEffect() {
+		return particleEffect;
+	}
+	public void setParticleEffect(String particleEffect) {
+		this.particleEffect = particleEffect;
+	}
+	public int getParticleCount() {
+		return particleCount;
+	}
+	public void setParticleCount(int particleCount) {
+		this.particleCount = particleCount;
+	}
+	public double getParticleSpeed() {
+		return particleSpeed;
+	}
+	public void setParticleSpeed(double particleSpeed) {
+		this.particleSpeed = particleSpeed;
+	}
+	public ParticleEffect getEffect() {
+		return effect;
+	}
+	public void setEffect(ParticleEffect effect) {
+		this.effect = effect;
+	}
+	public double getParticleHeight() {
+		return particleHeight;
+	}
+	public void setParticleHeight(double particleHeight) {
+		this.particleHeight = particleHeight;
 	}
 }

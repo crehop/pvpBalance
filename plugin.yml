@@ -11,3 +11,9 @@ commands:
     pvpgod:
     pvpstats:
     party:
+    effect:
+    effecttype:
+    effectspeed:
+    effectcount:
+    effectreset:
+    effectheight:

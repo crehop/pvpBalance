@@ -1,6 +1,7 @@
 package PvpBalance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -14,12 +15,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,7 +34,6 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -59,6 +56,7 @@ import org.bukkit.util.Vector;
 
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
+import AdditionalEnchants.EnchantManagment;
 import Event.PBEntityDamageEntityEvent;
 import Event.PBEntityDamageEvent;
 import Event.PBEntityDeathEvent;
@@ -157,12 +155,34 @@ public class DBZListener implements Listener
 			}
 		}
 	}
-	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void specialEnchantDamageEvent(EntityDamageByEntityEvent event)
+	{
+		Entity e = event.getEntity();
+		if (e instanceof Player)
+		{
+			Player damagee = (Player)e;
+			if(event.getDamager() instanceof Player)
+			{
+				Player damager = (Player)event.getDamager();
+				ItemStack weapon = damager.getItemInHand();
+				if(EnchantManagment.enchantmentType(weapon) == 1){
+					event.setDamage(0.1337);
+					event.setCancelled(true);
+					if(EnchantManagment.executeEnchant(damager, damagee, weapon)== true){
+						PVPPlayer PVPdamagee = PvpHandler.getPvpPlayer(damagee);
+					}
+				}
+			}
+		}
+	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDamageEvent(EntityDamageByEntityEvent event)
 	{
-		//if(event.isCancelled())
-		//	return;
+		if(event.getDamage() == 0.1337){
+			return;
+		}
+			
 		if(!Damage.partyCanHit(event.getEntity(), event.getDamager()))
 		{
 			event.setCancelled(true);
@@ -511,33 +531,13 @@ public class DBZListener implements Listener
 	    double height = .04;
 	    int every3 = 0;		
 	    Location loc = event.getLocation();
-	   	for(Block block:explosionBlocks){
-	   		every3++;
-	   		height+= .005;
-	    	if(height > 1){
-	    		height = .05;
-	    	}
-	    	if(every3 == 3){
-	    		every3 = 0;
-	    		continue;
-	    	}
-	    	FallingBlock thrown = block.getLocation().getWorld()
-	                   .spawnFallingBlock(block.getLocation(), block.getType(), (byte) 0);
-	    	thrown.setVelocity(new Vector(0,height,0));
-	    	thrown.setDropItem(false);
-	    	thrown.setTicksLived(100);
+		try {
+			ParticleEffect.sendToLocation(ParticleEffect.FLAME, loc,1.8f,1.0f,1.8f, (float)0.141, 2000);
+			ParticleEffect.sendToLocation(ParticleEffect.LAVA, loc,1.8f,0.8f,1.8f, (float)0.281, 200);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	    if(!(event.getEntity() instanceof TNTPrimed)){
-	    	TNTPrimed primed = loc.getWorld().spawn(loc, TNTPrimed.class);
-	    	primed.setYield(4);
-	    	primed.setFuseTicks(0);
-			try {
-				ParticleEffect.sendToLocation(ParticleEffect.FLAME, loc,1.8f,0.8f,1.8f, (float)0.041, 3000);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
     }
 	@EventHandler
 	public static void blockHitGround(EntityChangeBlockEvent event){
@@ -742,11 +742,11 @@ public class DBZListener implements Listener
 
 			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
 			{
-				damage = 600;
+				damage = 100;
 			}
 			else if(event.getCause().equals(DamageCause.BLOCK_EXPLOSION))
 			{
-				damage = 600;
+				damage = 200;
 			}
 			else if(event.getCause().equals(DamageCause.LIGHTNING))
 			{
