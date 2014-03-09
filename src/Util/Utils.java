@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
+import DuelZone.Duel;
+
 public class Utils
 {
 	public static Vector getTargetVector(Location shooter, Location target)
@@ -20,7 +22,14 @@ public class Utils
 		return vector;
 		
 	}
-	
+	public static Duel getDuel(Player player){
+		for(Duel check:PvpBalance.PvpBalance.duel){
+			if(check.checkContestant(player)== true){
+				return check;
+			}
+		}
+		return null;
+	}
     public static Entity getTarget(Player player)
     {
         List<Entity> nearbyE = player.getNearbyEntities(20, 20, 20);

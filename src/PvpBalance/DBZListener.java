@@ -1,5 +1,6 @@
 package PvpBalance;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +39,11 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -57,6 +61,7 @@ import org.bukkit.util.Vector;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import AdditionalEnchants.EnchantManagment;
+import DuelZone.Duel;
 import Event.PBEntityDamageEntityEvent;
 import Event.PBEntityDamageEvent;
 import Event.PBEntityDeathEvent;
@@ -65,6 +70,7 @@ import SaveLoad.LoadSave;
 import Skills.Incapacitate;
 import Skills.PileDrive;
 import Skills.SuperSpeed;
+import Util.MYSQLManager;
 
 
 public class DBZListener implements Listener
@@ -87,6 +93,16 @@ public class DBZListener implements Listener
 			if(Util.WildernessProtection.checkForProtectedBlock(event.getBlock()) == true){
 				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "SURFACE PROTECTION please find stone or a cave to start mining! if you need tools say /ekit mining!");
 				event.setCancelled(true);
+			}
+		}
+	}
+	@EventHandler
+	public void stopEnderWhileInCombat(InventoryOpenEvent event){
+		if(event.getInventory().getType() == InventoryType.ENDER_CHEST){
+			PVPPlayer pvp = PvpHandler.getPvpPlayer((Player)event.getPlayer());
+			if(pvp.isInCombat()){
+				event.setCancelled(true);
+				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT OPEN ENDERCHEST IN COMBAT!");
 			}
 		}
 	}
@@ -227,6 +243,13 @@ public class DBZListener implements Listener
 				if(damager instanceof Player && event.getEntity() instanceof Player)
 				{
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+					if(pvpDamagee.isDuelContestant() == true && pvpDamager.isDuelContestant() == false){
+						event.setCancelled(true);
+						pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
+						pvpDamager.setCombatCooldown(10);
+						pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN A DUEL!");
+						return;
+					}
 					if(pvpDamager.isUsingGrappleShot() == true)
 					{
 						pvpDamager.setGrapplePlayer(damagee);
@@ -296,6 +319,14 @@ public class DBZListener implements Listener
 				if(!pvpDamager.canHit())
 				{
 					event.setCancelled(true);
+					return;
+				}
+
+				if(pvpDamagee.isDuelContestant() == true && pvpDamager.isDuelContestant() == false){
+					event.setCancelled(true);
+					pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
+					pvpDamager.setCombatCooldown(10);
+					pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN A DUEL!");
 					return;
 				}
 				if(damager.getItemInHand().getType().equals(Material.BOW) && !(event.getDamager() instanceof Arrow))
@@ -401,12 +432,11 @@ public class DBZListener implements Listener
 			}
 		}
 	}
-	
 	@EventHandler
 	public void playerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		PVPPlayer newPVP = new PVPPlayer(player);
+		PVPPlayer newPVP = PvpBalance.createNewPvPPlayerObject(player);
 		if(player.getWorld().getName().contains("world"))
 		{
 			if(player.hasPermission("particles.admin"))
@@ -419,7 +449,6 @@ public class DBZListener implements Listener
 				player.teleport(new Location(player.getWorld(), -730.50, 105, 319.50));
 			}
 		}
-		PvpHandler.addPvpPlayer(newPVP);
 		Damage.calcArmor(event.getPlayer());
 		if(player.getHealth() > 0)
 			newPVP.sethealth(newPVP.getMaxHealth());
@@ -435,8 +464,7 @@ public class DBZListener implements Listener
 		}
 		if(PvpHandler.getPvpPlayer(player) == null)
 		{
-			PVPPlayer newPVP = new PVPPlayer(player);
-			PvpHandler.addPvpPlayer(newPVP);
+			PvpBalance.createNewPvPPlayer(player);
 		}
 		Damage.calcArmor(player);
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
@@ -562,8 +590,7 @@ public class DBZListener implements Listener
 				Player player = (Player)event.getEntity();
 				if(PvpHandler.getPvpPlayer(player) == null)
 				{
-					PVPPlayer newPVP = new PVPPlayer(player);
-					PvpHandler.addPvpPlayer(newPVP);
+					PvpBalance.createNewPvPPlayer(player);
 				}
 				PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 				int heal = SaveLoad.LoadSave.HealPot;
@@ -782,15 +809,37 @@ public class DBZListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
+		MYSQLManager mysql = PvpBalance.mysql;
+		if(Duel.checkContestant((Player)event.getEntity())){
+			Duel.playerDeath((Player)event.getEntity());
+		}
 		Player player = event.getEntity();
-		/*if(PvpHandler.getPvpPlayer(player) == null)
-		{
-			PVPPlayer newPVP = new PVPPlayer(player);
-			PvpHandler.addPvpPlayer(newPVP);
-		}*/
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		pvpPlayer.setIsDead(true);
 		//player.teleport(player.getWorld().getSpawnLocation());
+		if(event.getEntity().getKiller() instanceof Player){
+			PVPPlayer pvpKiller = PvpHandler.getPvpPlayer(event.getEntity().getKiller());
+			if(pvpPlayer.getMaxHealth() >= 6500){
+				try {
+					mysql.storeUserData(event.getEntity(), "EpicDeaths", (mysql.getUserData(event.getEntity(), "EpicDeaths") + 1));
+					mysql.storeUserData(event.getEntity().getKiller(), "EpicKills", (mysql.getUserData(event.getEntity(), "EpicKills") + 1));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else{
+				try {
+					mysql.storeUserData(event.getEntity(), "Deaths", (mysql.getUserData(event.getEntity(), "Deaths") + 1));
+					if(pvpKiller.getMaxHealth() < 6500){
+						mysql.storeUserData(event.getEntity().getKiller(), "Kills", (mysql.getUserData(event.getEntity(), "Kills") + 1));
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
 		{
 			@Override
@@ -813,8 +862,7 @@ public class DBZListener implements Listener
     			Player player = (Player) event.getWhoClicked();
     			if(PvpHandler.getPvpPlayer(player) == null)
     			{
-    				PVPPlayer newPVP = new PVPPlayer(player);
-    				PvpHandler.addPvpPlayer(newPVP);
+					PvpBalance.createNewPvPPlayer(player);
     			}
     			PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
     		}
@@ -824,8 +872,7 @@ public class DBZListener implements Listener
 	    	Player player = (Player) event.getWhoClicked();
 			if(PvpHandler.getPvpPlayer(player) == null)
 			{
-				PVPPlayer newPVP = new PVPPlayer(player);
-				PvpHandler.addPvpPlayer(newPVP);
+				PvpBalance.createNewPvPPlayer(player);
 			}
 	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
 	    }

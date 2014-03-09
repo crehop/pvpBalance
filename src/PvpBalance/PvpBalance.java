@@ -1,8 +1,11 @@
 package PvpBalance;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,17 +19,22 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import DuelZone.Duel;
 import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
 import Util.ItemUtils;
+import Util.MYSQLManager;
 
 public class PvpBalance extends JavaPlugin
 {
+	public static MYSQLManager mysql;
 	public static final Logger logger = Logger.getLogger("Minecraft");
     public static PvpBalance plugin;
 	public LoadSave LoadSave;
@@ -36,9 +44,12 @@ public class PvpBalance extends JavaPlugin
 	private boolean debug = false;
 	private static List<Chicken> chickens = new ArrayList<Chicken>();
 	public static List<Player> particulating = new ArrayList<Player>();
+	public static List<Duel> duel = new ArrayList<Duel>();
 	private boolean faction = false;
+	public static Economy economy = null;
 	
 	private Save sDamage, protection;
+	public boolean logDB = true;
 
 
  
@@ -54,22 +65,21 @@ public class PvpBalance extends JavaPlugin
 		PvpHandler.clear();
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 	 	logger.info(pdfFile.getName() + " Has Been Disabled!!");
+	 	this.mysql.closeDB();
  	}
  
  	public void onEnable()
  	{
-	 	plugin = this;
-	 	
+ 		plugin = this;
 	 	for(Player p : Bukkit.getOnlinePlayers())
 	 	{
 	 		if(p == null)
 	 			continue;
-	 		PVPPlayer pp = new PVPPlayer(p);
-	 		PvpHandler.addPvpPlayer(pp);
+	 		createNewPvPPlayer(p);
 	 	}
-	 	
+	 	setupEconomy();
 	 	PvpHandler.load();
-	 	
+ 		mysql = new MYSQLManager(this);
 	 	sDamage = new Save(this, "Damage.yml");
 	 	protection = new Save(this, "Protection.yml");
 	 	LoadSave  = new LoadSave(this);
@@ -84,6 +94,13 @@ public class PvpBalance extends JavaPlugin
 	 	getServer().getPluginManager().registerEvents(new PvpListener(), this);
 	 	
 	 	PluginDescriptionFile pdfFile = this.getDescription();
+	 	try {
+			this.mysql.setupDb();
+		} catch (SQLException e) {
+			this.logDB  = false;
+			e.printStackTrace();
+		}
+	 	
 
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 		{
@@ -321,6 +338,7 @@ public class PvpBalance extends JavaPlugin
 		    	everyOther = 0;
 	    		particulating();
 	    		fireballEffects();
+		    	Duel.tick();
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
 					try
@@ -443,21 +461,33 @@ public class PvpBalance extends JavaPlugin
 	{
 		Player player = (Player) sender;
 		//Location location = player.getLocation();
+		if(commandLabel.equalsIgnoreCase("bet")){
+			if(args[0] != null){
+				if(Duel.bet < 2500){
+					if(Duel.checkContestant(player) == true && Duel.has2players == true && Duel.betAccepted == false){
+						int bet = Integer.parseInt(args[0]);
+						Duel.setBet(bet);
+					}
+				}
+			}
+		}
+		if(commandLabel.equalsIgnoreCase("acceptbet")){
+			Duel.acceptBet(player);
+		}
+		if(commandLabel.equalsIgnoreCase("acceptduel")){
+			Duel.acceptDuel(player);
+		}
 		if(commandLabel.equalsIgnoreCase("pvpdebug") && player.hasPermission("particles.admin"))
 		{
 			if(debug == false)
 			{
 				debug = true;
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "DEBUG MODE ENABLED");
-				Bukkit.broadcastMessage("PVP PLAYER: " + PvpHandler.getPvpPlayer(player));
-				Bukkit.broadcastMessage("PVP PLAYER NAME: " + PvpHandler.getPvpPlayer(player).getPlayer().getName());
 			}
 			else
 				debug = false;
 			if(PvpHandler.getPvpPlayer(player) == null)
 			{
-				PVPPlayer newPVP = new PVPPlayer(player);
-				PvpHandler.addPvpPlayer(newPVP);
+				createNewPvPPlayer(player);
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpgod") && player.hasPermission("particles.admin"))
@@ -514,6 +544,19 @@ public class PvpBalance extends JavaPlugin
 			PlayerParticles.nextParticle(player);
 			player.sendMessage(ChatColor.GREEN + "type changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleEffect());
 		}
+		else if(commandLabel.equalsIgnoreCase("endduel") && player.hasPermission("pvpbalance.op")){
+			Duel.cancelDuel();
+			player.sendMessage(ChatColor.YELLOW + "INFO =======================");
+			if(Duel.cont1pvp != null)
+			player.sendMessage(ChatColor.GREEN + "Contestant1 = " + Duel.cont1pvp.getPlayer().getName());
+			if(Duel.cont2pvp != null)
+			player.sendMessage(ChatColor.GREEN + "Contestant2 = " + Duel.cont2pvp.getPlayer().getName());
+			player.sendMessage(ChatColor.GREEN + "EjectTimer = " + Duel.EjectTimer);
+			player.sendMessage(ChatColor.GREEN + "Bet ammount = " + Duel.bet);
+			player.sendMessage(ChatColor.GREEN + "DUEL CANNCELED");
+			player.sendMessage(ChatColor.YELLOW + "============================");
+			Duel.cancelDuel();
+		}
 		else if(commandLabel.equalsIgnoreCase("effectheight") && player.hasPermission("pvpbalance.particles2")){
 			PlayerParticles.incrimentParticleHeight(player);
 			player.sendMessage(ChatColor.GREEN + "height changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleHeight());
@@ -526,31 +569,124 @@ public class PvpBalance extends JavaPlugin
 			PlayerParticles.incrimentParticleCount(player);
 			player.sendMessage(ChatColor.GREEN + "speed changed to " + ChatColor.DARK_PURPLE + "" + PvpHandler.getPvpPlayer(player).getParticleCount());
 		}
+		else if(args.length > 0){
+			if(commandLabel.equalsIgnoreCase("pvpstats") && args[0] != null){
+				try {
+					if(mysql.getUserData(args[0].toString(), "Kills") != -1){
+						int epicKills = 0;
+						int epicDeaths = 0;
+						int duelsWon = 0;
+						int duelsLost = 0;
+						int kills = 0;
+						int deaths = 0;
+						try {
+							epicKills = mysql.getUserData(args[0].toString(), "EpicKills");
+						} catch (SQLException e5) {
+							// TODO Auto-generated catch block
+							e5.printStackTrace();
+						}
+						try {
+							epicDeaths = mysql.getUserData(args[0].toString(), "EpicDeaths");
+						} catch (SQLException e4) {
+							// TODO Auto-generated catch block
+							e4.printStackTrace();
+						}
+						try {
+							duelsWon = mysql.getUserData(args[0].toString(), "DuelsWon");
+						} catch (SQLException e3) {
+							e3.printStackTrace();
+						}
+						try {
+							duelsLost = mysql.getUserData(args[0].toString(), "DuelsLost");
+						} catch (SQLException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+						try {
+							kills = mysql.getUserData(args[0].toString(), "Kills");
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						try {
+							deaths = mysql.getUserData(args[0].toString(), "Deaths");
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						player.sendMessage(ChatColor.BLUE + "======= PVP STATS =======");
+						player.sendMessage(ChatColor.GREEN + "Name" + ChatColor.YELLOW + ":" + ChatColor.WHITE + args[0].toString());
+						player.sendMessage(ChatColor.GREEN + "Kills" + ChatColor.YELLOW + ":" + ChatColor.WHITE + kills);
+						player.sendMessage(ChatColor.GREEN + "Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + deaths);
+						player.sendMessage(ChatColor.GREEN + "Epic Kills" + ChatColor.YELLOW + ":" + ChatColor.WHITE + epicKills);
+						player.sendMessage(ChatColor.GREEN + "Epic Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + epicDeaths);
+						player.sendMessage(ChatColor.GREEN + "Duels Won" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsWon);
+						player.sendMessage(ChatColor.GREEN + "Duels Lost" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsLost);
+						player.sendMessage(ChatColor.BLUE + "=========================");
+						return true;
+					}
+				} catch (SQLException e) {
+				}
+
+			player.sendMessage(ChatColor.BLUE + "======= PVP STATS =======");
+			player.sendMessage(ChatColor.RED  + "Error: " + args[0].toString() + " not in database!");
+			player.sendMessage(ChatColor.RED  + "PLEASE TRY AGAIN");
+			player.sendMessage(ChatColor.BLUE + "=========================");
+	        return true;
+		}
+		}
 		else if(commandLabel.equalsIgnoreCase("pvpstats"))
 		{
-			//PVPPlayer pvpPlayer = Commands.getPVPPlayer(player); 
-//			player.sendMessage(ChatColor.GREEN + "IF NULL HERE ERROR :" + pvpPlayer);
-//			player.sendMessage(ChatColor.GREEN + "PLAYER NAME : " + pvpPlayer.getPlayer().getName());
-//			player.sendMessage(ChatColor.GREEN + "MAXIMUM HEALTH  : " + pvpPlayer.getMaxHealth());
-//			player.sendMessage(ChatColor.GREEN + "Health THIS TICK: " + pvpPlayer.gethealth());
-//			player.sendMessage(ChatColor.GREEN + "Health LAST TICK: " + pvpPlayer.getHealthLastTick());
-//			player.sendMessage(ChatColor.GREEN + "COOLDOWN (regen): " + pvpPlayer.getCooldown());
-//			player.sendMessage(ChatColor.GREEN + "COMBAT COOLDOWN (FASTREGEN): " + pvpPlayer.getCombatCoolDown());
-//			player.sendMessage(ChatColor.GREEN + "IS DEAD T/F : " + pvpPlayer.isDead);
-//			player.sendMessage(ChatColor.GREEN + "IS IN COMBAT T/F : " + pvpPlayer.isInCombat);
-//			player.sendMessage(ChatColor.GREEN + "HITCOOLDOWN : " + pvpPlayer.getHitCooldown());
-//			player.sendMessage(ChatColor.GREEN + "CAN REGEN HEALTH T/F: " + pvpPlayer.canRegen);
-			PVPPlayer pp = PvpHandler.getPvpPlayer(player);
-			if(pp.isPvpstats())
-			{
-				pp.setPvpstats(false);
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE DISABLED SAY /PVPSTATS again to Enable");
+			int epicKills = 0;
+			int epicDeaths = 0;
+			int duelsWon = 0;
+			int duelsLost = 0;
+			int kills = 0;
+			int deaths = 0;
+			try {
+				epicKills = mysql.getUserData(player, "EpicKills");
+			} catch (SQLException e5) {
+				// TODO Auto-generated catch block
+				e5.printStackTrace();
 			}
-			else
-			{
-				pp.setPvpstats(true);
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DAMAGE CHECK MODE ENABLED SAY /PVPSTATS again to Disable");
+			try {
+				epicDeaths = mysql.getUserData(player, "EpicDeaths");
+			} catch (SQLException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
 			}
+			try {
+				duelsWon = mysql.getUserData(player, "DuelsWon");
+			} catch (SQLException e3) {
+				e3.printStackTrace();
+			}
+			try {
+				duelsLost = mysql.getUserData(player, "DuelsLost");
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				kills = mysql.getUserData(player, "Kills");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				deaths = mysql.getUserData(player, "Deaths");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			player.sendMessage(ChatColor.BLUE + "" + ChatColor.UNDERLINE + "======= PVP STATS =======");
+			player.sendMessage(ChatColor.GREEN + "Name" + ChatColor.YELLOW + ":" + ChatColor.WHITE + player.getDisplayName());
+			player.sendMessage(ChatColor.GREEN + "Kills" + ChatColor.YELLOW + ":" + ChatColor.WHITE + kills);
+			player.sendMessage(ChatColor.GREEN + "Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + deaths);
+			player.sendMessage(ChatColor.GREEN + "Epic Kills" + ChatColor.YELLOW + ":" + ChatColor.WHITE + epicKills);
+			player.sendMessage(ChatColor.GREEN + "Epic Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + epicDeaths);
+			player.sendMessage(ChatColor.GREEN + "Duels Won" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsWon);
+			player.sendMessage(ChatColor.GREEN + "Duels Lost" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsLost);
+			player.sendMessage(ChatColor.BLUE + "" + ChatColor.UNDERLINE + "=========================");
 		}
         return true;
 	}
@@ -605,5 +741,53 @@ public class PvpBalance extends JavaPlugin
 				}
 			}
 		}
+	}
+	private boolean setupEconomy()
+	{
+		RegisteredServiceProvider economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+		if (economyProvider != null)
+		{
+			economy = (Economy)economyProvider.getProvider();
+		}
+
+		return economy != null;
+	}
+	public static Plugin getPlugin(){
+		return plugin;
+	}
+	public static MYSQLManager getMYSQL(){
+		return mysql;
+	}
+	public static void createNewPvPPlayer(Player player){
+		PVPPlayer newPVP = new PVPPlayer(player);
+		PvpHandler.addPvpPlayer(newPVP);
+		try {
+			mysql.storeUserData(player, "EpicKills", mysql.getUserData(player, "EpicKills"));
+			mysql.storeUserData(player, "EpicDeaths", mysql.getUserData(player, "EpicDeaths"));
+			mysql.storeUserData(player, "DuelsWon", mysql.getUserData(player, "DuelsWon"));
+			mysql.storeUserData(player, "DuelsLost", mysql.getUserData(player, "DuelsLost"));
+			mysql.storeUserData(player, "Kills", mysql.getUserData(player, "Kills"));
+			mysql.storeUserData(player, "Deaths", mysql.getUserData(player, "Deaths"));
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+	}
+	public static PVPPlayer createNewPvPPlayerObject(Player player){
+		PVPPlayer newPVP = new PVPPlayer(player);
+		PvpHandler.addPvpPlayer(newPVP);
+		try {
+			mysql.storeUserData(player, "EpicKills", mysql.getUserData(player, "EpicKills"));
+			mysql.storeUserData(player, "EpicDeaths", mysql.getUserData(player, "EpicDeaths"));
+			mysql.storeUserData(player, "DuelsWon", mysql.getUserData(player, "DuelsWon"));
+			mysql.storeUserData(player, "DuelsLost", mysql.getUserData(player, "DuelsLost"));
+			mysql.storeUserData(player, "Kills", mysql.getUserData(player, "Kills"));
+			mysql.storeUserData(player, "Deaths", mysql.getUserData(player, "Deaths"));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		return newPVP;
 	}
 }

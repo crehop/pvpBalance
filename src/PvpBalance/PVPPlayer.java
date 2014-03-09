@@ -1,5 +1,4 @@
 package PvpBalance;
-
 import java.util.Date;
 
 import me.frodenkvist.scoreboardmanager.SMHandler;
@@ -15,10 +14,12 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import DuelZone.Duel;
 import Event.PBEntityRegainHealthEvent;
 import Party.Invite;
 import Party.Party;
 import Skills.SuperSpeed;
+import Util.MYSQLManager;
 
 
 public class PVPPlayer
@@ -67,12 +68,15 @@ public class PVPPlayer
 	private boolean partyChat;
 	private boolean isStunned;
 	private boolean usedSpeedSkill;
+	public static Material check;
 	private String particleEffect = "";
 	private double particleHeight = 0.2;
 	private ParticleEffect effect = null;
 	private int particleCount = 0;
 	private double particleSpeed = 0;
 	public boolean flyZone;
+	private boolean duelContestant;
+	private boolean duelZone;
 	
 	public PVPPlayer(Player player)
 	{
@@ -99,6 +103,7 @@ public class PVPPlayer
 		this.comboReady = 0;
 		colorUp = false;
 		this.flyZone = false;
+		this.duelContestant = false;
 	}
 	public int tackleTimer()
 	{
@@ -518,10 +523,12 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		Material underfoot = this.player.getLocation().subtract(0,1,0).getBlock().getType();
+		check = this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType();
 		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
 			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
 		}
-		if(this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType() == Material.GLASS){
+		if(check == Material.GLASS){
 			if(this.isNewbZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
 				this.setIsNewbZone(true);
@@ -534,7 +541,47 @@ public class PVPPlayer
 			}
 			
 		}
-		if(this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType() == Material.ENDER_STONE){
+		if(check == Material.NETHER_BRICK){
+			Duel.addContestant(player);
+		}
+		if(check == Material.GLOWSTONE){
+			if(this.isDuelZone() == false){
+				player.sendMessage(ChatColor.RED + "YOU HAVE ENTERED A DUEL ZONE, IF YOU LEAVE WHILE IN A DUEL YOU WILL DIE AND LOSE!");
+				this.setDuelZone(true);
+				if(Duel.cont1pvp == null && !player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
+					player.teleport(Duel.ejectLoc);
+					return;
+				}
+				if(Duel.cont2pvp == null && !player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
+					player.teleport(Duel.ejectLoc);
+					return;
+				}
+				if(Duel.checkContestant(player) == false && player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
+					player.teleport(Duel.ejectLoc);
+					return;
+				}
+				if(Duel.duelAccepted == false && player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
+					player.teleport(Duel.ejectLoc);
+					return;
+				}
+				if(player.hasPermission("essentials.socialspy") || player.isOp()){
+					player.sendMessage(ChatColor.GREEN + "ARENA ENTRY OVERRIDE YOUR LIFE HAS BEEN SPARED");
+				}
+			}
+			if(Duel.checkContestant(player) == false && player.isOp() == false && player.hasPermission("essentials.socialspy") == false){
+				this.sethealth(0);
+				this.player.sendMessage(ChatColor.RED + "YOU HAVE BEEN KILLED FOR ENTERING A DUEL ZONE WHILE NOT IN A DUEL");
+				return;
+			}
+		}
+		else{
+			if(this.isDuelZone() == true){
+				this.setDuelZone(false);
+				player.sendMessage(ChatColor.RED + "YOU ARE NO LONGER IN A DUEL ZONE");
+			}
+			
+		}
+		if(check == Material.ENDER_STONE){
 			if(this.flyZone == false){
 				this.flyZone = true;
 				player.sendMessage(ChatColor.RED + "YOU FEEL WEIGHTLESS!");
@@ -550,7 +597,7 @@ public class PVPPlayer
 			
 		}
 
-		if(this.player.getLocation().subtract(0,1,0).getBlock().getType() == Material.BEDROCK){
+		if(underfoot == Material.BEDROCK){
 			Skills.SuperSpeed.pathspeedOn(player);
 		}
 		if(this.tackleTimer > 0)
@@ -713,7 +760,6 @@ public class PVPPlayer
 		}
 		if(this.health <= 0 && this.isDead == false)
 		{
-
 			if(player.getFireTicks() > 0)
 			{
 				player.setFireTicks(0);
@@ -1042,5 +1088,17 @@ public class PVPPlayer
 	}
 	public void setParticleHeight(double particleHeight) {
 		this.particleHeight = particleHeight;
+	}
+	public boolean isDuelContestant() {
+		return duelContestant;
+	}
+	public void setDuelContestant(boolean duelContestant) {
+		this.duelContestant = duelContestant;
+	}
+	public boolean isDuelZone() {
+		return duelZone;
+	}
+	public void setDuelZone(boolean duelZone) {
+		this.duelZone = duelZone;
 	}
 }
