@@ -44,13 +44,7 @@ public class Duel {
 					+ ChatColor.GREEN + "$" + winnings + ChatColor.YELLOW
 					+ " to duel enter the " + ChatColor.GOLD + "GOLDEN"
 					+ ChatColor.YELLOW + " gate at spawn");
-			try {
-				PvpBalance.PvpBalance.mysql.storeUserData(cont1, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont1, "DuelsWon" + 1));
-				PvpBalance.PvpBalance.mysql.storeUserData(cont2, "DuelsLost", PvpBalance.PvpBalance.mysql.getUserData(cont2, "DuelsLost" + 1));
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		} else {
 			Bukkit.broadcastMessage(ChatColor.YELLOW + "["
 					+ ChatColor.LIGHT_PURPLE + "DUEL" + ChatColor.YELLOW + "]"
@@ -61,13 +55,7 @@ public class Duel {
 					+ ChatColor.GREEN + "$" + winnings + ChatColor.YELLOW
 					+ " to duel enter the " + ChatColor.GOLD + "GOLDEN"
 					+ ChatColor.YELLOW + " gate at spawn");
-			try {
-				PvpBalance.PvpBalance.mysql.storeUserData(cont2, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont2, "DuelsWon" + 1));
-				PvpBalance.PvpBalance.mysql.storeUserData(cont1, "DuelsLost", PvpBalance.PvpBalance.mysql.getUserData(cont1, "DuelsLost" + 1));
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		}
 		PvpBalance.PvpBalance.economy.depositPlayer(cont.getName(), winnings);
 		PvpBalance.PvpBalance.economy.depositPlayer("realmtaxs",
@@ -75,13 +63,6 @@ public class Duel {
 		cont.sendMessage(ChatColor.GREEN + "$" + winnings
 				+ " Has been deposited in your bank account!");
 		winnings = 0;
-		try {
-			PvpBalance.PvpBalance.mysql.storeUserData(cont, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont, "DuelsWon" + 1));
-			PvpBalance.PvpBalance.mysql.storeUserData(cont, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont, "DuelsLost" + 1));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public static boolean checkContestant(Player player) {
@@ -242,12 +223,26 @@ public class Duel {
 	}
 
 	public static void playerDeath(Player player) {
-		if (cont1.getName() == player.getName()) {
+		if (cont1.getName() == player.getName() && winState < 1) {
+			try {
+				PvpBalance.PvpBalance.mysql.storeUserData(cont2, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont2, "DuelsWon") + 1);
+				PvpBalance.PvpBalance.mysql.storeUserData(cont1, "DuelsLost", PvpBalance.PvpBalance.mysql.getUserData(cont1, "DuelsLost") + 1);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			payout(cont2);
 			winner = cont2;
 			winState = 20;
 		}
-		if (cont2.getName() == player.getName()) {
+		if (cont2.getName() == player.getName() && winState < 1) {
+			try {
+				PvpBalance.PvpBalance.mysql.storeUserData(cont1, "DuelsWon", PvpBalance.PvpBalance.mysql.getUserData(cont1, "DuelsWon") + 1);
+				PvpBalance.PvpBalance.mysql.storeUserData(cont2, "DuelsLost", PvpBalance.PvpBalance.mysql.getUserData(cont2, "DuelsLost") + 1);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			payout(cont1);
 			winner = cont1;
 			winState = 20;

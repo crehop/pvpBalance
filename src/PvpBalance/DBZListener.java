@@ -819,7 +819,7 @@ public class DBZListener implements Listener
 		//player.teleport(player.getWorld().getSpawnLocation());
 		if(event.getEntity().getKiller() instanceof Player){
 			PVPPlayer pvpKiller = PvpHandler.getPvpPlayer(event.getEntity().getKiller());
-			if(pvpPlayer.getMaxHealth() >= 6500){
+			if(pvpPlayer.getMaxHealth() >= 6300){
 				try {
 					mysql.storeUserData(event.getEntity(), "EpicDeaths", (mysql.getUserData(event.getEntity(), "EpicDeaths") + 1));
 					mysql.storeUserData(event.getEntity().getKiller(), "EpicKills", (mysql.getUserData(event.getEntity(), "EpicKills") + 1));
@@ -831,7 +831,7 @@ public class DBZListener implements Listener
 			else{
 				try {
 					mysql.storeUserData(event.getEntity(), "Deaths", (mysql.getUserData(event.getEntity(), "Deaths") + 1));
-					if(pvpKiller.getMaxHealth() < 6500){
+					if(pvpKiller.getMaxHealth() < 6300){
 						mysql.storeUserData(event.getEntity().getKiller(), "Kills", (mysql.getUserData(event.getEntity(), "Kills") + 1));
 					}
 				} catch (SQLException e) {

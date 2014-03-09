@@ -548,28 +548,13 @@ public class PVPPlayer
 			if(this.isDuelZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU HAVE ENTERED A DUEL ZONE, IF YOU LEAVE WHILE IN A DUEL YOU WILL DIE AND LOSE!");
 				this.setDuelZone(true);
-				if(Duel.cont1pvp == null && !player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
-					player.teleport(Duel.ejectLoc);
-					return;
-				}
-				if(Duel.cont2pvp == null && !player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
-					player.teleport(Duel.ejectLoc);
-					return;
-				}
-				if(Duel.checkContestant(player) == false && player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
-					player.teleport(Duel.ejectLoc);
-					return;
-				}
-				if(Duel.duelAccepted == false && player.hasPermission("essentials.socialspy") == false && player.isOp() == false){
-					player.teleport(Duel.ejectLoc);
-					return;
-				}
 				if(player.hasPermission("essentials.socialspy") || player.isOp()){
 					player.sendMessage(ChatColor.GREEN + "ARENA ENTRY OVERRIDE YOUR LIFE HAS BEEN SPARED");
 				}
 			}
 			if(Duel.checkContestant(player) == false && player.isOp() == false && player.hasPermission("essentials.socialspy") == false){
 				this.sethealth(0);
+				this.damage(100);
 				this.player.sendMessage(ChatColor.RED + "YOU HAVE BEEN KILLED FOR ENTERING A DUEL ZONE WHILE NOT IN A DUEL");
 				return;
 			}
