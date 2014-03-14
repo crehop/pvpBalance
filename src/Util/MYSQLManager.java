@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -55,7 +55,7 @@ public class MYSQLManager {
 		Statement statement = this.db.getConnection().createStatement();
 		ResultSet rs = statement.executeQuery("SELECT * FROM `pvpstats` WHERE `Name`='" + playerName + "';");
 		while(rs.next()){
-			value = rs.getInt(key);;
+			value = rs.getInt(key);
 			statement.close();
 			return value;
 		}
@@ -71,12 +71,35 @@ public class MYSQLManager {
 		Statement statement = this.db.getConnection().createStatement();
 		ResultSet rs = statement.executeQuery("SELECT * FROM `pvpstats` WHERE `Name`='" + playerName + "';");
 		while(rs.next()){
-			value = rs.getInt(key);;
-			statement.close();
+			value = rs.getInt(key);
 			return value;
 		}
 		statement.close();
 		return value;
+	}
+	
+	public void top10(Player requester) throws SQLException{
+		int place = 0;
+		int place1 = 0;
+		int place2 = 0;
+		Statement statement = this.db.getConnection().createStatement();
+		requester.sendMessage(ChatColor.YELLOW + "=========== Kills TOP 5 ===========");
+		ResultSet rs = statement.executeQuery("SELECT * FROM `pvpstats`.`pvpstats` ORDER BY `Kills` DESC LIMIT 5;");
+		while(rs.next()){
+			requester.sendMessage(ChatColor.AQUA + "" + ++place + ": " +  "" + rs.getString("Name") + " " + "Kills: "  + rs.getInt("Kills") + " " + "Deaths: "  + rs.getInt("Deaths"));
+		}
+		requester.sendMessage(ChatColor.GREEN + "========= Epic Kills TOP 5 =========");
+		ResultSet rs1 = statement.executeQuery("SELECT * FROM `pvpstats`.`pvpstats` ORDER BY `EpicKills` DESC LIMIT 5;");
+		while(rs1.next()){
+			requester.sendMessage(ChatColor.AQUA + "" + ++place1 + ": " +  "Name: " + rs1.getString("Name") + " " + "Epic Kills: "  + rs1.getInt("EpicKills") + " " + "Epic Deaths: "  + rs1.getInt("EpicDeaths"));
+		}
+		requester.sendMessage(ChatColor.RED + "========= Duels Won TOP 5 ==========");
+		ResultSet rs2 = statement.executeQuery("SELECT * FROM `pvpstats`.`pvpstats` ORDER BY `DuelsWon` DESC LIMIT 5;");
+		while(rs2.next()){
+			requester.sendMessage(ChatColor.AQUA + "" + ++place2 + ": " + "Name: " + rs2.getString("Name") + " " + "Duels Won: "  + rs2.getInt("DuelsWon") + " " + "Duels Lost: "  + rs2.getInt("DuelsLost"));
+		}
+		statement.close();
+		requester.sendMessage(ChatColor.YELLOW + "=====================================");
 	}
 }
 

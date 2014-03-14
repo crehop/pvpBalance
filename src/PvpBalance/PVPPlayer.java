@@ -471,6 +471,9 @@ public class PVPPlayer
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
 			this.sethealth(health - dealtDamage);
+			if(this.health < 0){
+				this.health = 0;
+			}
 		}
 		else
 		{
@@ -552,10 +555,8 @@ public class PVPPlayer
 					player.sendMessage(ChatColor.GREEN + "ARENA ENTRY OVERRIDE YOUR LIFE HAS BEEN SPARED");
 				}
 			}
-			if(Duel.checkContestant(player) == false && player.isOp() == false && player.hasPermission("essentials.socialspy") == false){
-				this.sethealth(0);
-				this.damage(100);
-				this.player.sendMessage(ChatColor.RED + "YOU HAVE BEEN KILLED FOR ENTERING A DUEL ZONE WHILE NOT IN A DUEL");
+			if(Duel.checkContestant(this.player) == false && player.isOp() == false){
+				this.kill();
 				return;
 			}
 		}
@@ -754,6 +755,7 @@ public class PVPPlayer
 			this.isDead = true;
 			this.combatCoolDown = 0;
 			this.hitCoolDown = 0;
+			return;
 		}
 		if(this.combatCoolDown > 0 || this.isDead == true || this.player.getFoodLevel() < 1)
 		{
@@ -963,7 +965,18 @@ public class PVPPlayer
 		target.sendMessage(ChatColor.AQUA + this.player.getName() + ChatColor.GOLD + " Has Invited You To His Party");
 		target.sendMessage(ChatColor.GOLD + "Type " + ChatColor.AQUA + "/party accept " + ChatColor.GOLD + " To Accept Or " + ChatColor.AQUA + "/party decline" + ChatColor.GOLD + " To Decline");
 	}
-	 
+	public void kill(){
+		if(player.getFireTicks() > 0)
+		{
+			player.setFireTicks(0);
+		}
+		player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
+		this.player.setHealth(0f);
+		this.isDead = true;
+		this.combatCoolDown = 0;
+		this.hitCoolDown = 0;
+		return;
+	}
 	public void accept()
 	{
 		if (this.invite != null)

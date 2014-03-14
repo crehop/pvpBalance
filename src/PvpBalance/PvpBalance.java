@@ -678,7 +678,7 @@ public class PvpBalance extends JavaPlugin
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			player.sendMessage(ChatColor.BLUE + "" + ChatColor.UNDERLINE + "======= PVP STATS =======");
+			player.sendMessage(ChatColor.BLUE + "======= PVP STATS =======");
 			player.sendMessage(ChatColor.GREEN + "Name" + ChatColor.YELLOW + ":" + ChatColor.WHITE + player.getDisplayName());
 			player.sendMessage(ChatColor.GREEN + "Kills" + ChatColor.YELLOW + ":" + ChatColor.WHITE + kills);
 			player.sendMessage(ChatColor.GREEN + "Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + deaths);
@@ -686,10 +686,19 @@ public class PvpBalance extends JavaPlugin
 			player.sendMessage(ChatColor.GREEN + "Epic Deaths" + ChatColor.YELLOW + ":" + ChatColor.WHITE + epicDeaths);
 			player.sendMessage(ChatColor.GREEN + "Duels Won" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsWon);
 			player.sendMessage(ChatColor.GREEN + "Duels Lost" + ChatColor.YELLOW + ":" + ChatColor.WHITE + duelsLost);
-			player.sendMessage(ChatColor.BLUE + "" + ChatColor.UNDERLINE + "=========================");
+			player.sendMessage(ChatColor.BLUE + "=========================");
+		}
+		else if(commandLabel.equalsIgnoreCase("pvptop")){
+			try {
+				mysql.top10(player);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
         return true;
 	}
+
 	public static List<Chicken> chickenList()
 	{
 		return PvpBalance.chickens;
