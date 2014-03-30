@@ -24,11 +24,14 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.mysql.jdbc.Util;
+
 import DuelZone.Duel;
 import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
+import Util.InventoryManager;
 import Util.ItemUtils;
 import Util.MYSQLManager;
 
@@ -112,6 +115,7 @@ public class PvpBalance extends JavaPlugin
 		    		everyOther = 1;
 		    		particulating();
 		    		fireballEffects();
+		    		Event.EventRunner.tick();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
 							try
@@ -496,18 +500,27 @@ public class PvpBalance extends JavaPlugin
 			if(PVPPlayer.isGod())
 			{
 				PVPPlayer.setGod(false);
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GOD MODE DISABLED");
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GOD MODE DISABLED + Inventory STORED!");
 			}
 			else
 			{
 				PVPPlayer.setGod(true);
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "GOD MODE ENABLED");
+				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "GOD MODE ENABLED + Inventory RETRIEVED!");
 				player.setFoodLevel(20);
 				PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
 			}
 		}
+		else if(commandLabel.equalsIgnoreCase("play")){
+			if(Event.EventRunner.participants.contains(player) == false){
+				Event.EventRunner.joinEvent(player);
+			}
+			else{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE ALREADY PLAYING!");
+			}
+		}
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))
 		{
+			
 			ItemStack paper = new ItemStack(Material.PAPER);
 			List<String> lore = new ArrayList<String>();
 			lore.add("Polishing Cloth " + ChatColor.MAGIC + " " + ArmorEffects.CODE_PAPER);

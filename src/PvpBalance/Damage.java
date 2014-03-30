@@ -350,7 +350,6 @@ public class Damage
 				break;
 			}
 		}
-		
 		pvpPlayer.setMaxHealth(armor);	
 		return armor;
 	}

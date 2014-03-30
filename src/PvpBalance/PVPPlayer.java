@@ -77,6 +77,8 @@ public class PVPPlayer
 	public boolean flyZone;
 	private boolean duelContestant;
 	private boolean duelZone;
+	private boolean inEvent;
+	private boolean eventGrace;
 	
 	public PVPPlayer(Player player)
 	{
@@ -406,7 +408,7 @@ public class PVPPlayer
 	
 	public void setMaxHealth(double maxHealth)
 	{
-		if(this.health == this.maxHealth && this.combatCoolDown < 1)
+		if(this.health == this.maxHealth && this.combatCoolDown < 1 && this.canRegen == true && this.inCombat == false)
 		{
 			this.maxHealth = maxHealth;
 			this.sethealth(this.maxHealth);
@@ -1098,5 +1100,17 @@ public class PVPPlayer
 	}
 	public void setDuelZone(boolean duelZone) {
 		this.duelZone = duelZone;
+	}
+	public boolean isInEvent() {
+		return inEvent;
+	}
+	public void setInEvent(boolean inEvent) {
+		this.inEvent = inEvent;
+	}
+	public boolean isEventGrace() {
+		return eventGrace;
+	}
+	public void setEventGrace(boolean eventGrace) {
+		this.eventGrace = eventGrace;
 	}
 }
