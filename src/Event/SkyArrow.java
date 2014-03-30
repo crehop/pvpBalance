@@ -23,7 +23,7 @@ public class SkyArrow {
 	public static String getEventName = ChatColor.AQUA + "Sky" + ChatColor.RED + "Arrow";
 	public static void join(Player player){
 		if(players.size() == 0){
-			grace = 30;
+			grace = 150;
 		}
 		players.add(player);
 		numberOfPlayers++;
@@ -53,8 +53,18 @@ public class SkyArrow {
 		lore.add(ChatColor.GREEN + "/pb use" + ChatColor.AQUA + " to open!");
 		meta.setLore(lore);
 		prize.setItemMeta(meta);
-		prize.setAmount(5);
+		prize.setAmount(2);
+		ItemStack prize2 = new ItemStack(Material.NETHER_STAR);
+		ItemMeta meta2 = prize2.getItemMeta();
+		meta2.setDisplayName(ChatColor.YELLOW + "Armor Token");
+		List<String> lore2 = new ArrayList<String>();
+		lore2.add(ChatColor.GREEN + "/rules armor" + ChatColor.AQUA + " for more information!");
+		meta2.setLore(lore2);
+		prize2.setItemMeta(meta2);
+		prize.setAmount(2);
 		player.getInventory().addItem(prize);
+		player.getInventory().addItem(prize2);
+		Bukkit.broadcastMessage(ChatColor.GREEN + player.getCustomName() + ChatColor.YELLOW  + " has won " + getEventName);
 	}
 	public static void isActive(boolean state){
 		active = state;
@@ -78,7 +88,7 @@ public class SkyArrow {
 			}
 			else{
 				Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to start " + getEventName + ", Need 5. Extending grace period 5 minutes "+ChatColor.GREEN + "/play");
-				grace = 30;
+				grace = 45;
 			}
 		}
 		if(grace > 0){
@@ -93,8 +103,10 @@ public class SkyArrow {
 			if(players.size() == 1 && grace <= 0){
 				winner = players.get(0);
 				Bukkit.broadcastMessage("WINNER = " + players.get(0));
+				Winner(players.get(0));
 				active = false;
 				players.clear();
+				EventRunner.endEvent();
 			}
 		}
 	}

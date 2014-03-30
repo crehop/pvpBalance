@@ -63,6 +63,14 @@ public class EventRunner {
 			player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, YOU ARE IN COMBAT! LEAVE COMBAT THEN TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
 		}
 	}
+	public static void endEvent(){
+		participants.clear();
+		deaths.clear();
+		eventName = "";
+		tick = 0;
+		eventActive = false;
+		totalPlayers = 0;
+	}
 	public static void leaveEvent(Player player){
 		participants.remove(player);
 		if(eventActive == false)totalPlayers--;
