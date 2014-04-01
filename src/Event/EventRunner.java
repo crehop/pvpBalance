@@ -29,7 +29,7 @@ public class EventRunner {
 		}
 		else{
 			eventActive = false;
-			SkyArrow.isActive(false);
+			SkyArrow.setActive(false);
 			SkyArrow.players.clear();
 			participants.clear();
 		}
@@ -64,6 +64,8 @@ public class EventRunner {
 		}
 	}
 	public static void endEvent(){
+		//TODO add more event resets here
+		if(SkyArrow.isActive() == true) SkyArrow.reset();
 		participants.clear();
 		deaths.clear();
 		eventName = "";
@@ -97,5 +99,11 @@ public class EventRunner {
 			pvp.setInEvent(false);
 			return;
 		}
+	}
+	public static boolean isActive(){
+		return eventActive;
+	}
+	public static String getActiveEvent() {
+		return eventName;
 	}
 }

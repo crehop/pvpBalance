@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mysql.jdbc.Util;
 
 import DuelZone.Duel;
+import Event.SkyArrow;
 import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
@@ -463,8 +465,19 @@ public class PvpBalance extends JavaPlugin
 	
 	public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args)
 	{
+
 		Player player = (Player) sender;
-		//Location location = player.getLocation();
+		Location location = player.getLocation();
+		if(Event.EventRunner.isActive() == true){
+			if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+				if(SkyArrow.checkParticipant(player.getName().toString())== true && player.hasPermission("eventmanager.admin")){
+					if(commandLabel.equalsIgnoreCase("leave")){
+						SkyArrow.leave(player);
+					}
+					player.sendMessage(ChatColor.GREEN + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.GREEN + " to Quit");
+				}
+			}
+		}
 		if(commandLabel.equalsIgnoreCase("bet")){
 			if(args[0] != null){
 				if(Duel.bet < 2500){
@@ -516,6 +529,10 @@ public class PvpBalance extends JavaPlugin
 			}
 			else{
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE ALREADY PLAYING!");
+				Event.EventRunner.joinEvent(player);
+				if(Event.EventRunner.participants.size() > 5){
+					SkyArrow.winner(player);
+				}
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))

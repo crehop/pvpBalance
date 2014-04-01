@@ -45,7 +45,14 @@ public class SkyArrow {
 	public static void leave(Player player){
 		players.remove(player);
 	}
-	public static void Winner(Player player){
+	public static void reset(){
+		grace = 0;
+		numberOfPlayers = 0;
+		winner = null;
+		active = false;
+		players.clear();
+	}
+	public static void winner(Player player){
 		ItemStack prize = new ItemStack(Material.DRAGON_EGG);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "Event Prize Egg");
@@ -65,9 +72,13 @@ public class SkyArrow {
 		player.getInventory().addItem(prize);
 		player.getInventory().addItem(prize2);
 		Bukkit.broadcastMessage(ChatColor.GREEN + player.getCustomName() + ChatColor.YELLOW  + " has won " + getEventName);
+		EventRunner.endEvent();
 	}
-	public static void isActive(boolean state){
+	public static void setActive(boolean state){
 		active = state;
+	}
+	public static boolean isActive(){
+		return active;
 	}
 	public static void setGrace(int graceTime){
 		grace = graceTime;
@@ -79,7 +90,7 @@ public class SkyArrow {
 		Bukkit.broadcastMessage("GRACE = " + grace + " PLAYER COUNT =" + players.size());
 		if(grace == 1){
 			if(players.size() >= 5){
-				isActive(true);
+				setActive(true);
 				grace = 0;
 				for(Player player:players){
 					PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
@@ -97,18 +108,22 @@ public class SkyArrow {
 				pvp.setEventGrace(true);
 			}
 			grace--;
-			isActive(false);
+			setActive(false);
 		}
 		if(grace == 0){
 			if(players.size() == 1 && grace <= 0){
 				winner = players.get(0);
-				Bukkit.broadcastMessage("WINNER = " + players.get(0));
-				Winner(players.get(0));
-				active = false;
-				players.clear();
-				EventRunner.endEvent();
+				winner(players.get(0));
 			}
 		}
+	}
+	public static boolean checkParticipant(String playername) {
+		for(Player check : players){
+			if(check.getName().toString() == playername){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
