@@ -612,13 +612,11 @@ public class PvpBalance extends JavaPlugin
 						try {
 							epicKills = mysql.getUserData(args[0].toString(), "EpicKills");
 						} catch (SQLException e5) {
-							// TODO Auto-generated catch block
 							e5.printStackTrace();
 						}
 						try {
 							epicDeaths = mysql.getUserData(args[0].toString(), "EpicDeaths");
 						} catch (SQLException e4) {
-							// TODO Auto-generated catch block
 							e4.printStackTrace();
 						}
 						try {
@@ -629,19 +627,16 @@ public class PvpBalance extends JavaPlugin
 						try {
 							duelsLost = mysql.getUserData(args[0].toString(), "DuelsLost");
 						} catch (SQLException e2) {
-							// TODO Auto-generated catch block
 							e2.printStackTrace();
 						}
 						try {
 							kills = mysql.getUserData(args[0].toString(), "Kills");
 						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						try {
 							deaths = mysql.getUserData(args[0].toString(), "Deaths");
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						player.sendMessage(ChatColor.BLUE + "======= PVP STATS =======");
@@ -676,13 +671,11 @@ public class PvpBalance extends JavaPlugin
 			try {
 				epicKills = mysql.getUserData(player, "EpicKills");
 			} catch (SQLException e5) {
-				// TODO Auto-generated catch block
 				e5.printStackTrace();
 			}
 			try {
 				epicDeaths = mysql.getUserData(player, "EpicDeaths");
 			} catch (SQLException e4) {
-				// TODO Auto-generated catch block
 				e4.printStackTrace();
 			}
 			try {
@@ -693,19 +686,16 @@ public class PvpBalance extends JavaPlugin
 			try {
 				duelsLost = mysql.getUserData(player, "DuelsLost");
 			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			try {
 				kills = mysql.getUserData(player, "Kills");
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				deaths = mysql.getUserData(player, "Deaths");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			player.sendMessage(ChatColor.BLUE + "======= PVP STATS =======");
@@ -722,7 +712,6 @@ public class PvpBalance extends JavaPlugin
 			try {
 				mysql.top10(player);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -750,7 +739,6 @@ public class PvpBalance extends JavaPlugin
     				try {
 						ParticleEffect.sendToLocation(ParticleEffect.FIREWORKS_SPARK, arrow.getLocation(),0.01f,0.01f,0.01f, (float)0.0001, 1);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
     			}
@@ -773,7 +761,6 @@ public class PvpBalance extends JavaPlugin
 						try {
 							ParticleEffect.sendToLocation(pvp.getEffect(), player.getLocation().add(0, pvp.getParticleHeight(), 0),0.2f,0.2f,0.2f, (float)pvp.getParticleSpeed(), pvp.getParticleCount());
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -809,7 +796,6 @@ public class PvpBalance extends JavaPlugin
 			mysql.storeUserData(player, "Deaths", mysql.getUserData(player, "Deaths"));
 
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
 	}
@@ -824,7 +810,6 @@ public class PvpBalance extends JavaPlugin
 			mysql.storeUserData(player, "Kills", mysql.getUserData(player, "Kills"));
 			mysql.storeUserData(player, "Deaths", mysql.getUserData(player, "Deaths"));
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
 		return newPVP;

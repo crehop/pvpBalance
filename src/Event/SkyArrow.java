@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public class SkyArrow {
 		if(players.size() == 0){
 			grace = 150;
 		}
+		SkyArrow.teleportToStart(player);
 		players.add(player);
 		numberOfPlayers++;
 		ItemStack prize = new ItemStack(Material.BOW);
@@ -41,6 +43,12 @@ public class SkyArrow {
 		prize2.setAmount(1);
 		player.getInventory().addItem(prize);
 		player.getInventory().addItem(prize2);
+	}
+	private static void teleportToStart(Player player) {
+		//TODO set start location for skyarrow event (build arena in game and get a location)
+		Location start = new Location(Bukkit.getWorld("world"),0,0,0);
+		player.teleport(player.getLocation());
+		Bukkit.broadcastMessage("dontForgetme line 50 skyarrow.java");
 	}
 	public static void leave(Player player){
 		players.remove(player);
@@ -71,7 +79,7 @@ public class SkyArrow {
 		prize.setAmount(2);
 		player.getInventory().addItem(prize);
 		player.getInventory().addItem(prize2);
-		Bukkit.broadcastMessage(ChatColor.GREEN + player.getCustomName() + ChatColor.YELLOW  + " has won " + getEventName);
+		Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.YELLOW  + " has won " + getEventName);
 		EventRunner.endEvent();
 	}
 	public static void setActive(boolean state){
@@ -87,7 +95,16 @@ public class SkyArrow {
 		return grace;
 	}
 	public static void tick(){
-		Bukkit.broadcastMessage("GRACE = " + grace + " PLAYER COUNT =" + players.size());
+		if(grace <= 5 && grace != 0){
+			for(Player player:players){
+				player.sendMessage(ChatColor.YELLOW + "Event will start in "+ ChatColor.RED + grace + "" + ChatColor.YELLOW + " seconds.");
+			}
+		}
+		if(grace%10 == 0 && grace != 0){
+			for(Player player:players){
+				player.sendMessage(ChatColor.GREEN + "Joining grace period, Event will start in "+ ChatColor.RED + grace + "" + ChatColor.GREEN + " seconds.");
+			}
+		}
 		if(grace == 1){
 			if(players.size() >= 5){
 				setActive(true);
@@ -96,10 +113,11 @@ public class SkyArrow {
 					PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 					pvp.setEventGrace(false);
 				}
+				Bukkit.broadcastMessage(getEventName + "" + ChatColor.GREEN + " Has Started with " + ChatColor.RED + players.size() + "" + ChatColor.GREEN + " players GOOD LUCK");
 			}
 			else{
-				Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to start " + getEventName + ", Need 5. Extending grace period 5 minutes "+ChatColor.GREEN + "/play");
-				grace = 45;
+				//Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to start " + getEventName + ", Need 5. Extending grace period 5 minutes join now! "+ChatColor.GREEN + "/play");
+				grace = 100;
 			}
 		}
 		if(grace > 0){
@@ -111,11 +129,19 @@ public class SkyArrow {
 			setActive(false);
 		}
 		if(grace == 0){
+			for(Player player:players){
+				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+				if(pvp.check != Material.ENDER_STONE){
+					SkyArrow.leave(player);
+					player.sendMessage("You have Exited the arena!");
+				}
+			}
 			if(players.size() == 1 && grace <= 0){
 				winner = players.get(0);
 				winner(players.get(0));
 			}
 		}
+		
 	}
 	public static boolean checkParticipant(String playername) {
 		for(Player check : players){

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import PvpBalance.PVPPlayer;
@@ -13,11 +14,13 @@ import PvpBalance.PvpHandler;
 public class EventRunner {
 	public static ArrayList<Player> participants = new ArrayList<>();
 	public static HashMap<String, Integer> deaths = new HashMap<String, Integer>();
+	public static HashMap<String, Location> previousLOC = new HashMap<String, Location>();
 	public static String eventName = "";
 	private static int tick = 0;
 	private static boolean eventActive = false;
 	private static int totalPlayers = 0;
 	public static void tick(){
+		Bukkit.broadcastMessage("TICK = " + tick);
 		tick+=1000;
 		if(tick > 3600){
 			if(eventActive == false){
@@ -46,6 +49,7 @@ public class EventRunner {
 				return;
 			}
 			if(Util.InventoryManager.storeInventory(player) == true){
+				storeLocation(player);
 				participants.add(player);
 				if(eventActive == false)totalPlayers++;
 				player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
@@ -65,11 +69,14 @@ public class EventRunner {
 	}
 	public static void endEvent(){
 		//TODO add more event resets here
-		if(SkyArrow.isActive() == true) SkyArrow.reset();
+		if(SkyArrow.isActive() == true){
+			SkyArrow.reset();
+		}
 		participants.clear();
 		deaths.clear();
 		eventName = "";
 		tick = 0;
+		Bukkit.broadcastMessage("TICK RESET");
 		eventActive = false;
 		totalPlayers = 0;
 	}
@@ -78,6 +85,7 @@ public class EventRunner {
 		if(eventActive == false)totalPlayers--;
 		if(deaths.containsKey(player.getName().toString())) deaths.remove(player.getName().toString());
 		player.sendMessage(ChatColor.AQUA + "You have left " + ChatColor.GREEN + eventName + ChatColor.AQUA + " thank you for playing!");
+		returnToPreviousLocation(player);
 		Util.InventoryManager.getInventory(player);
 		if(SkyArrow.players.contains(player)){
 			SkyArrow.leave(player);
@@ -89,6 +97,15 @@ public class EventRunner {
 		}
 		else{
 			deaths.put(player.getName().toString(), 1);
+		}
+	}
+	public static void storeLocation(Player player){
+		previousLOC.put(player.getName().toString(), player.getLocation());
+	}
+	public static void returnToPreviousLocation(Player player){
+		if(previousLOC.containsKey(player.getName().toString())){
+			player.teleport(previousLOC.get(player.getName().toString()));
+			previousLOC.remove(player.getName().toString());
 		}
 	}
 	public static void removeFromEvent(Player player){

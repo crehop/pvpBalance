@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class InventoryManager{
+	//TODO add check and hold for armor contents
 	private static HashMap<String, ItemStack> inventories = new HashMap<>();
     public static boolean storeInventory(Player player){
     	ArrayList<ItemStack> items = new ArrayList<>();
