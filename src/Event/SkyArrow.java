@@ -31,6 +31,7 @@ public class SkyArrow {
 		numberOfPlayers++;
 		ItemStack prize = new ItemStack(Material.BOW);
 		ItemStack prize2 = new ItemStack(Material.ARROW);
+		ItemStack prize3 = new ItemStack(Material.BREAD);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
 		List<String> lore = new ArrayList<String>();
@@ -41,26 +42,39 @@ public class SkyArrow {
 		prize.addEnchantment(Enchantment.ARROW_INFINITE,1);
 		prize.addEnchantment(Enchantment.DURABILITY,2);
 		prize2.setAmount(1);
+		prize3.setAmount(64);
 		player.getInventory().addItem(prize);
 		player.getInventory().addItem(prize2);
+		player.getInventory().addItem(prize3);
 	}
 	private static void teleportToStart(Player player) {
-		//TODO set start location for skyarrow event (build arena in game and get a location)
-		Location start = new Location(Bukkit.getWorld("world"),0,0,0);
-		player.teleport(player.getLocation());
-		Bukkit.broadcastMessage("dontForgetme line 50 skyarrow.java");
+		Location start = new Location(Bukkit.getWorld("world"),-956,151,25);
+		player.teleport(start);
 	}
 	public static void leave(Player player){
+		player.getInventory().clear();
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		pvp.setEventGrace(false);
 		players.remove(player);
+		EventRunner.leaveEvent(player);
 	}
 	public static void reset(){
 		grace = 0;
 		numberOfPlayers = 0;
 		winner = null;
-		active = false;
+		setActive(false);
 		players.clear();
+		EventRunner.endEvent();
 	}
 	public static void winner(Player player){
+		ItemStack prize1 = new ItemStack(Material.BOW);
+		ItemMeta meta1 = prize1.getItemMeta();
+		meta1.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
+		List<String> lore1 = new ArrayList<String>();
+		lore1.add(ChatColor.RED + "Woot Woot");
+		meta1.setLore(lore1);
+		prize1.setItemMeta(meta1);
+		prize1.addEnchantment(Enchantment.ARROW_INFINITE,1);
 		ItemStack prize = new ItemStack(Material.DRAGON_EGG);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "Event Prize Egg");
@@ -78,9 +92,9 @@ public class SkyArrow {
 		prize2.setItemMeta(meta2);
 		prize.setAmount(2);
 		player.getInventory().addItem(prize);
+		player.getInventory().addItem(prize1);
 		player.getInventory().addItem(prize2);
 		Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.YELLOW  + " has won " + getEventName);
-		EventRunner.endEvent();
 	}
 	public static void setActive(boolean state){
 		active = state;
@@ -106,6 +120,9 @@ public class SkyArrow {
 			}
 		}
 		if(grace == 1){
+			if(players.size() == 0){
+				SkyArrow.reset();
+			}
 			if(players.size() >= 5){
 				setActive(true);
 				grace = 0;
@@ -116,8 +133,10 @@ public class SkyArrow {
 				Bukkit.broadcastMessage(getEventName + "" + ChatColor.GREEN + " Has Started with " + ChatColor.RED + players.size() + "" + ChatColor.GREEN + " players GOOD LUCK");
 			}
 			else{
-				//Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to start " + getEventName + ", Need 5. Extending grace period 5 minutes join now! "+ChatColor.GREEN + "/play");
-				grace = 100;
+				for(Player player:players){
+					player.sendMessage(ChatColor.RED + "Not enough players to start " + getEventName + ", Need 5. Extending grace period 30 Seconds!");
+				}
+				grace = 30;
 			}
 		}
 		if(grace > 0){
@@ -126,7 +145,6 @@ public class SkyArrow {
 				pvp.setEventGrace(true);
 			}
 			grace--;
-			setActive(false);
 		}
 		if(grace == 0){
 			for(Player player:players){
@@ -136,10 +154,10 @@ public class SkyArrow {
 					player.sendMessage("You have Exited the arena!");
 				}
 			}
-			if(players.size() == 1 && grace <= 0){
-				winner = players.get(0);
-				winner(players.get(0));
-			}
+		}
+		if(players.size() == 0 && active == true){
+			SkyArrow.reset();
+			Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to interested in " + getEventName + ", cancelling event!");
 		}
 		
 	}
@@ -150,6 +168,9 @@ public class SkyArrow {
 			}
 		}
 		return false;
+	}
+	public static void setWinner(Player player) {
+		winner = player;
 	}
 
 }

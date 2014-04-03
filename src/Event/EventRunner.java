@@ -2,7 +2,6 @@ package Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,14 +19,22 @@ public class EventRunner {
 	private static boolean eventActive = false;
 	private static int totalPlayers = 0;
 	public static void tick(){
-		Bukkit.broadcastMessage("TICK = " + tick);
-		tick+=1000;
+		tick++;
 		if(tick > 3600){
 			if(eventActive == false){
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 				eventActive = true;
 				eventName = SkyArrow.getEventName;
 			}
+			if(tick == 3630){
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+			}
+			if(tick == 3660){
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+			}		
+			if(tick == 3690){
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+			}			
 			SkyArrow.tick();
 		}
 		else{
@@ -68,15 +75,10 @@ public class EventRunner {
 		}
 	}
 	public static void endEvent(){
-		//TODO add more event resets here
-		if(SkyArrow.isActive() == true){
-			SkyArrow.reset();
-		}
 		participants.clear();
 		deaths.clear();
 		eventName = "";
 		tick = 0;
-		Bukkit.broadcastMessage("TICK RESET");
 		eventActive = false;
 		totalPlayers = 0;
 	}
@@ -87,8 +89,16 @@ public class EventRunner {
 		player.sendMessage(ChatColor.AQUA + "You have left " + ChatColor.GREEN + eventName + ChatColor.AQUA + " thank you for playing!");
 		returnToPreviousLocation(player);
 		Util.InventoryManager.getInventory(player);
-		if(SkyArrow.players.contains(player)){
-			SkyArrow.leave(player);
+		if(SkyArrow.players.size() == 1 && SkyArrow.isActive()){
+			for(Player player2:SkyArrow.players){
+				SkyArrow.setWinner(player2);
+				SkyArrow.leave(player2);
+			}
+		}
+		if(SkyArrow.winner != null){
+			if(SkyArrow.winner.getName().toString() == player.getName().toString()){
+				SkyArrow.winner(player);
+			}
 		}
 	}
 	public static void death(Player player){
@@ -122,5 +132,11 @@ public class EventRunner {
 	}
 	public static String getActiveEvent() {
 		return eventName;
+	}
+	public static void setTick(int newTick){
+		tick = newTick;
+	}
+	public static int getTick(){
+		return tick;
 	}
 }

@@ -23,3 +23,5 @@ commands:
     acceptduel:
     endduel:
     play:
+    leave:
+    startevent:

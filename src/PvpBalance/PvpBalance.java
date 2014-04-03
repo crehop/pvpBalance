@@ -470,11 +470,11 @@ public class PvpBalance extends JavaPlugin
 		Location location = player.getLocation();
 		if(Event.EventRunner.isActive() == true){
 			if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
-				if(SkyArrow.checkParticipant(player.getName().toString())== true && player.hasPermission("eventmanager.admin")){
-					if(commandLabel.equalsIgnoreCase("leave")){
-						SkyArrow.leave(player);
+				if(SkyArrow.checkParticipant(player.getName().toString()) == true && !player.hasPermission("eventmanager.admin")){
+					if(!commandLabel.equalsIgnoreCase("leave")){
+						player.sendMessage(ChatColor.GREEN + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.GREEN + " to Quit");
+						return false;
 					}
-					player.sendMessage(ChatColor.GREEN + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.GREEN + " to Quit");
 				}
 			}
 		}
@@ -530,9 +530,19 @@ public class PvpBalance extends JavaPlugin
 			else{
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE ALREADY PLAYING!");
 				Event.EventRunner.joinEvent(player);
-				if(Event.EventRunner.participants.size() > 5){
-					SkyArrow.winner(player);
-				}
+			}
+		}
+		else if(commandLabel.equalsIgnoreCase("startevent")  && player.isOp() == true){
+			if(Event.EventRunner.getTick() < 3600){
+				Event.EventRunner.setTick(3598);
+			}
+		}
+		else if(commandLabel.equalsIgnoreCase("leave")){
+			if(Event.EventRunner.participants.contains(player) == false){
+			}
+			else{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU FORFEIT THE EVENT!");
+				SkyArrow.leave(player);
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))

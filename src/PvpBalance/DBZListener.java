@@ -72,6 +72,7 @@ import Skills.Incapacitate;
 import Skills.PileDrive;
 import Skills.SuperSpeed;
 import Util.MYSQLManager;
+import Util.Utils;
 
 
 public class DBZListener implements Listener
@@ -468,7 +469,7 @@ public class DBZListener implements Listener
 			}
 			else
 			{
-				player.teleport(new Location(player.getWorld(), -730.50, 105, 319.50));
+				Utils.teleportToSpawn(player);
 			}
 		}
 		Damage.calcArmor(event.getPlayer());
@@ -834,6 +835,9 @@ public class DBZListener implements Listener
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		if(Event.EventRunner.participants.contains(player)){
 			Bukkit.broadcastMessage("CONFIRM EVENT DEATH");
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getEntity().getKiller());
+			pvp.sethealth(pvp.getMaxHealth());
+			pvp.getPlayer().sendMessage(SkyArrow.getEventName + ChatColor.GREEN + ": You have killed somone and gained full health!");
 			SkyArrow.leave(player);
 			Event.EventRunner.leaveEvent(player);
 			return;
