@@ -1,6 +1,7 @@
 package Event;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,8 @@ public class SkyArrow {
 		ItemStack prize = new ItemStack(Material.BOW);
 		ItemStack prize2 = new ItemStack(Material.ARROW);
 		ItemStack prize3 = new ItemStack(Material.BREAD);
+		ItemStack prize4 = new ItemStack(Material.IRON_CHESTPLATE);
+		ItemStack prize5 = new ItemStack(Material.IRON_LEGGINGS);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
 		List<String> lore = new ArrayList<String>();
@@ -46,14 +49,19 @@ public class SkyArrow {
 		player.getInventory().addItem(prize);
 		player.getInventory().addItem(prize2);
 		player.getInventory().addItem(prize3);
+		player.getInventory().addItem(prize4);
+		player.getInventory().addItem(prize5);
 	}
 	private static void teleportToStart(Player player) {
-		Location start = new Location(Bukkit.getWorld("world"),-956,151,25);
+		Location start = new Location(Bukkit.getWorld("world"),-956,151,-25);
 		player.teleport(start);
 	}
 	public static void leave(Player player){
-		player.getInventory().clear();
+		for(ItemStack item:player.getInventory().getArmorContents()){
+			item.setType(Material.AIR);
+		}
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		pvp.setInEvent(false);
 		pvp.setEventGrace(false);
 		players.remove(player);
 		EventRunner.leaveEvent(player);
@@ -63,18 +71,13 @@ public class SkyArrow {
 		numberOfPlayers = 0;
 		winner = null;
 		setActive(false);
+		for(Player player:players){
+			SkyArrow.leave(player);
+		}
 		players.clear();
 		EventRunner.endEvent();
 	}
 	public static void winner(Player player){
-		ItemStack prize1 = new ItemStack(Material.BOW);
-		ItemMeta meta1 = prize1.getItemMeta();
-		meta1.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
-		List<String> lore1 = new ArrayList<String>();
-		lore1.add(ChatColor.RED + "Woot Woot");
-		meta1.setLore(lore1);
-		prize1.setItemMeta(meta1);
-		prize1.addEnchantment(Enchantment.ARROW_INFINITE,1);
 		ItemStack prize = new ItemStack(Material.DRAGON_EGG);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "Event Prize Egg");
@@ -90,11 +93,21 @@ public class SkyArrow {
 		lore2.add(ChatColor.GREEN + "/rules armor" + ChatColor.AQUA + " for more information!");
 		meta2.setLore(lore2);
 		prize2.setItemMeta(meta2);
-		prize.setAmount(2);
 		player.getInventory().addItem(prize);
-		player.getInventory().addItem(prize1);
 		player.getInventory().addItem(prize2);
 		Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.YELLOW  + " has won " + getEventName);
+		ItemStack prize3 = new ItemStack(Material.BOW);
+		ItemMeta meta3 = prize3.getItemMeta();
+		meta3.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
+		List<String> lore3 = new ArrayList<String>();
+		lore3.add(ChatColor.RED + "Woot Woot");
+		meta3.setLore(lore3);
+		prize3.setItemMeta(meta3);
+		prize3.setAmount(1);
+		prize3.addEnchantment(Enchantment.ARROW_INFINITE,1);
+		player.getInventory().addItem(prize);
+		player.getInventory().addItem(prize2);
+		player.getInventory().addItem(prize3);
 	}
 	public static void setActive(boolean state){
 		active = state;
@@ -109,6 +122,18 @@ public class SkyArrow {
 		return grace;
 	}
 	public static void tick(){
+		Iterator it = players.iterator();
+		while(it.hasNext()){
+			Player player = (Player) it.next();
+			if(player == null){
+				players.remove(player);
+			}
+			if(player.isOnline() == false){
+				players.remove(player);
+			}
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			if(pvp.isInEvent() == false) pvp.setInEvent(true);
+		}
 		if(grace <= 5 && grace != 0){
 			for(Player player:players){
 				player.sendMessage(ChatColor.YELLOW + "Event will start in "+ ChatColor.RED + grace + "" + ChatColor.YELLOW + " seconds.");
@@ -121,6 +146,7 @@ public class SkyArrow {
 		}
 		if(grace == 1){
 			if(players.size() == 0){
+				
 				SkyArrow.reset();
 			}
 			if(players.size() >= 5){
@@ -141,15 +167,17 @@ public class SkyArrow {
 		}
 		if(grace > 0){
 			for(Player player:players){
-				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
-				pvp.setEventGrace(true);
+				if(player != null){
+					PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+					if(pvp != null)	pvp.setEventGrace(true);
+				}
 			}
 			grace--;
 		}
-		if(grace == 0){
+		if(grace <= 0){
 			for(Player player:players){
 				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
-				if(pvp.check != Material.ENDER_STONE){
+				if(pvp.flyZone == false){
 					SkyArrow.leave(player);
 					player.sendMessage("You have Exited the arena!");
 				}
@@ -157,9 +185,7 @@ public class SkyArrow {
 		}
 		if(players.size() == 0 && active == true){
 			SkyArrow.reset();
-			Bukkit.broadcastMessage(ChatColor.RED + "Not enough players to interested in " + getEventName + ", cancelling event!");
 		}
-		
 	}
 	public static boolean checkParticipant(String playername) {
 		for(Player check : players){
@@ -171,6 +197,16 @@ public class SkyArrow {
 	}
 	public static void setWinner(Player player) {
 		winner = player;
+	}
+	public static void simulateDeath(Player player){
+		PVPPlayer pvpDeath = PvpHandler.getPvpPlayer(player);{
+		PVPPlayer pvpKiller = PvpHandler.getPvpPlayer(pvpDeath.getLastHitBy());
+		pvpDeath.sethealth(pvpDeath.getMaxHealth());
+		pvpKiller.sethealth(pvpKiller.getMaxHealth());
+		pvpKiller .getPlayer().sendMessage(SkyArrow.getEventName + ChatColor.GREEN + ": You have killed " + player.getDisplayName() + " and gained full health!");
+		SkyArrow.leave(player);
+		return;
+		}
 	}
 
 }

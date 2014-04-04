@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import DuelZone.Duel;
 import Event.PBEntityRegainHealthEvent;
+import Event.SkyArrow;
 import Party.Invite;
 import Party.Party;
 import Skills.SuperSpeed;
@@ -25,6 +26,7 @@ import Util.MYSQLManager;
 public class PVPPlayer
 {
 	private Player player;
+	private Player lastHitBy;
 	private double health;
 	private double stamina;
 	private double healthLastTick;
@@ -474,6 +476,12 @@ public class PVPPlayer
 		{
 			this.sethealth(health - dealtDamage);
 			if(this.health < 0){
+				if(this.isInEvent() == true){
+					if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+						SkyArrow.simulateDeath(this.player);
+						return;
+					}
+				}
 				this.health = 0;
 			}
 		}
@@ -502,6 +510,14 @@ public class PVPPlayer
 		{
 			this.lastDamage = dealtDamage;
 			this.sethealth(health - dealtDamage);
+			if(this.gethealth() < 0){
+				if(this.isInEvent() == true){
+					if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+						SkyArrow.simulateDeath(this.player);
+						return false;
+					}
+				}
+			}
 		}
 		else if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
 		{
@@ -509,6 +525,14 @@ public class PVPPlayer
 			{
 				this.lastDamage = dealtDamage;
 				this.sethealth(health - (dealtDamage - this.lastDamage));
+				if(this.gethealth() < 0){
+					if(this.isInEvent() == true){
+						if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+							SkyArrow.simulateDeath(this.player);
+							return false;
+						}
+					}
+				}
 			}
 			else
 			{
@@ -1112,5 +1136,11 @@ public class PVPPlayer
 	}
 	public void setEventGrace(boolean eventGrace) {
 		this.eventGrace = eventGrace;
+	}
+	public Player getLastHitBy() {
+		return lastHitBy;
+	}
+	public void setLastHitBy(Player lastHitBy) {
+		this.lastHitBy = lastHitBy;
 	}
 }

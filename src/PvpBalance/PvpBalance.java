@@ -469,8 +469,8 @@ public class PvpBalance extends JavaPlugin
 		Player player = (Player) sender;
 		Location location = player.getLocation();
 		if(Event.EventRunner.isActive() == true){
-			if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
-				if(SkyArrow.checkParticipant(player.getName().toString()) == true && !player.hasPermission("eventmanager.admin")){
+			if(SkyArrow.players.size() > 0){
+				if(SkyArrow.checkParticipant(player.getName().toString()) == true){
 					if(!commandLabel.equalsIgnoreCase("leave")){
 						player.sendMessage(ChatColor.GREEN + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.GREEN + " to Quit");
 						return false;
@@ -528,8 +528,13 @@ public class PvpBalance extends JavaPlugin
 				Event.EventRunner.joinEvent(player);
 			}
 			else{
-				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE ALREADY PLAYING!");
-				Event.EventRunner.joinEvent(player);
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE PLAYING!");
+				player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
+				int counter = 0;
+				for(Player player2:SkyArrow.players){
+					counter++;
+					player.sendMessage(counter + ": " + player2.getName());
+				}
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("startevent")  && player.isOp() == true){

@@ -49,6 +49,12 @@ public class EventRunner {
 		if(pvp.isInCombat() == false){
 			if(SkyArrow.active == true){
 				player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
+				player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
+				int counter = 0;
+				for(Player player2:SkyArrow.players){
+					counter++;
+					player.sendMessage(counter + ": " + player2.getName());
+				}
 				return;
 			}
 			if(eventActive == false){
@@ -87,6 +93,8 @@ public class EventRunner {
 		if(eventActive == false)totalPlayers--;
 		if(deaths.containsKey(player.getName().toString())) deaths.remove(player.getName().toString());
 		player.sendMessage(ChatColor.AQUA + "You have left " + ChatColor.GREEN + eventName + ChatColor.AQUA + " thank you for playing!");
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		pvp.sethealth(pvp.getMaxHealth());
 		returnToPreviousLocation(player);
 		Util.InventoryManager.getInventory(player);
 		if(SkyArrow.players.size() == 1 && SkyArrow.isActive()){

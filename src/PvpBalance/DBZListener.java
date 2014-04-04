@@ -260,6 +260,7 @@ public class DBZListener implements Listener
 				if(damager instanceof Player && event.getEntity() instanceof Player)
 				{
 					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
+					pvpDamagee.setLastHitBy(pvpDamager.getPlayer());
 					if(pvpDamager.isInEvent()){
 						if(pvpDamager.isEventGrace() == true){
 							event.setCancelled(true);
@@ -330,6 +331,7 @@ public class DBZListener implements Listener
 			{
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
+				pvpDamagee.setLastHitBy(pvpDamager.getLastHitBy());
 				if(CombatUtil.preventDamageCall(damager, damagee) && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
@@ -831,17 +833,9 @@ public class DBZListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
+		
 		Player player = event.getEntity();
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
-		if(Event.EventRunner.participants.contains(player)){
-			Bukkit.broadcastMessage("CONFIRM EVENT DEATH");
-			PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getEntity().getKiller());
-			pvp.sethealth(pvp.getMaxHealth());
-			pvp.getPlayer().sendMessage(SkyArrow.getEventName + ChatColor.GREEN + ": You have killed somone and gained full health!");
-			SkyArrow.leave(player);
-			Event.EventRunner.leaveEvent(player);
-			return;
-		}
 		MYSQLManager mysql = PvpBalance.mysql;
 		if(Duel.checkContestant((Player)event.getEntity())){
 			Duel.playerDeath((Player)event.getEntity());
