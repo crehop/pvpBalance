@@ -42,6 +42,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -62,6 +63,8 @@ import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import AdditionalEnchants.EnchantManagment;
 import DuelZone.Duel;
+import Event.CrazyRace;
+import Event.EventRunner;
 import Event.PBEntityDamageEntityEvent;
 import Event.PBEntityDamageEvent;
 import Event.PBEntityDeathEvent;
@@ -829,6 +832,21 @@ public class DBZListener implements Listener
 			event.setCancelled(true);
 			player.damage(0D);
 		}
+	}
+	@EventHandler
+	public void command(final PlayerCommandPreprocessEvent event)
+	{
+		Player player = event.getPlayer();
+		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+		if(pvp.isInEvent() == true){
+			if(event.getMessage().equalsIgnoreCase("/leave")){
+			}
+			else{
+				event.setCancelled(true);
+				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.RED + " to Quit");
+			}
+		}
+
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(final PlayerDeathEvent event)

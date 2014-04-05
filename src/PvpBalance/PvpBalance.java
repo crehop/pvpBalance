@@ -1,5 +1,6 @@
 package PvpBalance;
 
+import java.awt.Event;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -28,6 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mysql.jdbc.Util;
 
 import DuelZone.Duel;
+import Event.CrazyRace;
+import Event.EventRunner;
 import Event.SkyArrow;
 import Party.CommandParty;
 import Party.PartyListener;
@@ -82,6 +86,7 @@ public class PvpBalance extends JavaPlugin
 	 			continue;
 	 		createNewPvPPlayer(p);
 	 	}
+	 	//TODO add more event resets here
 	 	setupEconomy();
 	 	PvpHandler.load();
  		mysql = new MYSQLManager(this);
@@ -117,7 +122,7 @@ public class PvpBalance extends JavaPlugin
 		    		everyOther = 1;
 		    		particulating();
 		    		fireballEffects();
-		    		Event.EventRunner.tick();
+		    		EventRunner.tick();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
 							try
@@ -468,16 +473,6 @@ public class PvpBalance extends JavaPlugin
 
 		Player player = (Player) sender;
 		Location location = player.getLocation();
-		if(Event.EventRunner.isActive() == true){
-			if(SkyArrow.players.size() > 0){
-				if(SkyArrow.checkParticipant(player.getName().toString()) == true){
-					if(!commandLabel.equalsIgnoreCase("leave")){
-						player.sendMessage(ChatColor.GREEN + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.GREEN + " to Quit");
-						return false;
-					}
-				}
-			}
-		}
 		if(commandLabel.equalsIgnoreCase("bet")){
 			if(args[0] != null){
 				if(Duel.bet < 2500){
@@ -524,30 +519,43 @@ public class PvpBalance extends JavaPlugin
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("play")){
-			if(Event.EventRunner.participants.contains(player) == false){
-				Event.EventRunner.joinEvent(player);
+			if(player.getGameMode() != GameMode.SURVIVAL){
+				player.sendMessage(ChatColor.RED + "YOU ARE NOT IN SURVIVAL MODE!");
+				return true;
+			}
+			if(EventRunner.participants.contains(player) == false){
+				EventRunner.joinEvent(player);
 			}
 			else{
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE PLAYING!");
-				player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
-				int counter = 0;
-				for(Player player2:SkyArrow.players){
-					counter++;
-					player.sendMessage(counter + ": " + player2.getName());
+				if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+					player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
+					int counter = 0;
+					for(Player player2:SkyArrow.players){
+						counter++;
+						player.sendMessage(counter + ": " + player2.getName());
+					}
+					return true;
 				}
+				//TODO Add other event remaining player informations here
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("startevent")  && player.isOp() == true){
-			if(Event.EventRunner.getTick() < 3600){
-				Event.EventRunner.setTick(3598);
+			if(EventRunner.getTick() < 3600){
+				EventRunner.setTick(3598);
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("leave")){
-			if(Event.EventRunner.participants.contains(player) == false){
+			if(EventRunner.participants.contains(player) == false){
 			}
 			else{
+				if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+					SkyArrow.leave(player);
+				}
+				if(EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+					CrazyRace.leave(player);
+				}
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU FORFEIT THE EVENT!");
-				SkyArrow.leave(player);
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("pvpver") && player.hasPermission("particles.admin"))

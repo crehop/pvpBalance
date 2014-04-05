@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import DuelZone.Duel;
+import Event.CrazyRace;
 import Event.PBEntityRegainHealthEvent;
 import Event.SkyArrow;
 import Party.Invite;
@@ -71,6 +72,7 @@ public class PVPPlayer
 	private boolean isStunned;
 	private boolean usedSpeedSkill;
 	public static Material check;
+	public static Material underfoot;
 	private String particleEffect = "";
 	private double particleHeight = 0.2;
 	private ParticleEffect effect = null;
@@ -477,8 +479,12 @@ public class PVPPlayer
 			this.sethealth(health - dealtDamage);
 			if(this.health < 0){
 				if(this.isInEvent() == true){
-					if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
 						SkyArrow.simulateDeath(this.player);
+						return;
+					}
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+						CrazyRace.simulateDeath(this.player);
 						return;
 					}
 				}
@@ -512,8 +518,12 @@ public class PVPPlayer
 			this.sethealth(health - dealtDamage);
 			if(this.gethealth() < 0){
 				if(this.isInEvent() == true){
-					if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
 						SkyArrow.simulateDeath(this.player);
+						return false;
+					}
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+						CrazyRace.simulateDeath(this.player);
 						return false;
 					}
 				}
@@ -527,8 +537,12 @@ public class PVPPlayer
 				this.sethealth(health - (dealtDamage - this.lastDamage));
 				if(this.gethealth() < 0){
 					if(this.isInEvent() == true){
-						if(Event.EventRunner.getActiveEvent() == SkyArrow.getEventName){
+						if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
 							SkyArrow.simulateDeath(this.player);
+							return false;
+						}
+						if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+							CrazyRace.simulateDeath(this.player);
 							return false;
 						}
 					}
@@ -552,7 +566,7 @@ public class PVPPlayer
 	
 	public void tick()
 	{
-		Material underfoot = this.player.getLocation().subtract(0,1,0).getBlock().getType();
+		underfoot = this.player.getLocation().subtract(0,1,0).getBlock().getType();
 		check = this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType();
 		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
 			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
@@ -1142,5 +1156,8 @@ public class PVPPlayer
 	}
 	public void setLastHitBy(Player lastHitBy) {
 		this.lastHitBy = lastHitBy;
+	}
+	public Material underFoot(){
+		return this.underfoot;
 	}
 }

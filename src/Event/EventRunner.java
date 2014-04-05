@@ -2,6 +2,8 @@ package Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,58 +24,92 @@ public class EventRunner {
 		tick++;
 		if(tick > 3600){
 			if(eventActive == false){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Random rand = new Random();
+				int check = rand.nextInt(2) + 1;
+				if(check == 1){
+					eventName = SkyArrow.getEventName();
+				}
+				if(check == 2){
+					eventName = CrazyRace.getEventName();
+				}
 				eventActive = true;
-				eventName = SkyArrow.getEventName;
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
 			}
 			if(tick == 3630){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 			}
 			if(tick == 3660){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 			}		
 			if(tick == 3690){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
-			}			
-			SkyArrow.tick();
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+			}		
+			if(tick == 3720){
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");			}			
+			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())) SkyArrow.tick();
+			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())) CrazyRace.tick();
+
 		}
 		else{
 			eventActive = false;
 			SkyArrow.setActive(false);
-			SkyArrow.players.clear();
+			CrazyRace.setActive(false);
+			eventName = "";
 			participants.clear();
 		}
 	}
 	public static void joinEvent(Player player){
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		if(pvp.isInCombat() == false){
-			if(SkyArrow.active == true){
-				player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
-				player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
-				int counter = 0;
-				for(Player player2:SkyArrow.players){
-					counter++;
-					player.sendMessage(counter + ": " + player2.getName());
-				}
-				return;
-			}
 			if(eventActive == false){
 				player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, NO EVENTS RUNNING. NEXT EVENT IN " + ChatColor.GREEN + (3600 - tick)/60 + " MINUTES");
 				return;
 			}
-			if(Util.InventoryManager.storeInventory(player) == true){
-				storeLocation(player);
-				participants.add(player);
-				if(eventActive == false)totalPlayers++;
-				player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
-				pvp.setEventGrace(true);
-				pvp.setInEvent(true);
-				SkyArrow.join(player);
-				return;
+			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())){
+				if(SkyArrow.active == true){
+					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
+					player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
+					int counter = 0;
+					for(Player player2:SkyArrow.players){
+						counter++;
+						player.sendMessage(counter + ": " + player2.getName());
+					}
+					return;
+				}
+				if(Util.InventoryManager.storeInventory(player) == true){
+					storeLocation(player);
+					participants.add(player);
+					if(eventActive == false)totalPlayers++;
+					player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
+					pvp.setEventGrace(true);
+					pvp.setInEvent(true);
+					SkyArrow.join(player);
+					return;
+				}
+				else{
+					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, PLEASE PUT YOUR ARMOR IN YOUR INVENTORY AND TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
+					return;
+				}
 			}
-			else{
-				player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, PLEASE PUT YOUR ARMOR IN YOUR INVENTORY AND TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
-				return;
+			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())){
+				if(CrazyRace.active == true){
+					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
+					return;
+				}
+				if(Util.InventoryManager.storeInventory(player) == true){
+					storeLocation(player);
+					participants.add(player);
+					if(eventActive == false)totalPlayers++;
+					player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
+					pvp.setEventGrace(true);
+					pvp.setInEvent(true);
+					CrazyRace.join(player);
+					return;
+				}
+				else{
+					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, PLEASE PUT YOUR ARMOR IN YOUR INVENTORY AND TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
+					return;
+				}
 			}
 		}
 		else{
@@ -89,24 +125,38 @@ public class EventRunner {
 		totalPlayers = 0;
 	}
 	public static void leaveEvent(Player player){
-		participants.remove(player);
-		if(eventActive == false)totalPlayers--;
-		if(deaths.containsKey(player.getName().toString())) deaths.remove(player.getName().toString());
-		player.sendMessage(ChatColor.AQUA + "You have left " + ChatColor.GREEN + eventName + ChatColor.AQUA + " thank you for playing!");
-		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
-		pvp.sethealth(pvp.getMaxHealth());
-		returnToPreviousLocation(player);
-		Util.InventoryManager.getInventory(player);
-		if(SkyArrow.players.size() == 1 && SkyArrow.isActive()){
-			for(Player player2:SkyArrow.players){
-				SkyArrow.setWinner(player2);
-				SkyArrow.leave(player2);
+		if(participants.contains(player)){
+			participants.remove(player);
+			if(eventActive == false)totalPlayers--;
+			if(deaths.containsKey(player.getName().toString())) deaths.remove(player.getName().toString());
+			player.sendMessage(ChatColor.AQUA + "You have left " + ChatColor.GREEN + eventName + ChatColor.AQUA + " thank you for playing!");
+			PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
+			pvp.sethealth(pvp.getMaxHealth());
+			returnToPreviousLocation(player);
+			Util.InventoryManager.getInventory(player);
+			if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+				if(SkyArrow.players.size() == 1 && SkyArrow.isActive()){
+					for(Player player2:SkyArrow.players){
+						SkyArrow.setWinner(player2);
+						SkyArrow.leave(player2);
+					}
+				}
+				if(SkyArrow.winner != null){
+					if(SkyArrow.winner.getName().toString() == player.getName().toString()){
+						SkyArrow.winner(player);
+					}
+				}
+			}
+			if(EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+				if(CrazyRace.winner != null){
+					if(CrazyRace.winner.getName().toString().equalsIgnoreCase(player.getName().toString())){
+						CrazyRace.winner(player);
+					}
+				}
 			}
 		}
-		if(SkyArrow.winner != null){
-			if(SkyArrow.winner.getName().toString() == player.getName().toString()){
-				SkyArrow.winner(player);
-			}
+		else{
+			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE NOT IN AN EVENT! ");
 		}
 	}
 	public static void death(Player player){
