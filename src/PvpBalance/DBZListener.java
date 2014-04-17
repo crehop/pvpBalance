@@ -59,6 +59,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import com.gmail.stevenpcc.arrowhitblockevent.ArrowHitBlockEvent;
+import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import AdditionalEnchants.EnchantManagment;
@@ -102,10 +104,10 @@ public class DBZListener implements Listener
 		}
 	}
 	@EventHandler
-	public void stopEnderWhileInCombat(InventoryOpenEvent event){
-		if(event.getInventory().getType() == InventoryType.ENDER_CHEST){
-			PVPPlayer pvp = PvpHandler.getPvpPlayer((Player)event.getPlayer());
-			if(pvp.isInCombat() || pvp.getCombatCooldown() > 0 || pvp.getCooldown() > 0){
+	public void stopEnderWhileInCombat(PlayerInteractEvent event){
+		PVPPlayer pvp = PvpHandler.getPvpPlayer((Player)event.getPlayer());
+		if(pvp.isInCombat() || pvp.getCombatCooldown() > 0 || pvp.getCooldown() > 0){
+			if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENDER_CHEST){
 				event.setCancelled(true);
 				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT OPEN ENDERCHEST IN COMBAT!");
 			}
@@ -146,8 +148,6 @@ public class DBZListener implements Listener
 	//	 	}
 	//	}
 	//}
-
-		
 	@EventHandler	
 	public void playerQuit(PlayerQuitEvent quitevent)
 	{
@@ -251,12 +251,12 @@ public class DBZListener implements Listener
 			{
 				Arrow arrow = (Arrow)event.getDamager();
 				Entity damager = arrow.getShooter();
-				if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() <= 0)
+				if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
 				}
-				else if(CombatUtil.preventDamageCall(((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
 				{
 					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
@@ -277,6 +277,14 @@ public class DBZListener implements Listener
 						pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN A DUEL!");
 						return;
 					}
+					if(pvpDamagee.isInEvent() == true && pvpDamager.isInEvent() == false){
+						event.setCancelled(true);
+						pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
+						pvpDamager.setCombatCooldown(10);
+						pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN AN EVENT! SEVERE DAMAGE PENALTY!");
+						pvpDamager.sethealth(pvpDamager.gethealth() - pvpDamager.getMaxHealth()/3);
+						return;
+					}
 					if(pvpDamager.isUsingGrappleShot() == true)
 					{
 						pvpDamager.setGrapplePlayer(damagee);
@@ -294,12 +302,12 @@ public class DBZListener implements Listener
 			}
 			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
-				if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee)  && pvpDamagee.getCombatCoolDown() <= 0)
+				if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Projectile)event.getDamager()).getShooter(), damagee)  && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
 				}
-				else if(CombatUtil.preventDamageCall(((Projectile)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Projectile)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
 				{
 					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
@@ -335,12 +343,12 @@ public class DBZListener implements Listener
 				Player damager = (Player)event.getDamager();
 				PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
 				pvpDamagee.setLastHitBy(pvpDamager.getLastHitBy());
-				if(CombatUtil.preventDamageCall(damager, damagee) && pvpDamagee.getCombatCoolDown() <= 0)
+				if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee) && pvpDamagee.getCombatCoolDown() <= 0)
 				{
 					event.setCancelled(true);
 					return;
 				}
-				else if(CombatUtil.preventDamageCall(damager, damagee) && pvpDamagee.getCombatCoolDown() > 0)
+				else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee) && pvpDamagee.getCombatCoolDown() > 0)
 				{
 					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
 				}
@@ -840,10 +848,30 @@ public class DBZListener implements Listener
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		if(pvp.isInEvent() == true){
 			if(event.getMessage().equalsIgnoreCase("/leave")){
+				if(SkyArrow.checkParticipant(player) == true){
+					SkyArrow.leave(player);
+				}
+				if(CrazyRace.checkParticipant(player) == true){
+					SkyArrow.leave(player);
+				}
+			}
+			if(event.getMessage().equalsIgnoreCase("/msg") || event.getMessage().equalsIgnoreCase("/message") || event.getMessage().equalsIgnoreCase("/r")){
+				return;
+			}
+			else if(event.getMessage().equalsIgnoreCase("/play")){
+				player.sendMessage(ChatColor.RED + "You are already playing.");
+				if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+					SkyArrow.listPlayers(player);
+				}
+				else if(EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+					CrazyRace.listPlayers(player);
+				}
 			}
 			else{
 				event.setCancelled(true);
-				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/leave" + ChatColor.RED + " to Quit");
+				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "Commands Cannot be used while in an event, type " + ChatColor.GREEN + "/play" + ChatColor.RED + " to get players remaining");
+				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "Or type " + ChatColor.GREEN + "/leave" + ChatColor.RED + " to Quit");
+
 			}
 		}
 
@@ -860,22 +888,20 @@ public class DBZListener implements Listener
 		}
 		pvpPlayer.setIsDead(true);
 		//player.teleport(player.getWorld().getSpawnLocation());
-		if(event.getEntity().getKiller() instanceof Player && event.getEntity().getWorld().getName().toLowerCase() == "world" ){
-			PVPPlayer pvpKiller = PvpHandler.getPvpPlayer(event.getEntity().getKiller());
+		if(event.getEntity().getKiller() instanceof Player && event.getEntity().getWorld().getName().equalsIgnoreCase("world") ){
+			PVPPlayer pvpKiller = PvpHandler.getPvpPlayer((Player)event.getEntity().getKiller());
 			if(pvpPlayer.getMaxHealth() >= 6300){
 				try {
-					mysql.storeUserData(event.getEntity(), "EpicDeaths", (mysql.getUserData(event.getEntity(), "EpicDeaths") + 1));
-					mysql.storeUserData(event.getEntity().getKiller(), "EpicKills", (mysql.getUserData(event.getEntity(), "EpicKills") + 1));
+					mysql.storeUserData((Player)event.getEntity(), "EpicDeaths", (mysql.getUserData((Player)event.getEntity(), "EpicDeaths") + 1));
+					mysql.storeUserData((Player)event.getEntity().getKiller(), "EpicKills", (mysql.getUserData((Player)event.getEntity(), "EpicKills") + 1));
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 			try{
-			mysql.storeUserData(event.getEntity(), "Deaths", (mysql.getUserData(event.getEntity(), "Deaths") + 1));
-			mysql.storeUserData(event.getEntity().getKiller(), "Kills", (mysql.getUserData(event.getEntity(), "Kills") + 1));
+			mysql.storeUserData((Player)event.getEntity(), "Deaths", (mysql.getUserData((Player)event.getEntity(), "Deaths") + 1));
+			mysql.storeUserData((Player)event.getEntity().getKiller(), "Kills", (mysql.getUserData((Player)event.getEntity(), "Kills") + 1));
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

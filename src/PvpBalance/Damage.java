@@ -356,7 +356,7 @@ public class Damage
 	
 	public static boolean canHit(Entity damagee, Entity damager)
 	{
-		if(CombatUtil.preventDamageCall(damager, damagee))
+		if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee))
 			return false;
 		if(!partyCanHit(damagee, damager))
 			return false;

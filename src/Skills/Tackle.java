@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 import PvpBalance.Damage;
 import PvpBalance.PVPPlayer;
+import PvpBalance.PvpBalance;
 import PvpBalance.PvpHandler;
 
 public class Tackle {
@@ -16,7 +17,7 @@ public class Tackle {
 		for(Entity near:player.getNearbyEntities(2, 2, 2)){
 			if(near instanceof Player)
 			{
-				if(Damage.partyCanHit(near, player) == true && CombatUtil.preventDamageCall(near,player) == false)
+				if(Damage.partyCanHit(near, player) == true && CombatUtil.preventDamageCall(PvpBalance.getTowny(), near,player) == false)
 				near.setPassenger(player);
 				PVPPlayer pvpDamagee = PvpHandler.getPvpPlayer((Player)near);
 				Player tackled = (Player)near;

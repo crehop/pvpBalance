@@ -68,13 +68,7 @@ public class EventRunner {
 			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())){
 				if(SkyArrow.active == true){
 					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
-					player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
-					int counter = 0;
-					for(Player player2:SkyArrow.players){
-						counter++;
-						player.sendMessage(counter + ": " + player2.getName());
-					}
-					return;
+					SkyArrow.listPlayers(player);
 				}
 				if(Util.InventoryManager.storeInventory(player) == true){
 					storeLocation(player);
@@ -93,8 +87,8 @@ public class EventRunner {
 			}
 			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())){
 				if(CrazyRace.active == true){
-					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
-					return;
+					player.sendMessage(ChatColor.RED + "Joining event already in progress");
+					CrazyRace.listPlayers(player);
 				}
 				if(Util.InventoryManager.storeInventory(player) == true){
 					storeLocation(player);
@@ -120,7 +114,7 @@ public class EventRunner {
 		participants.clear();
 		deaths.clear();
 		eventName = "";
-		tick = 0;
+		setTick(1);
 		eventActive = false;
 		totalPlayers = 0;
 	}
@@ -142,7 +136,7 @@ public class EventRunner {
 					}
 				}
 				if(SkyArrow.winner != null){
-					if(SkyArrow.winner.getName().toString() == player.getName().toString()){
+					if(SkyArrow.winner.getName().toString().equalsIgnoreCase(player.getName().toString())){
 						SkyArrow.winner(player);
 					}
 				}

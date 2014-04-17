@@ -14,10 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.sk89q.worldedit.WorldEdit;
+
 import PvpBalance.PVPPlayer;
 import PvpBalance.PvpHandler;
 
-public class SkyArrow {
+public class SkyBlock {/*
 	public static int grace = 0;
 	public static int numberOfPlayers = 0;
 	public static Player winner = null;
@@ -28,22 +30,13 @@ public class SkyArrow {
 			grace = 150;
 		}
 		players.add(player);
-		SkyArrow.teleportToStart(player);
+		SkyBlock.teleportToStart(player);
 		numberOfPlayers++;
-		ItemStack prize = new ItemStack(Material.BOW);
-		ItemStack prize2 = new ItemStack(Material.ARROW);
+		ItemStack prize = new ItemStack(Material.CACTUS);
+		ItemStack prize2 = new ItemStack(Material.FISHING_ROD);
 		ItemStack prize3 = new ItemStack(Material.BREAD);
 		ItemStack prize4 = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemStack prize5 = new ItemStack(Material.WOOD_SWORD);
-		ItemMeta meta = prize.getItemMeta();
-		meta.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
-		List<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.RED + "Woot Woot");
-		meta.setLore(lore);
-		prize.setItemMeta(meta);
-		prize.setAmount(1);
-		prize.addEnchantment(Enchantment.ARROW_INFINITE,1);
-		prize.addEnchantment(Enchantment.DURABILITY,2);
 		prize2.setAmount(1);
 		prize3.setAmount(64);
 		player.getInventory().addItem(prize);
@@ -72,7 +65,7 @@ public class SkyArrow {
 		winner = null;
 		setActive(false);
 		for(Player player:players){
-			SkyArrow.leave(player);
+			SkyBlock.leave(player);
 		}
 		players.clear();
 		EventRunner.endEvent();
@@ -97,7 +90,7 @@ public class SkyArrow {
 		Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.YELLOW  + " has won " + getEventName());
 		ItemStack prize3 = new ItemStack(Material.BOW);
 		ItemMeta meta3 = prize3.getItemMeta();
-		meta3.setDisplayName(ChatColor.YELLOW + "SkyArrow BOW");
+		meta3.setDisplayName(ChatColor.YELLOW + "SkyBlock BOW");
 		List<String> lore3 = new ArrayList<String>();
 		lore3.add(ChatColor.RED + "Woot Woot");
 		meta3.setLore(lore3);
@@ -151,11 +144,7 @@ public class SkyArrow {
 		}
 		if(grace == 1){
 			if(players.size() == 0){
-				SkyArrow.reset();
-			}
-			if(players.size() == 1){
-				SkyArrow.setWinner(players.get(0));
-				SkyArrow.leave(players.get(0));
+				SkyBlock.reset();
 			}
 			if(players.size() >= 5){
 				setActive(true);
@@ -186,26 +175,18 @@ public class SkyArrow {
 			for(Player player:players){
 				PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 				if(pvp.flyZone == false){
-					SkyArrow.leave(player);
+					SkyBlock.leave(player);
 					player.sendMessage("You have Exited the arena!");
 				}
 			}
 		}
 		if(players.size() == 0 && active == true){
-			SkyArrow.reset();
+			SkyBlock.reset();
 		}
 	}
 	public static boolean checkParticipant(String playername) {
 		for(Player check : players){
 			if(check.getName().toString().equalsIgnoreCase(playername)){
-				return true;
-			}
-		}
-		return false;
-	}
-	public static boolean checkParticipant(Player player) {
-		for(Player check : players){
-			if(check.getName().toString().equalsIgnoreCase(player.getName().toString())){
 				return true;
 			}
 		}
@@ -219,8 +200,8 @@ public class SkyArrow {
 		PVPPlayer pvpKiller = PvpHandler.getPvpPlayer(pvpDeath.getLastHitBy());
 		pvpDeath.sethealth(pvpDeath.getMaxHealth());
 		pvpKiller.sethealth(pvpKiller.getMaxHealth());
-		pvpKiller .getPlayer().sendMessage(SkyArrow.getEventName() + ChatColor.GREEN + ": You have killed " + player.getDisplayName() + " and gained full health!");
-		SkyArrow.leave(player);
+		pvpKiller .getPlayer().sendMessage(SkyBlock.getEventName() + ChatColor.GREEN + ": You have killed " + player.getDisplayName() + " and gained full health!");
+		SkyBlock.leave(player);
 		return;
 		}
 	}
@@ -228,11 +209,11 @@ public class SkyArrow {
 		return ChatColor.AQUA + "Sky" + ChatColor.RED + "Arrow";
 	}
 	public static void listPlayers(Player playerToTell){
-		playerToTell.sendMessage(getEventName() + ChatColor.YELLOW + " Remaining Players : " + ChatColor.RED + "" + ChatColor.BOLD + players.size());
+		playerToTell.sendMessage(getEventName() + ChatColor.YELLOW + " Remaining Players :" + players.size());
 		int counter = 0;
 		for(Player player:players){
 			counter++;
-			playerToTell.sendMessage(ChatColor.GREEN + "" + counter + ":" + ChatColor.AQUA + player.getName());
+			playerToTell.sendMessage(counter + ":" + player.getName());
 		}
-	}
+	}*/
 }

@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -28,6 +27,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mysql.jdbc.Util;
+import com.palmergames.bukkit.towny.Towny;
 
 import DuelZone.Duel;
 import Event.CrazyRace;
@@ -46,6 +46,8 @@ public class PvpBalance extends JavaPlugin
 	public static MYSQLManager mysql;
 	public static final Logger logger = Logger.getLogger("Minecraft");
     public static PvpBalance plugin;
+    public static Plugin townyPlugin;
+    public static Towny towny;
 	public LoadSave LoadSave;
 	private final float SPEED = 0.2F;
 	private final int AMOUNT = 300;
@@ -80,6 +82,8 @@ public class PvpBalance extends JavaPlugin
  	public void onEnable()
  	{
  		plugin = this;
+ 		townyPlugin = Bukkit.getPluginManager().getPlugin("Towny.jar");
+ 		towny = (Towny)townyPlugin;
 	 	for(Player p : Bukkit.getOnlinePlayers())
 	 	{
 	 		if(p == null)
@@ -821,6 +825,9 @@ public class PvpBalance extends JavaPlugin
 			} catch (SQLException e) {
 				e.printStackTrace();
 		}
+	}
+	public static Towny getTowny(){
+		return towny;
 	}
 	public static PVPPlayer createNewPvPPlayerObject(Player player){
 		PVPPlayer newPVP = new PVPPlayer(player);

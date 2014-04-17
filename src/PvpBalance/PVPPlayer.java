@@ -626,6 +626,9 @@ public class PVPPlayer
 		if(underfoot == Material.BEDROCK){
 			Skills.SuperSpeed.pathspeedOn(player);
 		}
+		if(underfoot == Material.SPONGE && CrazyRace.checkParticipant(player.getName().toString()) && CrazyRace.grace < 1){
+			if(player.getWorld().getName().equalsIgnoreCase(CrazyRace.world.getName()))CrazyRace.setWinner(player);
+		}
 		if(this.tackleTimer > 0)
 		{
 			if(this.getPlayer().getPassenger() != null && this.getPlayer().getPassenger() instanceof Player)

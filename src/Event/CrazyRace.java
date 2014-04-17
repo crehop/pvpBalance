@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,7 @@ public class CrazyRace {
 	public static boolean active = false;
 	public static ArrayList<Player> players2 = new ArrayList<Player>();
 	public static int timer = 0;
+	public static World world = Bukkit.getWorld("event");
 	
 	public static void join(Player player){
 		if(players2.size() == 0){
@@ -86,7 +88,6 @@ public class CrazyRace {
 		lore2.add(ChatColor.GREEN + "/rules armor" + ChatColor.AQUA + " for more information!");
 		meta2.setLore(lore2);
 		prize2.setItemMeta(meta2);
-
 		player.getInventory().addItem(prize2);
 		Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.YELLOW  + " has won " + getEventName());
 		ItemStack prize3 = new ItemStack(Material.DIAMOND_BOOTS);
@@ -121,7 +122,10 @@ public class CrazyRace {
 		if(winner != null){
 			evacuate();
 		}
-		if(players2.size() > 0 && CrazyRace.isActive() == true){
+		if( players2.size() < 1 && grace < 1){
+			reset();
+		}
+		if(players2.size() > 0){
 			for(Iterator it = players2.iterator(); it.hasNext();) {
 				try{
 					Player player = (Player) it.next();
@@ -139,13 +143,8 @@ public class CrazyRace {
 					}
 					PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 					if(pvp.isInEvent() == false) pvp.setInEvent(true);
-					if(pvp.underFoot() == Material.DIAMOND_BLOCK){
-						CrazyRace.setWinner(player);
-						break;
-					}
 				}catch(ConcurrentModificationException e){
 					e.printStackTrace();
-					break;
 				}
 			}
 		}
@@ -156,6 +155,7 @@ public class CrazyRace {
 			if(timer == 0){
 				CrazyRace.evacuate();
 				Bukkit.broadcastMessage(getEventName() + ChatColor.RED +" : Noone has won, 20 Minutes has passed. Ending Event!");
+				CrazyRace.reset();
 			}
 		}
 		if(grace <= 5 && grace != 0){
@@ -202,7 +202,15 @@ public class CrazyRace {
 	}
 	public static boolean checkParticipant(String playername) {
 		for(Player check : players2){
-			if(check.getName().toString() == playername){
+			if(check.getName().toString().equalsIgnoreCase(playername)){
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean checkParticipant(Player player) {
+		for(Player check : players2){
+			if(check.getName().toString().equalsIgnoreCase(player.getName().toString())){
 				return true;
 			}
 		}
@@ -210,15 +218,24 @@ public class CrazyRace {
 	}
 	public static void setWinner(Player player) {
 		winner = player;
+		evacuate();
 	}
 	public static void simulateDeath(Player player){
 		PVPPlayer pvpDeath = PvpHandler.getPvpPlayer(player);
-		pvpDeath.sethealth(pvpDeath.getMaxHealth());
+		if(pvpDeath != null)pvpDeath.sethealth(pvpDeath.getMaxHealth());
 		player.sendMessage(ChatColor.RED + "You can type " + ChatColor.GREEN + "/leave" + ChatColor.RED + " to quit " + getEventName());
 		CrazyRace.teleportToStart(player);
 	}
 	public static String getEventName(){
 		return ChatColor.AQUA + "C" + ChatColor.GOLD + "r" + ChatColor.DARK_RED + "a" + ChatColor.GREEN + "z" + ChatColor.LIGHT_PURPLE + "y" + ChatColor.YELLOW + " Race";
+	}
+	public static void listPlayers(Player playerToTell){
+		playerToTell.sendMessage(getEventName() + ChatColor.YELLOW + " Remaining Players : " + ChatColor.RED + "" + ChatColor.BOLD + players2.size());
+		int counter = 0;
+		for(Player player:players2){
+			counter++;
+			playerToTell.sendMessage(ChatColor.GREEN + "" + counter + ":" + ChatColor.AQUA + player.getName());
+		}
 	}
 }
 	
