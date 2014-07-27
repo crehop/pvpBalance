@@ -12,6 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -25,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -39,10 +41,13 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -54,12 +59,15 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.gmail.stevenpcc.arrowhitblockevent.ArrowHitBlockEvent;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
@@ -80,11 +88,13 @@ import Util.MYSQLManager;
 import Util.Utils;
 
 
+
 public class DBZListener implements Listener
 {
 	static int tick = 0;
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
+
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
@@ -104,7 +114,19 @@ public class DBZListener implements Listener
 		}
 	}
 	@EventHandler
-	public void stopEnderWhileInCombat(PlayerInteractEvent event){
+	public void stopSpongeMove(InventoryClickEvent event){
+		if(event.getWhoClicked().getWorld().toString().contains("test")){
+			try{
+				if(event.getInventory().getItem(event.getSlot()).getType() != null){
+					if(event.getInventory().getItem(event.getSlot()).getType() == Material.SPONGE){
+						event.setCancelled(true);
+					}
+				}
+			}catch(NullPointerException e){}
+		}
+	}
+	@EventHandler
+	public void inventoryInteractions(PlayerInteractEvent event){
 		PVPPlayer pvp = PvpHandler.getPvpPlayer((Player)event.getPlayer());
 		if(pvp.isInCombat() || pvp.getCombatCooldown() > 0 || pvp.getCooldown() > 0){
 			if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENDER_CHEST){
@@ -152,6 +174,9 @@ public class DBZListener implements Listener
 	public void playerQuit(PlayerQuitEvent quitevent)
 	{
 		Player quitPlayer = quitevent.getPlayer();
+		if(quitPlayer.getGameMode() == GameMode.CREATIVE){
+			quitPlayer.getInventory().clear();
+		}
 		PVPPlayer pp = PvpHandler.getPvpPlayer(quitPlayer);
 		if(pp.isInEvent() == true){
 			Event.EventRunner.leaveEvent(quitPlayer);
@@ -203,6 +228,19 @@ public class DBZListener implements Listener
 					}
 				}
 			}
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void arrowHit(BlockPlaceEvent event){
+		if(event.getBlock().getType() == Material.SKULL_ITEM || event.getBlock().getType() == Material.SKULL || event.getBlock().getType() == Material.SKULL_ITEM){
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "BLOCKED UNTIL CHEST GLITCH FIXED PLEASE STORE THIS ITEM!");
+		}
+	}
+	@EventHandler
+	public void arrowHit(EntityDamageEvent event){
+		if(event.getEntityType().toString().equalsIgnoreCase("Item_frame") && event.getCause().toString().equalsIgnoreCase("projectile")){
+			event.setCancelled(true);
 		}
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -531,6 +569,13 @@ public class DBZListener implements Listener
 	}
 	//JUMP SKILL!
 	@EventHandler
+	public void stopGamemodeDupe(PlayerGameModeChangeEvent event){
+		if(event.getNewGameMode() == GameMode.SURVIVAL && event.getPlayer().getGameMode() == GameMode.CREATIVE){
+			event.getPlayer().getInventory().clear();
+			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
+		}
+	}
+	@EventHandler
 	public void playerToggleFlightEvent(PlayerToggleFlightEvent event)
 	{
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(event.getPlayer());
@@ -646,6 +691,10 @@ public class DBZListener implements Listener
 	@EventHandler
 	public void playerinteract(PlayerInteractEvent event)
 	{
+		//TODO Remove with other code for chestr head glitch
+		if(event.getPlayer().getItemInHand().getType() == Material.SKULL_ITEM || event.getPlayer().getItemInHand().getType() == Material.SKULL){
+			event.setCancelled(true);
+		}
 		Player player = event.getPlayer();
 		if((event.useItemInHand() == Result.DEFAULT && !event.isBlockInHand()) && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
 		{

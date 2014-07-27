@@ -17,7 +17,7 @@ import code.husky.Database;
  * @author -_Husky_-
  * @author tips48
  */
-public class MySQL extends Database {
+public class MySQL2 extends Database {
     private final String user;
     private final String database;
     private final String password;
@@ -42,7 +42,7 @@ public class MySQL extends Database {
      * @param password
      *            Password
      */
-    public MySQL(Plugin plugin, String hostname, String port, String database, String username, String password) {
+    public MySQL2(Plugin plugin, String hostname, String port, String database, String username, String password) {
         super(plugin);
         this.hostname = hostname;
         this.port = port;

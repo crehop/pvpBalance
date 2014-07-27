@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.sk89q.worldedit.WorldEdit;
-
 import PvpBalance.PVPPlayer;
 import PvpBalance.PvpHandler;
 

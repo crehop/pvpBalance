@@ -566,6 +566,11 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(player.isSneaking()){
+			this.canUseGrappleShot = false;
+			this.canUsePileDrive = false;
+			this.canUseSkill = false;
+		}
 		underfoot = this.player.getLocation().subtract(0,1,0).getBlock().getType();
 		check = this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType();
 		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){

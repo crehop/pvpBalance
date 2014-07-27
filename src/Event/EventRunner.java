@@ -21,7 +21,8 @@ public class EventRunner {
 	private static boolean eventActive = false;
 	private static int totalPlayers = 0;
 	public static void tick(){
-		tick++;
+		//TODO fix events
+		/*tick++;
 		if(tick > 3600){
 			if(eventActive == false){
 				Random rand = new Random();
@@ -56,7 +57,7 @@ public class EventRunner {
 			CrazyRace.setActive(false);
 			eventName = "";
 			participants.clear();
-		}
+		}*/
 	}
 	public static void joinEvent(Player player){
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);

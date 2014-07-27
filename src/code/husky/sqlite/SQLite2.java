@@ -16,7 +16,7 @@ import code.husky.Database;
  * 
  * @author tips48
  */
-public class SQLite extends Database {
+public class SQLite2 extends Database {
     private final String dbLocation;
 
     private Connection connection;
@@ -29,7 +29,7 @@ public class SQLite extends Database {
      * @param dbLocation
      *            Location of the Database (Must end in .db)
      */
-    public SQLite(Plugin plugin, String dbLocation) {
+    public SQLite2(Plugin plugin, String dbLocation) {
         super(plugin);
         this.dbLocation = dbLocation;
         this.connection = null;

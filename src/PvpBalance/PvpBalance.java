@@ -1,6 +1,5 @@
 package PvpBalance;
 
-import java.awt.Event;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,25 +7,20 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.mysql.jdbc.Util;
 import com.palmergames.bukkit.towny.Towny;
 
 import DuelZone.Duel;
@@ -37,7 +31,6 @@ import Party.CommandParty;
 import Party.PartyListener;
 import SaveLoad.LoadSave;
 import SaveLoad.Save;
-import Util.InventoryManager;
 import Util.ItemUtils;
 import Util.MYSQLManager;
 
@@ -76,13 +69,13 @@ public class PvpBalance extends JavaPlugin
 		PvpHandler.clear();
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 	 	logger.info(pdfFile.getName() + " Has Been Disabled!!");
-	 	this.mysql.closeDB();
+	 	PvpBalance.mysql.closeDB();
  	}
  
  	public void onEnable()
  	{
  		plugin = this;
- 		townyPlugin = Bukkit.getPluginManager().getPlugin("Towny.jar");
+ 		townyPlugin = Bukkit.getPluginManager().getPlugin("Towny");
  		towny = (Towny)townyPlugin;
 	 	for(Player p : Bukkit.getOnlinePlayers())
 	 	{
@@ -109,7 +102,7 @@ public class PvpBalance extends JavaPlugin
 	 	
 	 	PluginDescriptionFile pdfFile = this.getDescription();
 	 	try {
-			this.mysql.setupDb();
+			PvpBalance.mysql.setupDb();
 		} catch (SQLException e) {
 			this.logDB  = false;
 			e.printStackTrace();
@@ -125,7 +118,6 @@ public class PvpBalance extends JavaPlugin
 		    	{
 		    		everyOther = 1;
 		    		particulating();
-		    		fireballEffects();
 		    		EventRunner.tick();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
@@ -196,7 +188,6 @@ public class PvpBalance extends JavaPlugin
 		    {
 		    	everyOther = 2;
 	    		particulating();
-	    		fireballEffects();
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
@@ -287,7 +278,6 @@ public class PvpBalance extends JavaPlugin
 		    	}
 		    	everyOther = 3;
 	    		particulating();
-	    		fireballEffects();
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
 						try
@@ -352,7 +342,6 @@ public class PvpBalance extends JavaPlugin
 		    {
 		    	everyOther = 0;
 	    		particulating();
-	    		fireballEffects();
 		    	Duel.tick();
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
 		    	{
@@ -476,7 +465,6 @@ public class PvpBalance extends JavaPlugin
 	{
 
 		Player player = (Player) sender;
-		Location location = player.getLocation();
 		if(commandLabel.equalsIgnoreCase("bet")){
 			if(args[0] != null){
 				if(Duel.bet < 2500){
@@ -748,32 +736,6 @@ public class PvpBalance extends JavaPlugin
 	public static List<Chicken> chickenList()
 	{
 		return PvpBalance.chickens;
-	}
-	public void fireballEffects(){
-    	for(Entity e:Bukkit.getWorld("world").getEntities()){
-    		if(e instanceof Fireball){
-    			Fireball shoot = (Fireball)e;
-    			Effects.igniteFireball(e);
-    			for(Entity near:shoot.getNearbyEntities(3, 3, 3)){
-    				if(near instanceof Player && near != shoot.getShooter()){
-    					shoot.teleport(near.getLocation());
-    				}
-    			}
-    		}
-    		if(e instanceof Arrow){
-    			Arrow arrow = (Arrow)e;
-    			if(arrow.isOnGround() == false){
-    				try {
-						ParticleEffect.sendToLocation(ParticleEffect.FIREWORKS_SPARK, arrow.getLocation(),0.01f,0.01f,0.01f, (float)0.0001, 1);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-    			}
-    			if(arrow.getTicksLived() > 1200){
-    				arrow.remove();
-    			}
-    		}
-        }
 	}
 	public void createParticleEffect(Player player){
 		if(player.isOnline() == false){
