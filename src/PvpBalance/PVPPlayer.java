@@ -415,7 +415,6 @@ public class PVPPlayer
 		if(this.health == this.maxHealth && this.combatCoolDown < 1 && this.canRegen == true && this.inCombat == false)
 		{
 			this.maxHealth = maxHealth;
-			this.sethealth(this.maxHealth);
 			if(this.armorEventLastTick == 1)
 			{
 				player.sendMessage(ChatColor.GREEN + "[HEALTH]:" + ChatColor.YELLOW + " change in armor your new health is: " + ChatColor.GREEN + this.maxHealth);
@@ -576,23 +575,23 @@ public class PVPPlayer
 		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
 			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
 		}
-		if(check == Material.GLASS){
+		if(check == Material.GLASS && player.getWorld().getName().contains("world")){
 			if(this.isNewbZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
 				this.setIsNewbZone(true);
 			}
 		}
 		else{
-			if(this.isNewbZone() == true){
+			if(this.isNewbZone() == true ){
 				this.setIsNewbZone(false);
 				player.sendMessage(ChatColor.RED + "YOU ARE LEAVING THE NEWBIE ZONE GEAR/DAMAGE UNLIMITED!");
 			}
 			
 		}
-		if(check == Material.NETHER_BRICK){
+		if(check == Material.NETHER_BRICK && player.getWorld().getName().contains("world")){
 			Duel.addContestant(player);
 		}
-		if(check == Material.GLOWSTONE){
+		if(check == Material.GLOWSTONE && player.getWorld().getName().contains("world")){
 			if(this.isDuelZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU HAVE ENTERED A DUEL ZONE, IF YOU LEAVE WHILE IN A DUEL YOU WILL DIE AND LOSE!");
 				this.setDuelZone(true);
@@ -612,7 +611,7 @@ public class PVPPlayer
 			}
 			
 		}
-		if(check == Material.ENDER_STONE){
+		if(check == Material.ENDER_STONE && player.getWorld().getName().contains("world")){
 			if(this.flyZone == false){
 				this.flyZone = true;
 				player.sendMessage(ChatColor.RED + "YOU FEEL WEIGHTLESS!");
@@ -631,9 +630,9 @@ public class PVPPlayer
 		if(underfoot == Material.BEDROCK){
 			Skills.SuperSpeed.pathspeedOn(player);
 		}
-		if(underfoot == Material.SPONGE && CrazyRace.checkParticipant(player.getName().toString()) && CrazyRace.grace < 1){
-			if(player.getWorld().getName().equalsIgnoreCase(CrazyRace.world.getName()))CrazyRace.setWinner(player);
-		}
+		//if(underfoot == Material.SPONGE && CrazyRace.checkParticipant(player.getName().toString()) && CrazyRace.grace < 1){
+		//	if(player.getWorld().getName().equalsIgnoreCase(CrazyRace.world.getName()))CrazyRace.setWinner(player);
+		//}
 		if(this.tackleTimer > 0)
 		{
 			if(this.getPlayer().getPassenger() != null && this.getPlayer().getPassenger() instanceof Player)

@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -174,6 +175,7 @@ public class DBZListener implements Listener
 	public void playerQuit(PlayerQuitEvent quitevent)
 	{
 		Player quitPlayer = quitevent.getPlayer();
+		Utils.teleportToSpawn(quitPlayer);
 		if(quitPlayer.getGameMode() == GameMode.CREATIVE){
 			quitPlayer.getInventory().clear();
 		}
@@ -208,6 +210,11 @@ public class DBZListener implements Listener
 				event.setCancelled(true);
 			}
 		}
+		Random rand = new Random();
+		if (((event.getFoodLevel() < ((Player) event.getEntity()).getFoodLevel()) && (rand.nextInt(100) > 4))) {
+			event.setCancelled(true);
+		}
+
 	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void specialEnchantDamageEvent(EntityDamageByEntityEvent event)
@@ -528,6 +535,7 @@ public class DBZListener implements Listener
 			newPVP.sethealth(newPVP.getMaxHealth());
 	}
 	
+	
 	@EventHandler
 	public void respawn(PlayerRespawnEvent event)
 	{
@@ -572,7 +580,27 @@ public class DBZListener implements Listener
 	public void stopGamemodeDupe(PlayerGameModeChangeEvent event){
 		if(event.getNewGameMode() == GameMode.SURVIVAL && event.getPlayer().getGameMode() == GameMode.CREATIVE){
 			event.getPlayer().getInventory().clear();
+			event.getPlayer().getItemInHand().setType(Material.AIR);
+			event.getPlayer().getItemOnCursor().setType(Material.AIR);
+			event.getPlayer().getInventory().getBoots().setType(Material.AIR);
+			event.getPlayer().getInventory().getChestplate().setType(Material.AIR);
+			event.getPlayer().getInventory().getLeggings().setType(Material.AIR);
+			event.getPlayer().getInventory().getHelmet().setType(Material.AIR);
 			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
+		}
+		if(event.getNewGameMode() == GameMode.CREATIVE && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
+			if(Damage.calcArmor(event.getPlayer()) > 550){
+				event.setCancelled(true);
+				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DUE TO GLITCHS WITH ARMOR PLEASE TAKE OFF ALL ARMOR BEFORE CHANGING GAMEMODES!");
+			}
+		}
+	}
+	@EventHandler
+	public void blockfromto(BlockFromToEvent event)
+	{
+		if(event.getBlock().getType() == Material.WATER && event.getToBlock().getType() == Material.STONE){
+			event.setCancelled(true);
+			event.getToBlock().setType(Material.GRAVEL);
 		}
 	}
 	@EventHandler
@@ -648,13 +676,13 @@ public class DBZListener implements Listener
 			e.printStackTrace();
 		}
     }
-	@EventHandler
-	public static void blockHitGround(EntityChangeBlockEvent event){
-		if(event.getEntity().getType() == EntityType.FALLING_BLOCK){
-			event.setCancelled(true);
-		}
-
-	}
+	//@EventHandler
+	//public static void blockHitGround(EntityChangeBlockEvent event){
+	//	if(event.getEntity().getType() == EntityType.FALLING_BLOCK){
+	//		event.setCancelled(true);
+	//	}
+	//
+	//}
 	@EventHandler
 	public void antiSnow(EntityBlockFormEvent event){
 		if(event.getEntity().toString() == "CraftSnowman"){
@@ -928,10 +956,10 @@ public class DBZListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
-		
 		Player player = event.getEntity();
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		MYSQLManager mysql = PvpBalance.mysql;
+		Utils.teleportToSpawn(player);
 		if(Duel.checkContestant((Player)event.getEntity())){
 			Duel.playerDeath((Player)event.getEntity());
 		}
@@ -953,6 +981,7 @@ public class DBZListener implements Listener
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PvpBalance.plugin, new Runnable()
 		{
