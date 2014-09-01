@@ -959,7 +959,6 @@ public class DBZListener implements Listener
 		Player player = event.getEntity();
 		PVPPlayer pvpPlayer = PvpHandler.getPvpPlayer(player);
 		MYSQLManager mysql = PvpBalance.mysql;
-		Utils.teleportToSpawn(player);
 		if(Duel.checkContestant((Player)event.getEntity())){
 			Duel.playerDeath((Player)event.getEntity());
 		}
