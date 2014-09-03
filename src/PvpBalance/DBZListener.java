@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -195,11 +196,16 @@ public class DBZListener implements Listener
 			pp.getParty().leave(pp);
 		}
 		PvpHandler.removePvpPlayer(pp);
+		Utils.teleportToSpawn(quitPlayer);
 	}
 	
 	@EventHandler
 	public void foodChangeEvent(FoodLevelChangeEvent event)
 	{
+		Random rand = new Random();
+		if (((event.getFoodLevel() < ((Player) event.getEntity()).getFoodLevel()) && (rand.nextInt(100) > 4))) {
+			event.setCancelled(true);
+		}
 		if(event.getEntity() instanceof Player)
 		{
 			Player player = (Player)event.getEntity();
@@ -246,7 +252,6 @@ public class DBZListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDamageEvent(EntityDamageByEntityEvent event)
 	{
-		
 		if(event.getDamage() == 0.1337){
 			return;
 		}
@@ -263,6 +268,7 @@ public class DBZListener implements Listener
 		}
 		double dealtDamage = 0.0f;
 		Entity e = event.getEntity();
+		boolean playerarrow = false;
 		if (e instanceof Player)
 		{
 			double rawDamage = event.getDamage();
@@ -335,6 +341,8 @@ public class DBZListener implements Listener
 				if(!(damager instanceof Player))
 				{	
 					dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
+					pvpDamagee.damage((int)dealtDamage);
+					pvpDamagee.setCombatCoolDown(20);
 				}
 				pvpDamagee.setCombatCoolDown(20);
 			}
@@ -454,6 +462,7 @@ public class DBZListener implements Listener
 				{
 					damager.sendMessage(ChatColor.RED + "DAMAGE DEALT: " + dealtDamage);
 				}
+				
 			}
 			else
 			{
@@ -467,7 +476,9 @@ public class DBZListener implements Listener
 				}
 				else
 				{
-					dealtDamage = rawDamage * SaveLoad.LoadSave.Multi;
+					dealtDamage = rawDamage * (SaveLoad.LoadSave.Multi/2);
+					pvpDamagee.damage((int) dealtDamage);
+					pvpDamagee.setCombatCoolDown(20);
 				}
 				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
 				Bukkit.getPluginManager().callEvent(pbdEvent);
@@ -573,6 +584,28 @@ public class DBZListener implements Listener
 		if(event.getNewGameMode() == GameMode.SURVIVAL && event.getPlayer().getGameMode() == GameMode.CREATIVE){
 			event.getPlayer().getInventory().clear();
 			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
+			event.getPlayer().getInventory().clear();
+			event.getPlayer().getItemInHand().setType(Material.AIR);
+			event.getPlayer().getItemOnCursor().setType(Material.AIR);
+			event.getPlayer().getInventory().getBoots().setType(Material.AIR);
+			event.getPlayer().getInventory().getChestplate().setType(Material.AIR);
+			event.getPlayer().getInventory().getLeggings().setType(Material.AIR);
+			event.getPlayer().getInventory().getHelmet().setType(Material.AIR);
+			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
+		}
+		if(event.getNewGameMode() == GameMode.CREATIVE && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
+			if(Damage.calcArmor(event.getPlayer()) > 550){
+				event.setCancelled(true);
+				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DUE TO GLITCHS WITH ARMOR PLEASE TAKE OFF ALL ARMOR BEFORE CHANGING GAMEMODES!");
+			}
+		}
+	}
+	@EventHandler
+	public void blockfromto(BlockFromToEvent event)
+	{
+		if(event.getBlock().getType() == Material.WATER && event.getToBlock().getType() == Material.STONE){
+			event.setCancelled(true);
+			event.getToBlock().setType(Material.GRAVEL);
 		}
 	}
 	@EventHandler
@@ -605,7 +638,6 @@ public class DBZListener implements Listener
 		Player player = event.getPlayer();
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		pvp.setWasSprinting(2);
-		pvp.setCanUseSkill(true);
 	}
 	@EventHandler
 	public void playerToggleSneakEvent(PlayerToggleSneakEvent event)
@@ -648,13 +680,6 @@ public class DBZListener implements Listener
 			e.printStackTrace();
 		}
     }
-	@EventHandler
-	public static void blockHitGround(EntityChangeBlockEvent event){
-		if(event.getEntity().getType() == EntityType.FALLING_BLOCK){
-			event.setCancelled(true);
-		}
-
-	}
 	@EventHandler
 	public void antiSnow(EntityBlockFormEvent event){
 		if(event.getEntity().toString() == "CraftSnowman"){
@@ -855,23 +880,28 @@ public class DBZListener implements Listener
 			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
 			{
 				damage = Damage.LoadSave.Explosion_Mob;
+				pvp.setCombatCoolDown(20);
 			}
 			else if(event.getCause().equals(DamageCause.BLOCK_EXPLOSION))
 			{
 				damage = Damage.LoadSave.Explosion;
+				pvp.setCombatCoolDown(20);
 			}
 			else if(event.getCause().equals(DamageCause.LIGHTNING))
 			{
 				damage = Damage.LoadSave.Lightning;
+				pvp.setCombatCoolDown(20);
 			}
 			else if(event.getCause().equals(DamageCause.SUFFOCATION))
 			{
 				damage = Damage.LoadSave.Drowning;
+				pvp.setCombatCoolDown(20);
 			}
 			//THIS MUST BE LAST ==================================================================================
 			else if(!(event.getCause().equals(DamageCause.PROJECTILE)) && !(event.getCause().equals(DamageCause.ENTITY_ATTACK)))
 			{
 				damage = (int)event.getDamage();
+				pvp.setCombatCoolDown(20);
 			}
 			//THIS MUST BE LAST ================================================================================
 			PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());

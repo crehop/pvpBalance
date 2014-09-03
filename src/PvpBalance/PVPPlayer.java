@@ -576,7 +576,7 @@ public class PVPPlayer
 		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
 			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
 		}
-		if(check == Material.GLASS){
+		if(check == Material.GLASS && player.getWorld().getName().equals("world")){
 			if(this.isNewbZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
 				this.setIsNewbZone(true);
@@ -589,10 +589,10 @@ public class PVPPlayer
 			}
 			
 		}
-		if(check == Material.NETHER_BRICK){
+		if(check == Material.NETHER_BRICK && player.getWorld().getName().equals("world")){
 			Duel.addContestant(player);
 		}
-		if(check == Material.GLOWSTONE){
+		if(check == Material.GLOWSTONE && player.getWorld().getName().equals("world")){
 			if(this.isDuelZone() == false){
 				player.sendMessage(ChatColor.RED + "YOU HAVE ENTERED A DUEL ZONE, IF YOU LEAVE WHILE IN A DUEL YOU WILL DIE AND LOSE!");
 				this.setDuelZone(true);
@@ -612,7 +612,7 @@ public class PVPPlayer
 			}
 			
 		}
-		if(check == Material.ENDER_STONE){
+		if(check == Material.ENDER_STONE && player.getWorld().getName().equals("world")){
 			if(this.flyZone == false){
 				this.flyZone = true;
 				player.sendMessage(ChatColor.RED + "YOU FEEL WEIGHTLESS!");

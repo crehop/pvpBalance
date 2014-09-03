@@ -764,7 +764,6 @@ public class PvpBalance extends JavaPlugin
 		{
 			economy = (Economy)economyProvider.getProvider();
 		}
-
 		return economy != null;
 	}
 	public static Plugin getPlugin(){
