@@ -85,7 +85,9 @@ public class Utils
         return target;
     }
 	public static void teleportToSpawn(Player player) {
-		Location spawn = new Location(player.getWorld(), -730.50, 105, 319.50);
-		player.teleport(spawn);
+		if(player.getWorld().getName().equals("world")){
+			Location spawn = new Location(player.getWorld(), -730.50, 105, 319.50);
+			player.teleport(spawn);
+		}
 	}
 }

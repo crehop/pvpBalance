@@ -555,6 +555,7 @@ public class DBZListener implements Listener
 		PVPPlayer PVPPlayer = PvpHandler.getPvpPlayer(player);
 		PVPPlayer.setIsDead(false);
 		PVPPlayer.sethealth(PVPPlayer.getMaxHealth());
+		Utils.teleportToSpawn(player);
 	}
 	@EventHandler
 	public void projectileHitEvent(ProjectileHitEvent event)
