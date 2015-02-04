@@ -594,12 +594,6 @@ public class DBZListener implements Listener
 			event.getPlayer().getInventory().getHelmet().setType(Material.AIR);
 			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
 		}
-		if(event.getNewGameMode() == GameMode.CREATIVE && event.getPlayer().getGameMode() == GameMode.SURVIVAL){
-			if(Damage.calcArmor(event.getPlayer()) > 550){
-				event.setCancelled(true);
-				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DUE TO GLITCHS WITH ARMOR PLEASE TAKE OFF ALL ARMOR BEFORE CHANGING GAMEMODES!");
-			}
-		}
 	}
 	@EventHandler
 	public void blockfromto(BlockFromToEvent event)
