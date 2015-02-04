@@ -1,35 +1,33 @@
-/*    */ package Skills;
-/*    */ 
-/*    */ import PvpBalance.Damage;
-/*    */ import PvpBalance.PVPPlayer;
-/*    */ import PvpBalance.PvpBalance;
-/*    */ import PvpBalance.PvpHandler;
-/*    */ import com.palmergames.bukkit.towny.utils.CombatUtil;
-/*    */ import org.bukkit.ChatColor;
-/*    */ import org.bukkit.entity.Entity;
-/*    */ import org.bukkit.entity.Player;
-/*    */ 
-/*    */ public class Tackle
-/*    */ {
-/*    */   public static void tackle(Player player)
-/*    */   {
-/* 17 */     for (Entity near : player.getNearbyEntities(2.0D, 2.0D, 2.0D))
-/* 18 */       if ((near instanceof Player))
-/*    */       {
-/* 20 */         if ((Damage.partyCanHit(near, player)) && (!CombatUtil.preventDamageCall(PvpBalance.getTowny(), near, player)))
-/* 21 */           near.setPassenger(player);
-/* 22 */         PVPPlayer pvpDamagee = PvpHandler.getPvpPlayer((Player)near);
-/* 23 */         Player tackled = (Player)near;
-/* 24 */         pvpDamagee.setTackleTimer(10);
-/* 25 */         pvpDamagee.damage(Damage.calcDamage(player) * 2);
-/* 26 */         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD + "YOU TACKLE " + tackled.getDisplayName() + " CROUCH TO EXIT");
-/* 27 */         ((Player)near).sendMessage(ChatColor.RED + ChatColor.BOLD + player.getDisplayName() + " HAS TACKLED YOU!");
-/* 28 */         break;
-/*    */       }
-/*    */   }
-/*    */ }
+package Skills;
 
-/* Location:           G:\MCMYADMIN2\Minecraft\decompiler\PVPBalance.jar
- * Qualified Name:     Skills.Tackle
- * JD-Core Version:    0.6.2
- */
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import com.palmergames.bukkit.towny.utils.CombatUtil;
+
+import PvpBalance.Damage;
+import PvpBalance.PVPPlayer;
+import PvpBalance.PvpBalance;
+import PvpBalance.PvpHandler;
+
+public class Tackle {
+	public static void tackle(Player player)
+	{
+		for(Entity near:player.getNearbyEntities(2, 2, 2)){
+			if(near instanceof Player)
+			{
+				if(Damage.partyCanHit(near, player) == true && CombatUtil.preventDamageCall(PvpBalance.getTowny(), near,player) == false)
+				near.setPassenger(player);
+				PVPPlayer pvpDamagee = PvpHandler.getPvpPlayer((Player)near);
+				Player tackled = (Player)near;
+				pvpDamagee.setTackleTimer(10);
+				pvpDamagee.damage(Damage.calcDamage(player) * 2);
+				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "" + "YOU TACKLE " + tackled.getDisplayName() + " CROUCH TO EXIT");
+				((Player) near).sendMessage(ChatColor.RED  + "" + ChatColor.BOLD + "" + player.getDisplayName()+ " HAS TACKLED YOU!");
+				break;
+			}
+		}
+	}
+}
+
