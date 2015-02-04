@@ -3,13 +3,13 @@
 /*    */ import java.sql.Connection;
 /*    */ import org.bukkit.plugin.Plugin;
 /*    */ 
-/*    */ public abstract class Database2
+/*    */ public abstract class Database
 /*    */ {
 /*    */   protected Plugin plugin;
 /*    */ 
-/*    */   protected void Database2(Plugin plugin)
+/*    */   protected Database(Plugin plugin)
 /*    */   {
-/* 28 */     this.plugin = plugin;
+/* 27 */     this.plugin = plugin;
 /*    */   }
 /*    */ 
 /*    */   public abstract Connection openConnection();
@@ -22,6 +22,6 @@
 /*    */ }
 
 /* Location:           G:\MCMYADMIN2\Minecraft\decompiler\PVPBalance.jar
- * Qualified Name:     code.husky.Database2
+ * Qualified Name:     code.husky.Database
  * JD-Core Version:    0.6.2
  */
