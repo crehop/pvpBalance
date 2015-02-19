@@ -835,6 +835,17 @@ public class DBZListener implements Listener
 				for(ItemStack item:pvp.getPlayer().getInventory().getArmorContents())
 				{
 					theDamage = theDamage - item.getEnchantmentLevel(Enchantment.PROTECTION_FIRE)/2;
+					//TODO KNOCKBACK FIX
+					if(item.getEnchantmentLevel(Enchantment.KNOCKBACK)>2){
+						item.removeEnchantment(Enchantment.KNOCKBACK);
+						item.addEnchantment(Enchantment.KNOCKBACK, 2);
+						pvp.getPlayer().sendMessage(ChatColor.RED + "The knockback on this weapon is too high!, reduced to 2");
+						for(Player player1:Bukkit.getOnlinePlayers()){
+							if(player1.hasPermission("essentials.kick")){
+								player1.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Notice:" + pvp.getPlayer().getDisplayName() + " had a weapon with a higher then 2 knockback, it has been corrected!");
+							}
+						}
+					}
 				}
 				if(theDamage < 0)
 				{
