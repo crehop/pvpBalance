@@ -54,63 +54,65 @@ import org.bukkit.entity.Player;
             }
          
             public static void sendToPlayer(ParticleEffect effect, Player player, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) throws Exception {
-                Object packet = createPacket(effect, location, offsetX, offsetY, offsetZ, speed, count);
-                sendPacket(player, packet);
+                //Object packet = createPacket(effect, location, offsetX, offsetY, offsetZ, speed, count);
+                //sendPacket(player, packet);
             }
          
             public static void sendToLocation(ParticleEffect effect, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) throws Exception {
-                Object packet = createPacket(effect, location, offsetX, offsetY, offsetZ, speed, count);
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    sendPacket(player, packet);
-                }
+                //Object packet = createPacket(effect, location, offsetX, offsetY, offsetZ, speed, count);
+                //for (Player player : Bukkit.getOnlinePlayers()) {
+                //    sendPacket(player, packet);
+               // }
             }
          
             public static void sendCrackToPlayer(boolean icon, int id, byte data, Player player, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
-                Object packet = createCrackPacket(icon, id, data, location, offsetX, offsetY, offsetZ, count);
-                sendPacket(player, packet);
+                //Object packet = createCrackPacket(icon, id, data, location, offsetX, offsetY, offsetZ, count);
+               // sendPacket(player, packet);
             }
          
             public static void sendCrackToLocation(boolean icon, int id, byte data, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
-                Object packet = createCrackPacket(icon, id, data, location, offsetX, offsetY, offsetZ, count);
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    sendPacket(player, packet);
-                }
+               // Object packet = createCrackPacket(icon, id, data, location, offsetX, offsetY, offsetZ, count);
+               // for (Player player : Bukkit.getOnlinePlayers()) {
+                //    sendPacket(player, packet);
+               // }
             }
          
             public static Object createPacket(ParticleEffect effect, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) throws Exception {
-                if (count <= 0)
-                    count = 1;
-                Object packet = getPacket63WorldParticles();
-                setValue(packet, "a", effect.name);
-                setValue(packet, "b", (float) location.getX());
-                setValue(packet, "c", (float) location.getY());
-                setValue(packet, "d", (float) location.getZ());
-                setValue(packet, "e", offsetX);
-                setValue(packet, "f", offsetY);
-                setValue(packet, "g", offsetZ);
-                setValue(packet, "h", speed);
-                setValue(packet, "i", count);
-                return packet;
+               // if (count <= 0)
+              //      count = 1; 
+            	Object packet = getPacket63WorldParticles();
+              //  setValue(packet, "a", ID_MAP.get(effect.name));
+             //   setValue(packet, "b", (float) location.getX());
+             //   setValue(packet, "c", (float) location.getY());
+            //    setValue(packet, "d", (float) location.getZ());
+             //   setValue(packet, "e", offsetX);
+            //    setValue(packet, "f", offsetY);
+             //   setValue(packet, "g", offsetZ);
+            //    setValue(packet, "h", speed);
+            //    setValue(packet, "i", count);
+            	return packet;
             }
          
             public static Object createCrackPacket(boolean icon, int id, byte data, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
-                if (count <= 0)
-                    count = 1;
-                Object packet = getPacket63WorldParticles();
-                String modifier = "iconcrack_" + id;
-                if (!icon) {
-                    modifier = "tilecrack_" + id + "_" + data;
-                }
-                setValue(packet, "a", modifier);
-                setValue(packet, "b", (float) location.getX());
-                setValue(packet, "c", (float) location.getY());
-                setValue(packet, "d", (float) location.getZ());
-                setValue(packet, "e", offsetX);
-                setValue(packet, "f", offsetY);
-                setValue(packet, "g", offsetZ);
-                setValue(packet, "h", 0.1F);
-                setValue(packet, "i", count);
-                return packet;
+              //  if (count <= 0)
+              //      count = 1;
+              //  
+            	Object packet = getPacket63WorldParticles();
+              //  String modifier = "iconcrack_" + id;
+              //  if (!icon) {
+              //      modifier = "tilecrack_" + id + "_" + data;
+              //  }
+             //   setValue(packet, "a", modifier);
+            //    setValue(packet, "b", (float) location.getX());
+             //   setValue(packet, "c", (float) location.getY());
+             //   setValue(packet, "d", (float) location.getZ());
+             //   setValue(packet, "e", offsetX);
+             //   setValue(packet, "f", offsetY);
+             //   setValue(packet, "g", offsetZ);
+            //    setValue(packet, "h", 0.1F);
+            //    setValue(packet, "i", count);
+            //    
+            	return packet;
             }
          
             private static void setValue(Object instance, String fieldName, Object value) throws Exception {
@@ -134,16 +136,16 @@ import org.bukkit.entity.Player;
             }
          
             private static void sendPacket(Player p, Object packet) throws Exception {
-                Object eplayer = getEntityPlayer(p);
-                Field playerConnectionField = eplayer.getClass().getField("playerConnection");
-                Object playerConnection = playerConnectionField.get(eplayer);
-                for (Method m : playerConnection.getClass().getMethods()) {
-                    if (m.getName().equalsIgnoreCase("sendPacket")) {
-                    	m.setAccessible(true);
-                        m.invoke(playerConnection, packet);
-                        return;
-                    }
-                }
+               // Object eplayer = getEntityPlayer(p);
+               // Field playerConnectionField = eplayer.getClass().getField("playerConnection");
+               // Object playerConnection = playerConnectionField.get(eplayer);
+               // for (Method m : playerConnection.getClass().getMethods()) {
+               //     if (m.getName().equalsIgnoreCase("sendPacket")) {
+              //      	m.setAccessible(true);
+               //         m.invoke(playerConnection, packet);
+               //         return;
+               //     }
+             //   }
             }
         }
 

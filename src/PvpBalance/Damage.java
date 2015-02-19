@@ -22,6 +22,8 @@ public class Damage
 {
 
 	public static SaveLoad.LoadSave LoadSave;
+	public static String OLD_KEY = "A06540";
+	public static String KEY = "A065400";
 
 	//ADDED++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public static int calcDamage(Player player){
@@ -252,7 +254,7 @@ public class Damage
 					{
 						ItemMeta metah = helmet.getItemMeta();
 						LeatherArmorMeta meta = (LeatherArmorMeta) metah;
-						if(meta.getColor().toString().contains("A06540"))
+						if(meta.getColor().toString().contains(KEY))
 						{
 							armor += SaveLoad.LoadSave.Lhelmet;
 						}
@@ -280,7 +282,7 @@ public class Damage
 					{
 						ItemMeta metah2 = chestplate.getItemMeta();
 						LeatherArmorMeta meta2 = (LeatherArmorMeta) metah2;
-						if(meta2.getColor().toString().contains("A06540"))
+						if(meta2.getColor().toString().contains(KEY))
 						{
 							armor += SaveLoad.LoadSave.Lchest;
 						}
@@ -307,7 +309,7 @@ public class Damage
 					{
 						ItemMeta metah3 = leggings.getItemMeta();
 						LeatherArmorMeta meta3 = (LeatherArmorMeta) metah3;
-						if(meta3.getColor().toString().contains("A06540"))
+						if(meta3.getColor().toString().contains(KEY))
 						{
 							armor += SaveLoad.LoadSave.Lleggings;
 						}
@@ -334,7 +336,7 @@ public class Damage
 					{
 						ItemMeta metah4 = boots.getItemMeta();
 						LeatherArmorMeta meta4 = (LeatherArmorMeta) metah4;
-						if(meta4.getColor().toString().contains("A06540"))
+						if(meta4.getColor().toString().contains(KEY))
 						{
 							armor += SaveLoad.LoadSave.Lboots;
 						}

@@ -18,6 +18,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Result;
@@ -49,6 +50,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -95,12 +97,18 @@ public class DBZListener implements Listener
 	static int tick = 0;
 	public static PvpBalance plugin;
 	public LoadSave LoadSave;
+	static String check = "0";
+	static Player player;
+	static boolean tell = false;
+	static List<String> lore = new ArrayList<String>();
+	static ItemMeta meta = null;
 
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
 	{
 		this.LoadSave = LoadSave;
 		plugin = instance;
+		lore.add("");
 	}
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void antiDestruction(BlockBreakEvent event){
@@ -111,6 +119,19 @@ public class DBZListener implements Listener
 			if(Util.WildernessProtection.checkForProtectedBlock(event.getBlock()) == true){
 				event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "SURFACE PROTECTION please find stone or a cave to start mining! if you need tools say /ekit mining!");
 				event.setCancelled(true);
+			}
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void stopArmorStandDupe(PlayerInteractAtEntityEvent event){
+		check = "" + event.getRightClicked();
+		if(check.equalsIgnoreCase("CraftArmorStand") && event.getPlayer().getGameMode() == GameMode.CREATIVE){
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "Dont attempt to dupe, you will be banned!" + ChatColor.BOLD + "" + ChatColor.DARK_RED + " (STAFF NOTIFIED)");
+			for(Player player:Bukkit.getOnlinePlayers()){
+				if(player.hasPermission("essentials.kick")){
+					player.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE +  "DUPE ALERT: " + event.getPlayer().getName() + " is atempting to use the armor/stand dupe glitch");
+				}
 			}
 		}
 	}
@@ -239,8 +260,8 @@ public class DBZListener implements Listener
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void arrowHit(BlockPlaceEvent event){
 		if(event.getBlock().getType() == Material.SKULL_ITEM || event.getBlock().getType() == Material.SKULL || event.getBlock().getType() == Material.SKULL_ITEM){
-			event.setCancelled(true);
-			event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "BLOCKED UNTIL CHEST GLITCH FIXED PLEASE STORE THIS ITEM!");
+			//event.setCancelled(true);
+			//event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "BLOCKED UNTIL CHEST GLITCH FIXED PLEASE STORE THIS ITEM!");
 		}
 	}
 	@EventHandler
@@ -712,8 +733,17 @@ public class DBZListener implements Listener
 	public void playerinteract(PlayerInteractEvent event)
 	{
 		//TODO Remove with other code for chestr head glitch
-		if(event.getPlayer().getItemInHand().getType() == Material.SKULL_ITEM || event.getPlayer().getItemInHand().getType() == Material.SKULL){
+		check = ""+event.getClickedBlock();
+		if(event.getMaterial() == Material.HOPPER_MINECART){
 			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "Blocked to prevent griefing!");
+		}
+		//STOPS ARMOR STAND INTERACTIONS!
+		if(event.getPlayer().getGameMode() != GameMode.SURVIVAL && check.equalsIgnoreCase("null")){
+			event.setCancelled(true);
+		}
+		if(event.getPlayer().getItemInHand().getType() == Material.SKULL_ITEM || event.getPlayer().getItemInHand().getType() == Material.SKULL){
+			//event.setCancelled(true);
 		}
 		Player player = event.getPlayer();
 		if((event.useItemInHand() == Result.DEFAULT && !event.isBlockInHand()) && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
@@ -990,6 +1020,10 @@ public class DBZListener implements Listener
 			}
 		},1L);
 	}
+	@EventHandler
+	public void onInventoryOpenEvent(InventoryOpenEvent event){
+		return;
+	}
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event)
@@ -1014,6 +1048,14 @@ public class DBZListener implements Listener
 				PvpBalance.createNewPvPPlayer(player);
 			}
 	        PvpHandler.getPvpPlayer(player).setArmorEventLastTick(1);
+	    }
+	    if(event.getSlotType() == SlotType.RESULT){
+	    	Player player = (Player) event.getWhoClicked();
+	    	if(event.getCurrentItem().getType() == Material.LEATHER_HELMET || event.getCurrentItem().getType() == Material.LEATHER_CHESTPLATE || event.getCurrentItem().getType() == Material.LEATHER_LEGGINGS || event.getCurrentItem().getType() == Material.LEATHER_BOOTS  ){
+	    		event.setCancelled(true);
+	    		player.sendMessage(ChatColor.BOLD + "" +  ChatColor.GREEN + "[EPIC ARMOR]" + ChatColor.RED + ":YOUR ATTEMPT TO ENCHANT EPIC ARMOR HAS DESTROYED ITS MAGIC!!!");
+	    		event.getCurrentItem().setType(Material.COAL);
+	    	}
 	    }
 	}
 	@EventHandler
