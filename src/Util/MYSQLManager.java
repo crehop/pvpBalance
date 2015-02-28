@@ -20,11 +20,11 @@ public class MYSQLManager {
 	}
 	
 	public void setupDb() throws SQLException{
-		this.db = new MySQL(PvpBalance.getPlugin(), "localhost", "3306", "pvpstats", "root", "root");
-		this.db.openConnection();
-		Statement statement = this.db.getConnection().createStatement();
-		statement.executeUpdate("CREATE TABLE IF NOT EXISTS `pvpstats` (`Name` varchar(32), `Kills` int, `Deaths` int, `EpicKills` int,`EpicDeaths` int, `DuelsWon` int,`DuelsLost` int, `MinutesPlayed` int)");
-		statement.close();
+		//this.db = new MySQL(PvpBalance.getPlugin(), "localhost", "3306", "pvpstats", "root", "root");
+		//this.db.openConnection();
+		//Statement statement = this.db.getConnection().createStatement();
+		//statement.executeUpdate("CREATE TABLE IF NOT EXISTS `pvpstats` (`Name` varchar(32), `Kills` int, `Deaths` int, `EpicKills` int,`EpicDeaths` int, `DuelsWon` int,`DuelsLost` int, `MinutesPlayed` int)");
+		//statement.close();
 	}
 	
 	public void closeDB(){

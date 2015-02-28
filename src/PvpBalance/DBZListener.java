@@ -42,6 +42,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -257,6 +258,16 @@ public class DBZListener implements Listener
 			}
 		}
 	}
+	@EventHandler(priority = EventPriority.LOW)
+    public void onMiddleClick(InventoryClickEvent event){
+	        if(event.getEventName().equalsIgnoreCase("InventoryCreativeEvent")){
+        		player = (Player)event.getWhoClicked();
+	        	if(event.getCursor().getType().toString().equalsIgnoreCase("CHEST") || event.getCursor().getType().toString().equalsIgnoreCase("TRAPPED_CHEST") && player.isOp() == false){
+	        		event.setCancelled(true);
+	        		player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CHESTS BLOCKED TO PREVENT DUPING");
+	        	}
+	        }
+	    }
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void arrowHit(BlockPlaceEvent event){
 		if(event.getBlock().getType() == Material.SKULL_ITEM || event.getBlock().getType() == Material.SKULL || event.getBlock().getType() == Material.SKULL_ITEM){
