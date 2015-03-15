@@ -93,11 +93,11 @@ import org.bukkit.entity.Player;
             	return packet;
             }
          
-            public static Object createCrackPacket(boolean icon, int id, byte data, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
+            //public static Object createCrackPacket(boolean icon, int id, byte data, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
               //  if (count <= 0)
               //      count = 1;
               //  
-            	Object packet = getPacket63WorldParticles();
+            //	Object packet = getPacket63WorldParticles();
               //  String modifier = "iconcrack_" + id;
               //  if (!icon) {
               //      modifier = "tilecrack_" + id + "_" + data;
@@ -112,8 +112,8 @@ import org.bukkit.entity.Player;
             //    setValue(packet, "h", 0.1F);
             //    setValue(packet, "i", count);
             //    
-            	return packet;
-            }
+            //	return packet;
+            //}
          
             private static void setValue(Object instance, String fieldName, Object value) throws Exception {
                 Field field = instance.getClass().getDeclaredField(fieldName);

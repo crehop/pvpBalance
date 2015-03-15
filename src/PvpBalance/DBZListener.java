@@ -262,9 +262,14 @@ public class DBZListener implements Listener
     public void onMiddleClick(InventoryClickEvent event){
 	        if(event.getEventName().equalsIgnoreCase("InventoryCreativeEvent")){
         		player = (Player)event.getWhoClicked();
-	        	if(event.getCursor().getType().toString().equalsIgnoreCase("CHEST") || event.getCursor().getType().toString().equalsIgnoreCase("TRAPPED_CHEST") && player.isOp() == false){
+	        	if(event.getCursor().getType().toString().contains("CHEST") ||
+	        			event.getCursor().getType().toString().contains("FURNACE") ||
+	        			event.getCursor().getType().toString().contains("DISPENSER") ||
+	        			event.getCursor().getType().toString().contains("OPPER")||
+	        			event.getCursor().getType().toString().contains("MINECART")||
+	        			event.getCursor().getType().toString().contains("STAND")){
 	        		event.setCancelled(true);
-	        		player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CHESTS BLOCKED TO PREVENT DUPING");
+	        		player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "BLOCKED TO PREVENT DUPING");
 	        	}
 	        }
 	    }
