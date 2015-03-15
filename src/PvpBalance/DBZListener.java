@@ -932,28 +932,28 @@ public class DBZListener implements Listener
 			else if(event.getCause().equals(DamageCause.ENTITY_EXPLOSION))
 			{
 				damage = Damage.LoadSave.Explosion_Mob;
-				pvp.setCombatCoolDown(20);
+				pvp.setCombatCoolDown(5);
 			}
 			else if(event.getCause().equals(DamageCause.BLOCK_EXPLOSION))
 			{
 				damage = Damage.LoadSave.Explosion;
-				pvp.setCombatCoolDown(20);
+				pvp.setCombatCoolDown(5);
 			}
 			else if(event.getCause().equals(DamageCause.LIGHTNING))
 			{
 				damage = Damage.LoadSave.Lightning;
-				pvp.setCombatCoolDown(20);
+				pvp.setCombatCoolDown(5);
 			}
 			else if(event.getCause().equals(DamageCause.SUFFOCATION))
 			{
 				damage = Damage.LoadSave.Drowning;
-				pvp.setCombatCoolDown(20);
+				pvp.setCombatCoolDown(5);
 			}
 			//THIS MUST BE LAST ==================================================================================
 			else if(!(event.getCause().equals(DamageCause.PROJECTILE)) && !(event.getCause().equals(DamageCause.ENTITY_ATTACK)))
 			{
 				damage = (int)event.getDamage();
-				pvp.setCombatCoolDown(20);
+				pvp.setCombatCoolDown(5);
 			}
 			//THIS MUST BE LAST ================================================================================
 			PBEntityDamageEvent pbdEvent = new PBEntityDamageEvent(player, damage, event.getCause());
@@ -964,9 +964,9 @@ public class DBZListener implements Listener
 				return;
 			}
 			pvp.uncheckedDamage(damage);
-			if(pvp.getCombatCooldown() < 10)
+			if(pvp.getCombatCooldown() < 3)
 			{
-				pvp.setCombatCooldown(pvp.getCombatCooldown() + 5);
+				pvp.setCombatCooldown(pvp.getCombatCooldown() + 3);
 			}
 			event.setCancelled(true);
 			player.damage(0D);
