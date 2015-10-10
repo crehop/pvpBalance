@@ -70,12 +70,12 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
-import AdditionalEnchants.EnchantManagment;
 import DuelZone.Duel;
 import Event.CrazyRace;
 import Event.EventRunner;
@@ -156,11 +156,19 @@ public class DBZListener implements Listener
 				event.setCancelled(true);
 				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT OPEN ENDERCHEST IN COMBAT!");
 			}
+			if(event.getPlayer().getItemInHand().getType() == Material.ENDER_PEARL){
+				event.setCancelled(true);
+				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
+			}
 		}
 	}
 	@EventHandler
 	public void vehicleDismountEvent(PlayerTeleportEvent event)
 	{
+		if(event.getPlayer().getItemInHand().getType() == Material.ENDER_PEARL){
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
+		}
 		Material check = event.getPlayer().getEyeLocation().subtract(0,1,0).getBlock().getType();
 		if(check == Material.FENCE || check == Material.IRON_FENCE || check == Material.NETHER_FENCE){
 			event.setCancelled(true);
@@ -248,13 +256,13 @@ public class DBZListener implements Listener
 			{
 				Player damager = (Player)event.getDamager();
 				ItemStack weapon = damager.getItemInHand();
-				if(EnchantManagment.enchantmentType(weapon) == 1){
-					event.setDamage(0.1337);
-					event.setCancelled(true);
-					if(EnchantManagment.executeEnchant(damager, damagee, weapon)== true){
-						PVPPlayer PVPdamagee = PvpHandler.getPvpPlayer(damagee);
-					}
-				}
+				//if(EnchantManagment.enchantmentType(weapon) == 1){
+				//	event.setDamage(0.1337);
+				//	event.setCancelled(true);
+				//	if(EnchantManagment.executeEnchant(damager, damagee, weapon)== true){
+				//		PVPPlayer PVPdamagee = PvpHandler.getPvpPlayer(damagee);
+				//	}
+				//}
 			}
 		}
 	}
@@ -330,95 +338,101 @@ public class DBZListener implements Listener
 			}
 			if(event.getDamager() instanceof Arrow)
 			{
-				Arrow arrow = (Arrow)event.getDamager();
-				Entity damager = arrow.getShooter();
-				if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() <= 0)
-				{
-					event.setCancelled(true);
-					return;
-				}
-				else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Arrow)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
-				{
-					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
-				}
-				if(damager instanceof Player && event.getEntity() instanceof Player)
-				{
-					PVPPlayer pvpDamager = PvpHandler.getPvpPlayer((Player)arrow.getShooter());
-					pvpDamagee.setLastHitBy(pvpDamager.getPlayer());
-					if(pvpDamager.isInEvent()){
-						if(pvpDamager.isEventGrace() == true){
+				ProjectileSource player = ((Projectile)event.getDamager()).getShooter();
+				if(player instanceof Player){
+					Player damager = (Player)player;
+					if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee) && pvpDamagee.getCombatCoolDown() <= 0)
+					{
+						event.setCancelled(true);
+						return;
+					}
+					else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee) && pvpDamagee.getCombatCoolDown() > 0)
+					{
+						pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
+					}
+					if(damager instanceof Player && event.getEntity() instanceof Player)
+					{
+						PVPPlayer pvpDamager = PvpHandler.getPvpPlayer(damager);
+						pvpDamagee.setLastHitBy(pvpDamager.getPlayer());
+						if(pvpDamager.isInEvent()){
+							if(pvpDamager.isEventGrace() == true){
+								event.setCancelled(true);
+								return;
+							}
+						}
+						if(pvpDamagee.isDuelContestant() == true && pvpDamager.isDuelContestant() == false){
 							event.setCancelled(true);
+							pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
+							pvpDamager.setCombatCooldown(10);
+							pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN A DUEL!");
 							return;
 						}
+						if(pvpDamagee.isInEvent() == true && pvpDamager.isInEvent() == false){
+							event.setCancelled(true);
+							pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
+							pvpDamager.setCombatCooldown(10);
+							pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN AN EVENT! SEVERE DAMAGE PENALTY!");
+							pvpDamager.sethealth(pvpDamager.gethealth() - pvpDamager.getMaxHealth()/3);
+							return;
+						}
+						if(pvpDamager.isUsingGrappleShot() == true)
+						{
+							pvpDamager.setGrapplePlayer(damagee);
+						}
+						dealtDamage = Damage.calcDamage((Player)damager);
+						pvpDamagee.damage((int)dealtDamage);
+						pvpDamager.setCombatCoolDown(20);
+						pvpDamagee.setCombatCoolDown(20);
 					}
-					if(pvpDamagee.isDuelContestant() == true && pvpDamager.isDuelContestant() == false){
-						event.setCancelled(true);
-						pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
-						pvpDamager.setCombatCooldown(10);
-						pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN A DUEL!");
-						return;
+					if(!(damager instanceof Player))
+					{	
+						dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
+						pvpDamagee.damage((int)dealtDamage);
+						pvpDamagee.setCombatCoolDown(20);
 					}
-					if(pvpDamagee.isInEvent() == true && pvpDamager.isInEvent() == false){
-						event.setCancelled(true);
-						pvpDamager.sethealth(pvpDamager.gethealth() - 1000);
-						pvpDamager.setCombatCooldown(10);
-						pvpDamager.getPlayer().sendMessage(ChatColor.RED + "DONT TRY TO DAMAGE SOMONE IN AN EVENT! SEVERE DAMAGE PENALTY!");
-						pvpDamager.sethealth(pvpDamager.gethealth() - pvpDamager.getMaxHealth()/3);
-						return;
-					}
-					if(pvpDamager.isUsingGrappleShot() == true)
-					{
-						pvpDamager.setGrapplePlayer(damagee);
-					}
-					dealtDamage = Damage.calcDamage((Player)damager);
-					pvpDamagee.damage((int)dealtDamage);
-					pvpDamager.setCombatCoolDown(20);
 					pvpDamagee.setCombatCoolDown(20);
 				}
-				if(!(damager instanceof Player))
-				{	
-					dealtDamage = event.getDamage() * SaveLoad.LoadSave.Multi;
-					pvpDamagee.damage((int)dealtDamage);
-					pvpDamagee.setCombatCoolDown(20);
-				}
-				pvpDamagee.setCombatCoolDown(20);
 			}
 			else if(event.getCause().equals(DamageCause.PROJECTILE))
 			{
-				if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Projectile)event.getDamager()).getShooter(), damagee)  && pvpDamagee.getCombatCoolDown() <= 0)
-				{
-					event.setCancelled(true);
-					return;
-				}
-				else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), ((Projectile)event.getDamager()).getShooter(), damagee) && pvpDamagee.getCombatCoolDown() > 0)
-				{
-					pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
-				}
-				else if((event.getDamager().getType() == EntityType.WITHER_SKULL))
-				{
-					event.setDamage(0f);
-					dealtDamage += 85;
-				}
-				else if((event.getDamager().getType() == EntityType.SMALL_FIREBALL))
-				{
-					dealtDamage += 65;
-				}
-				else if(event.getDamager().getType() == EntityType.FIREBALL)
-				{
-					dealtDamage += 175;
-				}
-				PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
-				Bukkit.getPluginManager().callEvent(pbdEvent);
-				if(pbdEvent.isCancelled())
-				{
-					event.setCancelled(true);
-					return;
-				}
-				dealtDamage = pbdEvent.getDamage();
-				if(!pvpDamagee.damage((int)dealtDamage))
-				{
-					event.setCancelled(true);
-					return;
+				ProjectileSource player2 = ((Projectile)event.getDamager()).getShooter();
+				if(player2 instanceof Player){
+						Player damager = (Player)player2;
+					if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee)  && pvpDamagee.getCombatCoolDown() <= 0)
+					{
+						event.setCancelled(true);
+						return;
+					}
+					else if(CombatUtil.preventDamageCall(PvpBalance.getTowny(), damager, damagee) && pvpDamagee.getCombatCoolDown() > 0)
+					{
+						pvpDamagee.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU CAN BE ATTACKED ANYWHERE DUE TO RECENT COMBAT!");
+					}
+					else if((event.getDamager().getType() == EntityType.WITHER_SKULL))
+					{
+						event.setDamage(0f);
+						dealtDamage += 85;
+					}
+					else if((event.getDamager().getType() == EntityType.SMALL_FIREBALL))
+					{
+						dealtDamage += 65;
+					}
+					else if(event.getDamager().getType() == EntityType.FIREBALL)
+					{
+						dealtDamage += 175;
+					}
+					PBEntityDamageEntityEvent pbdEvent = new PBEntityDamageEntityEvent(damagee, event.getDamager(), (int)dealtDamage, event.getCause());
+					Bukkit.getPluginManager().callEvent(pbdEvent);
+					if(pbdEvent.isCancelled())
+					{
+						event.setCancelled(true);
+						return;
+					}
+					dealtDamage = pbdEvent.getDamage();
+					if(!pvpDamagee.damage((int)dealtDamage))
+					{
+						event.setCancelled(true);
+						return;
+					}
 				}
 			}
 			else if(event.getDamager() instanceof Player)

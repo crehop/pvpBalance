@@ -1,4 +1,6 @@
 package PvpBalance;
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -8,7 +10,7 @@ import org.bukkit.entity.Player;
 //Will house effect methods
 public class Effects
 {
-	Player[] onlinePlayerList = Bukkit.getServer().getOnlinePlayers();
+	Collection<? extends Player> onlinePlayerList = Bukkit.getServer().getOnlinePlayers();
 	public static void healEffect(Player player)
 	{
 		try
