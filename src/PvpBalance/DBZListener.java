@@ -632,8 +632,9 @@ public class DBZListener implements Listener
 	}
 	//JUMP SKILL!
 	@EventHandler
-	public void stopGamemodeDupe(PlayerGameModeChangeEvent event){
+	public void stopGamemodeDupe(PlayerGameModeChangeEvent event) {
 		if(event.getNewGameMode() == GameMode.SURVIVAL && event.getPlayer().getGameMode() == GameMode.CREATIVE){
+			try {
 			event.getPlayer().getInventory().clear();
 			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
 			event.getPlayer().getInventory().clear();
@@ -644,6 +645,9 @@ public class DBZListener implements Listener
 			event.getPlayer().getInventory().getLeggings().setType(Material.AIR);
 			event.getPlayer().getInventory().getHelmet().setType(Material.AIR);
 			event.getPlayer().sendMessage(ChatColor.RED + "Creative Inventory cleared to stop duping");
+			} catch (Exception e) {
+				
+			}
 		}
 	}
 	@EventHandler
@@ -719,8 +723,8 @@ public class DBZListener implements Listener
 	    int every3 = 0;		
 	    Location loc = event.getLocation();
 		try {
-			ParticleEffect.sendToLocation(ParticleEffect.FLAME, loc,1.8f,1.0f,1.8f, (float)0.141, 2000);
-			ParticleEffect.sendToLocation(ParticleEffect.LAVA, loc,1.8f,0.8f,1.8f, (float)0.281, 200);
+			ParticleEffect.FLAME.display(1.8f, 1.0f, 1.8f, 0.141f, 10, loc, 2000);
+			ParticleEffect.LAVA.display(1.8f, 0.8f, 1.8f, 0.141f, 10, loc, 200);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

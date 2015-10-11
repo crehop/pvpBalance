@@ -765,7 +765,7 @@ public class PvpBalance extends JavaPlugin
 				if(pvp.getEffect() != null){
 					if(pvp.getParticleSpeed() != 0){
 						try {
-							ParticleEffect.sendToLocation(pvp.getEffect(), player.getLocation().add(0, pvp.getParticleHeight(), 0),0.2f,0.2f,0.2f, (float)pvp.getParticleSpeed(), pvp.getParticleCount());
+							pvp.getEffect().display(0.2f, 0.2f, 0.2f, 0.2f, (int)pvp.getParticleSpeed(), player.getLocation().add(0, pvp.getParticleHeight(), 0), pvp.getParticleCount());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

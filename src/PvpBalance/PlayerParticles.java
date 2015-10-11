@@ -69,15 +69,15 @@ public class PlayerParticles {
 		}
 		else if(currentParticleString == "CRIT"){
 			currentParticleString = "MAGIC_CRIT";
-			pvp.setEffect(ParticleEffect.MAGIC_CRIT);
+			pvp.setEffect(ParticleEffect.CRIT_MAGIC);
 		} 
 		else if(currentParticleString == "MAGIC_CRIT"){
 			currentParticleString = "MOB_SPELL";
-			pvp.setEffect(ParticleEffect.MOB_SPELL);
+			pvp.setEffect(ParticleEffect.SPELL_MOB);
 		} 
 		else if(currentParticleString == "MOB_SPELL"){
 			currentParticleString = "MOB_SPELL_AMBIENT";
-			pvp.setEffect(ParticleEffect.MOB_SPELL_AMBIENT);
+			pvp.setEffect(ParticleEffect.SPELL_MOB_AMBIENT);
 		} 
 		else if(currentParticleString == "MOB_SPELL_AMBIENT"){
 			currentParticleString = "SPELL";
@@ -85,11 +85,11 @@ public class PlayerParticles {
 		}
 		else if(currentParticleString == "SPELL"){
 			currentParticleString = "INSTANT_SPELL";
-			pvp.setEffect(ParticleEffect.INSTANT_SPELL);
+			pvp.setEffect(ParticleEffect.SPELL_INSTANT);
 		}
 		else if(currentParticleString == "INSTANT_SPELL"){
 			currentParticleString = "WITCH_MAGIC";
-			pvp.setEffect(ParticleEffect.WITCH_MAGIC);
+			pvp.setEffect(ParticleEffect.SPELL_WITCH);
 		}
 		else if(currentParticleString == "WITCH_MAGIC"){
 			currentParticleString = "NOTE";
@@ -113,11 +113,11 @@ public class PlayerParticles {
 		}
 		else if(currentParticleString == "LAVA"){
 			currentParticleString = "SPLASH";
-			pvp.setEffect(ParticleEffect.SPLASH);
+			pvp.setEffect(ParticleEffect.WATER_SPLASH);
 		}
 		else if(currentParticleString == "SPLASH"){
 			currentParticleString = "LARGE_SMOKE";
-			pvp.setEffect(ParticleEffect.LARGE_SMOKE);
+			pvp.setEffect(ParticleEffect.SMOKE_LARGE);
 		}
 		else if(currentParticleString == "LARGE_SMOKE"){
 			currentParticleString = "CLOUD";
@@ -125,7 +125,7 @@ public class PlayerParticles {
 		}
 		else if(currentParticleString == "CLOUD"){
 			currentParticleString = "RED_DUST";
-			pvp.setEffect(ParticleEffect.RED_DUST);
+			pvp.setEffect(ParticleEffect.REDSTONE);
 		}
 		else if(currentParticleString == "RED_DUST"){
 			currentParticleString = "DRIP_WATER";
@@ -141,11 +141,11 @@ public class PlayerParticles {
 		}
 		else if(currentParticleString == "HEART"){
 			currentParticleString = "ANGRY_VILLAGER";
-			pvp.setEffect(ParticleEffect.ANGRY_VILLAGER);
+			pvp.setEffect(ParticleEffect.VILLAGER_ANGRY);
 		}
 		else if(currentParticleString == "ANGRY_VILLAGER"){
 			currentParticleString = "HAPPY_VILLAGER";
-			pvp.setEffect(ParticleEffect.HAPPY_VILLAGER);
+			pvp.setEffect(ParticleEffect.VILLAGER_HAPPY);
 		}
 		else if(currentParticleString == "HAPPY_VILLAGER"){
 			currentParticleString = "";

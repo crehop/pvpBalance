@@ -15,7 +15,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.HEART , player.getLocation().add(0, 1, 0),0.3f,0.62f,0.3f, (float)0.65, 150);
+			ParticleEffect.HEART.display(0.3f, 0.62f, 0.3f, 0.65f, 10, player.getLocation().add(0, 1, 0), 150);
 		}
 		catch (Exception e)
 		{
@@ -28,7 +28,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER , player.getLocation().add(0, 1, 0),0.3f,0.62f,0.3f, (float)0.65, 150);
+			ParticleEffect.VILLAGER_HAPPY.display(0.3f, 0.62f, 0.3f, 0.65f, 10, player.getLocation().add(0, 1, 0), 150);
 		}
 		catch (Exception e)
 		{
@@ -41,7 +41,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.SPELL , player.getLocation(),0.2f,0.2f,0.2f, (float)0.02, 160);
+			ParticleEffect.SPELL.display(0.2f, 0.2f, 0.2f, 0.02f, 10, player.getLocation(), 160);
 		}
 		catch (Exception e)
 		{
@@ -55,7 +55,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.FLAME, player.getLocation().add(0, 1, 0),0.2f,0.2f,0.2f, (float)0.02, 60);
+			ParticleEffect.FLAME.display(0.2f, 0.2f, 0.2f, 0.02f, 10, player.getLocation().add(0, 1, 0), 60);
 		}
 		catch (Exception e)
 		{
@@ -68,7 +68,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.FLAME, object.getLocation(),0.1f,0.1f,0.1f, (float)0.04, 160);
+			ParticleEffect.FLAME.display(0.1f, 0.1f, 0.1f, 0.04f, 10, object.getLocation().add(0.1f, 0.1f, 0.1f), 160);
 		}
 		catch (Exception e)
 		{
@@ -81,7 +81,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.EXPLODE, player.getLocation().add(0, 1, 0),0.2f,0.2f,0.2f, (float)0.02, 13);
+			ParticleEffect.FLAME.display(0.1f, 0.1f, 0.1f, 0.04f, 10, player.getLocation().add(0.1f, 0.1f, 0.1f), 160);
 		}
 		catch (Exception e)
 		{
@@ -94,7 +94,7 @@ public class Effects
 	{	
 		try
 		{
-			ParticleEffect.sendCrackToLocation(true, 295, (byte) 0, player.getLocation().add(0, 1.3, 0), 0.2f, 0.2f, 0.2f, 100);
+			ParticleEffect.SPELL_WITCH.display(0.2f, 0.2f, 0.2f, 0.2f, 10, player.getLocation().add(0.1f, 0.1f, 0.1f), 100);
 		}
 		catch (Exception e)
 		{
@@ -107,7 +107,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.TOWN_AURA, player.getLocation().add(0, 2, 0),0.1f,0.1f,0.1f, (float)0.01, 100);
+			ParticleEffect.TOWN_AURA.display(0.1f, 0.1f, 0.1f, 0.01f, 10, player.getLocation().add(0, 2f, 0f), 100);
 		}
 		catch (Exception e)
 		{
@@ -121,7 +121,7 @@ public class Effects
 		try
 		{
 			//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
-			ParticleEffect.sendToLocation(ParticleEffect.CLOUD, player.getLocation().subtract(0, 0.1, 0) ,0.2f,-0.2f,0.2f, (float)0.0001, 100);
+			ParticleEffect.CLOUD.display(0.2f, -0.2f, 0.2f, 0.0001f, 10, player.getLocation().subtract(0, 0.1, 0), 100);
 		}
 		catch (Exception e)
 		{
@@ -134,7 +134,7 @@ public class Effects
 		try
 		{
 			//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
-			ParticleEffect.sendToLocation(ParticleEffect.CLOUD, player.getLocation().subtract(0, 0.1, 0) ,0.4f,-0.4f,0.4f, (float)0.004, 100);
+			ParticleEffect.CLOUD.display(0.4f, -0.4f, 0.4f, 0.004f, 10, player.getLocation().subtract(0, 0.1, 0), 100);
 		}
 		catch (Exception e)
 		{
@@ -146,7 +146,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.TOWN_AURA, player.getLocation().add(0, 1, 0),0.2f,0.5f,0.2f, (float)0.02, 200);
+			ParticleEffect.TOWN_AURA.display(0.2f, 0.5f, 0.2f, 0.02f, 10, player.getLocation().add(0, 1, 0), 200);
 		}
 		catch (Exception e)
 		{
@@ -167,7 +167,7 @@ public class Effects
 		float amount = enchantsO;
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.PORTAL, player.getLocation().add(0, 0.2, 0),0.2f,0.2f,0.2f, (float)0.15f, (int)amount*5);
+			ParticleEffect.PORTAL.display(0.2f, 0.2f, 0.2f, 0.15f, (int) (amount*5), player.getLocation().add(0, 0.2, 0), 60);
 		}
 		catch (Exception e)
 		{
@@ -179,7 +179,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.FOOTSTEP, player.getLocation().add(0, 0.02, 0),0.2f,0f,0.2f, (float)0.15, 1);
+			ParticleEffect.FOOTSTEP.display(0.2f, 0f, 0.2f, 0.15f, 1, player.getLocation().add(0, 0.05f, 0), 50);
 		}
 		catch (Exception e)
 		{
@@ -192,7 +192,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.SMOKE, player.getLocation(),0.3f,0.2f,0.3f, (float)0.03, 70);
+			ParticleEffect.SMOKE_NORMAL.display(0.3f, 0.2f, 0.3f, 0.03f, 10, player.getLocation(), 70);
 		}
 		catch (Exception e)
 		{
@@ -205,7 +205,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.HEART, player.getLocation().add(0,2.2,0),0f,0f,0f, (float)0.01, 3);
+			ParticleEffect.HEART.display(0f, 0f, 0f, 0.01f, 10, player.getLocation().add(0, 2.2, 0), 3);
 		}
 		catch (Exception e)
 		{
@@ -218,7 +218,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.CRIT, player.getLocation(),0f,1f,0f, (float)0.02, 6);
+			ParticleEffect.CRIT.display(0f, 1f, 0.2f, 0.02f, 10, player.getLocation().add(0, 1, 0), 6);
 		}
 		catch (Exception e)
 		{
@@ -231,7 +231,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.DRIP_LAVA, player.getLocation(),0.35f,0.35f,0.35f, (float)0.02, 40);
+			ParticleEffect.DRIP_LAVA.display(0.35f, 0.35f, 0.35f, 0.02f, 10, player.getLocation().add(0, 1, 0), 40);
 		}
 		catch (Exception e)
 		{
@@ -244,7 +244,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.FLAME, player.getLocation(),0.3f,0.3f,0.3f, (float)0.025, 70);
+			ParticleEffect.FLAME.display(0.3f, 0.3f, 0.3f, 0.025f, 10, player.getLocation().add(0, 1, 0), 70);
 		}
 		catch (Exception e)
 		{
@@ -259,7 +259,7 @@ public class Effects
 		{
 			try
 			{
-				ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, player.getLocation(),0.35f,0.35f,0.35f, (float)0.02, 100);
+				ParticleEffect.SPELL_WITCH.display(0.35f, 0.35f, 0.35f, 0.02f, 10, player.getLocation(), 100);
 			}
 			catch (Exception e)
 			{
@@ -271,7 +271,7 @@ public class Effects
 	public static void impactEffect(Location location){
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.FLAME, location,0.3f,0.3f,0.3f, (float)0.3, 300);
+			ParticleEffect.FLAME.display(0.3f, 0.3f, 0.3f, 0.3f, 10, location, 300);
 		}
 		catch (Exception e)
 		{
