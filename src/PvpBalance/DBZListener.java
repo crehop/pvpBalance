@@ -577,7 +577,7 @@ public class DBZListener implements Listener
 		{
 			if(player.hasPermission("particles.admin"))
 			{
-				player.sendMessage(ChatColor.RED + "Welcome Administrator :" + player.getName() + ChatColor.GREEN + " Please Enjoy your stay on the medieval lords server.. a personal Concierge will be with you shortly to handle your every whim");
+				player.sendMessage(ChatColor.RED + "Welcome Administrator: " + player.getName());
 				newPVP.setGod(true);
 			}
 			else

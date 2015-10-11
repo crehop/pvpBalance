@@ -122,7 +122,7 @@ public class SkyArrow {
 	}
 	public static void tick(){
 		if(players.size() > 0){
-			for (Iterator it = players.iterator(); it.hasNext();) {
+			for (Iterator<Player> it = players.iterator(); it.hasNext();) {
 				try{
 					Player player = (Player) it.next();
 					if(player == null){

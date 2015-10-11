@@ -21,8 +21,7 @@ public class EventRunner {
 	private static boolean eventActive = false;
 	private static int totalPlayers = 0;
 	public static void tick(){
-		//TODO fix events
-		/*tick++;
+		tick++;
 		if(tick > 3600){
 			if(eventActive == false){
 				Random rand = new Random();
@@ -34,19 +33,19 @@ public class EventRunner {
 					eventName = CrazyRace.getEventName();
 				}
 				eventActive = true;
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
 			}
 			if(tick == 3630){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 			}
 			if(tick == 3660){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 			}		
 			if(tick == 3690){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");
 			}		
 			if(tick == 3720){
-				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "NEW PRIZED EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");			}			
+				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");			}			
 			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())) SkyArrow.tick();
 			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())) CrazyRace.tick();
 
@@ -57,7 +56,7 @@ public class EventRunner {
 			CrazyRace.setActive(false);
 			eventName = "";
 			participants.clear();
-		}*/
+		}
 	}
 	public static void joinEvent(Player player){
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
@@ -70,6 +69,7 @@ public class EventRunner {
 				if(SkyArrow.active == true){
 					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, EVENT IN PROGRESS. PLEASE WAIT TILL THE NEXT EVENT!");
 					SkyArrow.listPlayers(player);
+					return;
 				}
 				if(Util.InventoryManager.storeInventory(player) == true){
 					storeLocation(player);

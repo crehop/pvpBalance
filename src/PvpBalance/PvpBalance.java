@@ -511,9 +511,17 @@ public class PvpBalance extends JavaPlugin
 			}
 		}
 		else if(commandLabel.equalsIgnoreCase("play")){
+			PVPPlayer pvpp = PvpHandler.getPvpPlayer(player);
 			if(player.getGameMode() != GameMode.SURVIVAL){
 				player.sendMessage(ChatColor.RED + "YOU ARE NOT IN SURVIVAL MODE!");
 				return true;
+			}
+			if(pvpp.isInParty()) {
+				player.sendMessage(ChatColor.RED + "YOU ARE IN A PARTY!");
+				return true;
+			}
+			if(pvpp.isGod()) {
+				pvpp.setGod(false);
 			}
 			if(EventRunner.participants.contains(player) == false){
 				EventRunner.joinEvent(player);
@@ -528,6 +536,15 @@ public class PvpBalance extends JavaPlugin
 						player.sendMessage(counter + ": " + player2.getName());
 					}
 					return true;
+				}
+				if (EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())) {
+					player.sendMessage("PLAYERS REMAINING = " + CrazyRace.players2.size());
+					int counter = 0;
+					for (Player p : CrazyRace.players2) {
+						counter++;
+						player.sendMessage(counter + ": " + p.getName());
+						return true;
+					}
 				}
 				//TODO Add other event remaining player informations here
 			}
