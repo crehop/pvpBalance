@@ -126,14 +126,14 @@ public class ArmorEffects
 				}
 				if(pvpPlayer.isColorUp())
 				{
-					red += 0;
-					green += 0;
+					red = 0;
+					green = 0;
 					blue += 12;
 				}
 				else
 				{
-					red -= 0;
-					green -= 0;
+					red = 0;
+					green = 0;
 					blue -= 12;
 				}
 			}
