@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import me.frodenkvist.armoreditor.EpicGear;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import com.palmergames.bukkit.towny.Towny;
 
 import DuelZone.Duel;
@@ -119,6 +121,7 @@ public class PvpBalance extends JavaPlugin
 		    		everyOther = 1;
 		    		particulating();
 		    		EventRunner.tick();
+		    		me.frodenkvist.armoreditor.SkillKiBlast.tickLaser();
 			    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 			    	{
 							try
@@ -187,6 +190,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 1)
 		    {
 		    	everyOther = 2;
+		    	me.frodenkvist.armoreditor.SkillKiBlast.tickLaser();
 	    		particulating();
 	    		//ARMOR EFFECTS =================================================================================
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
@@ -277,6 +281,7 @@ public class PvpBalance extends JavaPlugin
 		    		}
 		    	}
 		    	everyOther = 3;
+		    	me.frodenkvist.armoreditor.SkillKiBlast.tickLaser();
 	    		particulating();
 		    	for(Player all : Bukkit.getServer().getOnlinePlayers())
 		    	{
@@ -341,6 +346,7 @@ public class PvpBalance extends JavaPlugin
 		    else if(everyOther == 3)
 		    {
 		    	everyOther = 0;
+		    	me.frodenkvist.armoreditor.SkillKiBlast.tickLaser();
 	    		particulating();
 		    	Duel.tick();
 		    	for(PVPPlayer all: PvpHandler.getPvpPlayers())
