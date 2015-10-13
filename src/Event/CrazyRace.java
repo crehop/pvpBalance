@@ -52,7 +52,7 @@ public class CrazyRace {
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		pvp.setInEvent(false);
 		pvp.setEventGrace(false);
-		for(Iterator it = players2.iterator(); it.hasNext();){
+		for(Iterator<Player> it = players2.iterator(); it.hasNext();){
 			Player player2 = (Player)it.next();
 			if(player2.getName().equalsIgnoreCase(player.getName())){
 				it.remove();
@@ -126,7 +126,7 @@ public class CrazyRace {
 			reset();
 		}
 		if(players2.size() > 0){
-			for(Iterator it = players2.iterator(); it.hasNext();) {
+			for(Iterator<Player> it = players2.iterator(); it.hasNext();) {
 				try{
 					Player player = (Player) it.next();
 					if(player.getName() == null){
@@ -187,14 +187,17 @@ public class CrazyRace {
 			grace--;
 		}
 		if(grace <= 0){
-			//TODO add player leave arena detection code here.
+			//add player leave arena detection code here.
+			if (players2.isEmpty()) {
+				CrazyRace.reset();
+			}
 		}
 		if(players2.size() == 0 && active == true){
 			CrazyRace.reset();
 		}
 	}
 	private static void evacuate() {
-		for(Iterator it = players2.iterator(); it.hasNext();){
+		for(Iterator<Player> it = players2.iterator(); it.hasNext();){
 			Player player = (Player)it.next();
 			it.remove();
 			CrazyRace.leave(player);

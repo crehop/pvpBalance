@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import me.frodenkvist.armoreditor.EpicGear;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -535,12 +534,7 @@ public class PvpBalance extends JavaPlugin
 			else{
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE PLAYING!");
 				if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
-					player.sendMessage("PLAYERS REMAINING = " + SkyArrow.players.size());
-					int counter = 0;
-					for(Player player2:SkyArrow.players){
-						counter++;
-						player.sendMessage(counter + ": " + player2.getName());
-					}
+					CrazyRace.join(player);
 					return true;
 				}
 				if (EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())) {
@@ -782,7 +776,7 @@ public class PvpBalance extends JavaPlugin
 	}
 	private boolean setupEconomy()
 	{
-		RegisteredServiceProvider economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 		if (economyProvider != null)
 		{
 			economy = (Economy)economyProvider.getProvider();
