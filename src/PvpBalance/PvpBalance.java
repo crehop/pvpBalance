@@ -534,7 +534,7 @@ public class PvpBalance extends JavaPlugin
 			else{
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU ARE PLAYING!");
 				if(EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
-					CrazyRace.join(player);
+					SkyArrow.join(player);
 					return true;
 				}
 				if (EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())) {

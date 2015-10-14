@@ -87,28 +87,30 @@ public class EventRunner {
 				}
 			}
 			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())){
-				if(CrazyRace.active == true){
-					player.sendMessage(ChatColor.RED + "Joining event already in progress");
-					CrazyRace.listPlayers(player);
-				}
-				if(Util.InventoryManager.storeInventory(player) == true){
-					storeLocation(player);
-					participants.add(player);
-					if(eventActive == false)totalPlayers++;
-					player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
-					pvp.setEventGrace(true);
-					pvp.setInEvent(true);
-					CrazyRace.join(player);
-					return;
-				}
-				else{
-					player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, PLEASE PUT YOUR ARMOR IN YOUR INVENTORY AND TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
-					return;
-				}
+				if(eventName.equalsIgnoreCase(CrazyRace.getEventName())){
+					if(CrazyRace.active == true){
+						player.sendMessage(ChatColor.RED + "Joining event already in progress");
+						CrazyRace.listPlayers(player);
+					}
+					if(Util.InventoryManager.storeInventory(player) == true){
+						storeLocation(player);
+						participants.add(player);
+						if(eventActive == false)totalPlayers++;
+						player.sendMessage(ChatColor.AQUA + "Welcome to " + ChatColor.GREEN + eventName + ChatColor.AQUA + " event will begin shortly!");
+						pvp.setEventGrace(true);
+						pvp.setInEvent(true);
+						CrazyRace.join(player);
+						return;
+					}
+					else{
+						player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, PLEASE PUT YOUR ARMOR IN YOUR INVENTORY AND TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
+						return;
+					}
 			}
 		}
 		else{
 			player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, YOU ARE IN COMBAT! LEAVE COMBAT THEN TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " AGAIN!");
+			}
 		}
 	}
 	public static void endEvent(){

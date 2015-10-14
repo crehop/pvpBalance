@@ -1,6 +1,5 @@
 package Event;
 
-
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -187,10 +186,7 @@ public class CrazyRace {
 			grace--;
 		}
 		if(grace <= 0){
-			//add player leave arena detection code here.
-			if (players2.isEmpty()) {
-				CrazyRace.reset();
-			}
+			//TODO add player leave arena detection code here.
 		}
 		if(players2.size() == 0 && active == true){
 			CrazyRace.reset();
@@ -241,4 +237,3 @@ public class CrazyRace {
 		}
 	}
 }
-	
