@@ -23,7 +23,7 @@ public class ArmorEffects
 	{
 		if(player == null)
 			return;
-		LeatherArmorMeta[] metas = new LeatherArmorMeta[5];
+		LeatherArmorMeta[] metas = new LeatherArmorMeta[10];
 		for(ItemStack item : player.getInventory().getArmorContents())
 		{
 			if(item == null)
@@ -181,6 +181,75 @@ public class ArmorEffects
 				red -= 12;
 				green -= 15;
 				blue = 0;
+			}
+		}
+		else if(Fade.type(item) == 6)
+		{ //0,128,128
+			if(red >= 0 && green >= 225 && blue >= 225)
+			{
+				pvpPlayer.setColorUp(false);
+			}
+			else if(red <= 0 && green <= 115 && blue <= 115)
+			{
+				pvpPlayer.setColorUp(true);
+			}
+			if(pvpPlayer.isColorUp())
+			{
+				red = 0;
+				green += 12;
+				blue += 15;
+			}
+			else
+			{
+				red = 0;
+				green -= 12;
+				blue -= 15;
+			}
+		}
+		else if(Fade.type(item) == 8)
+		{ //255,255,0
+			if(red >= 255 && green >= 255 && blue >= 0)
+			{
+				pvpPlayer.setColorUp(false);
+			}
+			else if(red <= 15 && green <= 19 && blue <= 0)
+			{
+				pvpPlayer.setColorUp(true);
+			}
+			if(pvpPlayer.isColorUp())
+			{
+				red += 15;
+				green += 12;
+				blue = 0;
+			}
+			else
+			{
+				red -= 15;
+				green -= 12;
+				blue = 0;
+			}
+		}
+		else if(Fade.type(item) == 9)
+		{ //153,50,204
+			if(red >= 153 && green >= 50 && blue >= 204)
+			{
+				pvpPlayer.setColorUp(false);
+			}
+			else if(red <= 45 && green <= 120 && blue <= 175)
+			{
+				pvpPlayer.setColorUp(true);
+			}
+			if(pvpPlayer.isColorUp())
+			{
+				red += 15;
+				green += 12;
+				blue += 7;
+			}
+			else
+			{
+				red -= 7;
+				green -= 15;
+				blue -= 12;
 			}
 		}
 		else if(Fade.type(item) == 5 || item.getItemMeta().getLore().toString().contains("Polished Prized"))
