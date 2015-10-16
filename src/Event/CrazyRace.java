@@ -20,6 +20,7 @@ import PvpBalance.PvpHandler;
 public class CrazyRace {
 	
 	public static Location starter = new Location(Bukkit.getWorld("event"), -52 , 38 , 9);
+	public static Location end = new Location(Bukkit.getWorld("event"), -31 , 39, -4);
 	public static int grace = 0;
 	public static int numberOfPlayers = 0;
 	public static Player winner = null;
@@ -29,8 +30,10 @@ public class CrazyRace {
 	public static World world = Bukkit.getWorld("event");
 	
 	public static void join(Player player){
+		if (CrazyRace.timer > 0) {
+			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GAME IS ALREADY IN PROGRESS");
+		}
 		if(players2.size() == 0){
-			grace = 150;
 			starter.getBlock().setType(Material.COAL);
 		}
 		players2.add(player);
@@ -120,7 +123,12 @@ public class CrazyRace {
 	public static void tick(){
 		if(winner != null){
 			evacuate();
-		}
+			for(Player player:players2){
+				if (player.getLocation() == end) {
+					setWinner(player);
+				}
+			}
+			}
 		if( players2.size() < 1 && grace < 1){
 			reset();
 		}
