@@ -31,6 +31,7 @@ public class EventRunner {
 				}
 				if(check == 2){
 					eventName = CrazyRace.getEventName();
+					CrazyRace.setGrace(150);
 				}
 				eventActive = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				

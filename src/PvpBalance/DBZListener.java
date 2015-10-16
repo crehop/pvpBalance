@@ -1001,7 +1001,7 @@ public class DBZListener implements Listener
 					SkyArrow.leave(player);
 				}
 				if(CrazyRace.checkParticipant(player) == true){
-					SkyArrow.leave(player);
+					CrazyRace.leave(player);
 				}
 			}
 			if(event.getMessage().equalsIgnoreCase("/msg") || event.getMessage().equalsIgnoreCase("/message") || event.getMessage().equalsIgnoreCase("/r")){
