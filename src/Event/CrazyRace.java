@@ -20,7 +20,8 @@ import PvpBalance.PvpHandler;
 public class CrazyRace {
 	
 	public static Location starter = new Location(Bukkit.getWorld("event"), -52 , 38 , 9);
-	public static Location end = new Location(Bukkit.getWorld("event"), -31 , 39, -4);
+	public static Location end1 = new Location(Bukkit.getWorld("event"), -30 , 39, -5);
+	public static Location end2 = new Location(Bukkit.getWorld("event"), -32 , 39, -3);
 	public static int grace = 0;
 	public static int numberOfPlayers = 0;
 	public static Player winner = null;
@@ -124,7 +125,8 @@ public class CrazyRace {
 		if(winner != null){
 			evacuate();
 			for(Player player:players2){
-				if (player.getLocation() == end) {
+				if (player.getLocation().getX() >= -30 && player.getLocation().getX() <= -32) {
+					if (player.getLocation().getBlockZ() >= -3 && player.getLocation().getBlockZ() <= -5)
 					setWinner(player);
 				}
 			}
