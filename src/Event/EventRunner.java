@@ -33,10 +33,10 @@ public class EventRunner {
 					eventName = CrazyRace.getEventName();
 					CrazyRace.setGrace(150);
 				}
-				if (check == 3) {
+				/*if (check == 3) {
 					eventName = TheWalls.getEventName();
 					TheWalls.setTimeToJoin(200);
-				}
+				}*/
 				eventActive = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
 			}
