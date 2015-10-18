@@ -33,6 +33,7 @@ public class CrazyRace {
 	public static void join(Player player){
 		if (CrazyRace.timer > 0) {
 			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "GAME IS ALREADY IN PROGRESS");
+			return;
 		}
 		if(players2.size() == 0){
 			starter.getBlock().setType(Material.COAL);
@@ -63,7 +64,7 @@ public class CrazyRace {
 		}
 		EventRunner.leaveEvent(player);
 	}
-	public static void reset(){
+	public static void reset() {
 		setActive(false);
 		timer = 0;
 		grace = 0;
@@ -122,12 +123,13 @@ public class CrazyRace {
 		return grace;
 	}
 	public static void tick(){
-		if(winner != null){
-			evacuate();
+		if(winner == null){
 			for(Player player:players2){
 				if (player.getLocation().getX() >= -30 && player.getLocation().getX() <= -32) {
-					if (player.getLocation().getBlockZ() >= -3 && player.getLocation().getBlockZ() <= -5)
+					if (player.getLocation().getBlockZ() >= -3 && player.getLocation().getBlockZ() <= -5) {
 					setWinner(player);
+					evacuate();
+					}
 				}
 			}
 			}

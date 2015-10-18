@@ -25,13 +25,17 @@ public class EventRunner {
 		if(tick > 3600){
 			if(eventActive == false){
 				Random rand = new Random();
-				int check = rand.nextInt(2) + 1;
+				int check = rand.nextInt(3) + 1;
 				if(check == 1){
 					eventName = SkyArrow.getEventName();
 				}
 				if(check == 2){
 					eventName = CrazyRace.getEventName();
 					CrazyRace.setGrace(150);
+				}
+				if (check == 3) {
+					eventName = TheWalls.getEventName();
+					TheWalls.setTimeToJoin(200);
 				}
 				eventActive = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
@@ -49,6 +53,7 @@ public class EventRunner {
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");			}			
 			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())) SkyArrow.tick();
 			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())) CrazyRace.tick();
+			if(eventName.equalsIgnoreCase(TheWalls.getEventName())) TheWalls.tick();
 
 		}
 		else{
