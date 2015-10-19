@@ -1,46 +1,52 @@
 package Teams;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 
 public class Team {
 
-	public static ArrayList<Team> teams = new ArrayList<Team>();
+	public static ArrayList<Player> red = new ArrayList<Player>();
+	public static ArrayList<Player> blue = new ArrayList<Player>();
 	
-	public static HashMap<String, Team> playerTeams = new HashMap<String, Team>();
-	
-	public String teamColor;
-	
-	public Team(String teamcolor) {
-		teamColor = teamcolor;
-		teams.add(this);
-	}
-	
-	public void addPlayer(Player p){
-		playerTeams.put(p.getName(), this);
+	public static void addPlayer(Player p) {
+		if (blue.size() == 0 && red.size() == 0) {
+			red.add(p);
+			return;
+		}
+		if (blue.size() > red.size()) {
+			red.add(p);
+			return;
+		}
+		if (red.size() > blue.size()) {
+			blue.add(p);
+			return;
+		}
 	}
 	
 	public static void removePlayer(Player p) {
-		if(hasTeam(p) == true){
-			playerTeams.remove(p.getName());
+		if (blue.contains(p)) {
+			blue.remove(p);
+			return;
+		}
+		if (red.contains(p)) {
+			red.remove(p);
+			return;
 		}
 	}
 	
-	public static boolean hasTeam(Player p) {
-		return playerTeams.containsKey(p.getName());
-	}
-	
-	public static Team getTeam(Player p) {
-		if(hasTeam(p) == true) {
-			return playerTeams.get(p);
+	public static int getSize(String name) {
+		if (name == "red") {
+			return red.size();
 		}
-		return null;
+		if (name == "blue") {
+			return blue.size();
+		}
+		return 0;
 	}
 	
-	public String getTeamColor() {
-		return teamColor;
+	public static void removeAll() {
+		red.clear();
+		blue.clear();
 	}
 	
 }

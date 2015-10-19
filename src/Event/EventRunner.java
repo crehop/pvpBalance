@@ -33,10 +33,6 @@ public class EventRunner {
 					eventName = CrazyRace.getEventName();
 					CrazyRace.setGrace(150);
 				}
-				/*if (check == 3) {
-					eventName = TheWalls.getEventName();
-					TheWalls.setTimeToJoin(200);
-				}*/
 				eventActive = true;
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");				
 			}
@@ -53,7 +49,6 @@ public class EventRunner {
 				Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "EVENT STARTING " + eventName + ChatColor.RED + "" + ChatColor.BOLD + " TYPE " + ChatColor.GREEN + "/PLAY" + ChatColor.RED + " TO JOIN");			}			
 			if(eventName.equalsIgnoreCase(SkyArrow.getEventName())) SkyArrow.tick();
 			if(eventName.equalsIgnoreCase(CrazyRace.getEventName())) CrazyRace.tick();
-			if(eventName.equalsIgnoreCase(TheWalls.getEventName())) TheWalls.tick();
 
 		}
 		else{
