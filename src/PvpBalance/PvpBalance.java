@@ -525,9 +525,6 @@ public class PvpBalance extends JavaPlugin
 				player.sendMessage(ChatColor.RED + "YOU ARE IN A PARTY!");
 				return true;
 			}
-			if(pvpp.isGod()) {
-				pvpp.setGod(false);
-			}
 			if(EventRunner.participants.contains(player) == false){
 				EventRunner.joinEvent(player);
 			}

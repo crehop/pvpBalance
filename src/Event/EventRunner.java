@@ -61,7 +61,7 @@ public class EventRunner {
 	}
 	public static void joinEvent(Player player){
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
-		if(pvp.isInCombat() == false){
+		if(pvp.isInCombat() == false && pvp.gethealth() == pvp.getMaxHealth()){
 			if(eventActive == false){
 				player.sendMessage(ChatColor.RED + "UNABLE TO JOIN, NO EVENTS RUNNING. NEXT EVENT IN " + ChatColor.GREEN + (3600 - tick)/60 + " MINUTES");
 				return;
