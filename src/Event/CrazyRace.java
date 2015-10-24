@@ -50,7 +50,9 @@ public class CrazyRace {
 		player.teleport(start);
 	}
 	public static void leave(Player player){
-		player.getInventory().clear();
+		for(ItemStack item:player.getInventory().getArmorContents()){
+			item.setType(Material.AIR);
+		}
 		PVPPlayer pvp = PvpHandler.getPvpPlayer(player);
 		pvp.setInEvent(false);
 		pvp.setEventGrace(false);
@@ -76,7 +78,6 @@ public class CrazyRace {
 		EventRunner.endEvent();
 	}
 	public static void winner(Player player){
-		player.getInventory().clear();
 		ItemStack prize = new ItemStack(Material.DRAGON_EGG);
 		ItemMeta meta = prize.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + "Event Prize Egg");
