@@ -191,6 +191,10 @@ public class SkyArrow {
 				}
 			}
 		}
+		if(players.size() == 1 && active == true){
+			setWinner(players.get(0));
+			SkyArrow.reset();
+		}
 		if(players.size() == 0 && active == true){
 			SkyArrow.reset();
 		}
