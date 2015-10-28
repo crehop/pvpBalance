@@ -27,6 +27,9 @@ public class SkyArrow {
 		if(players.size() == 0){
 			grace = 150;
 		}
+		if(players.contains(player)) {
+			player.sendMessage(ChatColor.RED + "You are already in game!");
+		}
 		players.add(player);
 		SkyArrow.teleportToStart(player);
 		numberOfPlayers++;
