@@ -29,6 +29,7 @@ public class SkyArrow {
 		}
 		if(players.contains(player)) {
 			player.sendMessage(ChatColor.RED + "You are already in game!");
+			return;
 		}
 		players.add(player);
 		SkyArrow.teleportToStart(player);
