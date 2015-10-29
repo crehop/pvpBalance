@@ -3,6 +3,7 @@ package PvpBalance;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -103,6 +104,7 @@ public class DBZListener implements Listener
 	static boolean tell = false;
 	static List<String> lore = new ArrayList<String>();
 	static ItemMeta meta = null;
+	private static HashMap<Player, Integer> cooldown = new HashMap<Player, Integer>();
 
 	
 	public DBZListener(PvpBalance instance, LoadSave LoadSave)
@@ -157,8 +159,15 @@ public class DBZListener implements Listener
 				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT OPEN ENDERCHEST IN COMBAT!");
 			}
 			if(event.getPlayer().getItemInHand().getType() == Material.ENDER_PEARL){
-				event.setCancelled(true);
-				pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
+				//event.setCancelled(true);
+				//pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
+				if (!getCooldown().containsKey(event.getPlayer())) {
+					getCooldown().put(event.getPlayer(), 20);
+				}
+				if (getCooldown().containsKey(event.getPlayer())) {
+					event.setCancelled(true);
+					event.getPlayer().sendMessage(ChatColor.AQUA + "Ender pearl on cooldown for " + getCooldown().get(event.getPlayer()));
+				}
 			}
 		}
 	}
@@ -1229,6 +1238,12 @@ public class DBZListener implements Listener
 		default:
 			return false;
 		}
+	}
+	public static HashMap<Player, Integer> getCooldown() {
+		return cooldown;
+	}
+	public static void setCooldown(HashMap<Player, Integer> cooldown) {
+		DBZListener.cooldown = cooldown;
 	}
 }
 	

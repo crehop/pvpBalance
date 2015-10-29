@@ -125,7 +125,13 @@ public class PvpBalance extends JavaPlugin
 			    	{
 							try
 							{
-					    		// BASIC EFFECT APLICATIONS ==========================================================================================
+					    		// ENDER PEARL COOLDOWN ==============================================================================================
+								for (Player s : DBZListener.getCooldown().keySet()) {
+									if (DBZListener.getCooldown().get(s) == 0) DBZListener.getCooldown().remove(s);
+									DBZListener.getCooldown().put(s, DBZListener.getCooldown().get(s) - 1);
+								}
+								
+								// BASIC EFFECT APLICATIONS ==========================================================================================
 					    		//ON FIRE
 					    		if(all.getFireTicks() > 1){
 					    			Effects.igniteFirePlayers(all);
