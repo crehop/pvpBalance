@@ -163,6 +163,7 @@ public class DBZListener implements Listener
 				//pvp.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
 				if (!getCooldown().containsKey(event.getPlayer())) {
 					getCooldown().put(event.getPlayer(), 20);
+					return;
 				}
 				if (getCooldown().containsKey(event.getPlayer())) {
 					event.setCancelled(true);
@@ -174,9 +175,9 @@ public class DBZListener implements Listener
 	@EventHandler
 	public void vehicleDismountEvent(PlayerTeleportEvent event)
 	{
-		if(event.getPlayer().getItemInHand().getType() == Material.ENDER_PEARL){
+		if(event.getPlayer().getItemInHand().getType() == Material.ENDER_PEARL && (!getCooldown().containsKey(event.getPlayer()))){
 			event.setCancelled(true);
-			event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT AN ENDER PEARL IN COMBAT!");
+			event.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "CANNOT ENDER PEARL YET!");
 		}
 		Material check = event.getPlayer().getEyeLocation().subtract(0,1,0).getBlock().getType();
 		if(check == Material.FENCE || check == Material.IRON_FENCE || check == Material.NETHER_FENCE){
