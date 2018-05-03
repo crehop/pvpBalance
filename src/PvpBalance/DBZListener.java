@@ -136,6 +136,22 @@ public class DBZListener implements Listener
 			}
 		}
 	}
+	
+       //Illegal commands such as /bukkit:me ect 
+         @EventHandler 
+         public void command2(PlayerCommandPreprocessEvent event) 
+	{
+	Player player = event.getPlayer();
+	if(event.getMessage().contains("/bukkit:")){
+         if(!event.getPlayer().hasPermission("particles.admin")){
+	   event.setCancelled(true);
+	   player.sendMessage(ChatColor.RED + "This Command Is Illegal!");
+							       }
+				     }
+			}
+	}
+	
+	
 	@EventHandler
 	public void vehicleDismountEvent(PlayerTeleportEvent event)
 	{
