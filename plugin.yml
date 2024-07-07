@@ -1,8 +1,8 @@
 name: PVPBalance
 main: PvpBalance.PvpBalance
 version: 1.52
-description: >
-            The Best plugin EVER!
+description:
+            The Best plugin EVER
 commands:
     PVPDebug:
     PVPVer:
@@ -10,4 +10,18 @@ commands:
     polish:
     pvpgod:
     pvpstats:
+    pvptop:
     party:
+    effect:
+    effecttype:
+    effectspeed:
+    effectcount:
+    effectreset:
+    effectheight:
+    bet:
+    acceptbet:
+    acceptduel:
+    endduel:
+    play:
+    leave:
+    startevent:

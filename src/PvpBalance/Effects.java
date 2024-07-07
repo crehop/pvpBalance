@@ -1,12 +1,53 @@
 package PvpBalance;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 //Will house effect methods
 public class Effects
 {
 	Player[] onlinePlayerList = Bukkit.getServer().getOnlinePlayers();
+	public static void healEffect(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.HEART , player.getLocation().add(0, 1, 0),0.3f,0.62f,0.3f, (float)0.65, 150);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
+	public static void teleportGreen(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER , player.getLocation().add(0, 1, 0),0.3f,0.62f,0.3f, (float)0.65, 150);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
+	public static void magicWhiteSwirls(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.SPELL , player.getLocation(),0.2f,0.2f,0.2f, (float)0.02, 160);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
 	
 	public static void igniteFirePlayers(Player player)
 	{
@@ -21,7 +62,32 @@ public class Effects
 		}
 		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
 	}
-	
+	public static void igniteFireball(Entity object)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.FLAME, object.getLocation(),0.1f,0.1f,0.1f, (float)0.04, 160);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFireball!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
+	public static void blockedPlayer(Player player)
+	{
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.EXPLODE, player.getLocation().add(0, 1, 0),0.2f,0.2f,0.2f, (float)0.02, 13);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
+		}
+		//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+	}
 	public static void effectPoison(Player player)
 	{	
 		try
@@ -61,7 +127,19 @@ public class Effects
 			PvpBalance.logger.info("Effect SlowPlayer!");
 		}
 	}
-	
+	public static void effectSuperJump(Player player)
+	{
+		try
+		{
+			//ParticleEffect.sendToLocation(effect, location, offsetX, offsetY, offsetZ, speed, count)
+			ParticleEffect.sendToLocation(ParticleEffect.CLOUD, player.getLocation().subtract(0, 0.1, 0) ,0.4f,-0.4f,0.4f, (float)0.004, 100);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect SlowPlayer!");
+		}
+	}
 	public static void effectWither(Player player)
 	{
 		try
@@ -112,7 +190,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.SMOKE, player.getLocation(),0.2f,0.1f,0.2f, (float)0.03, 30);
+			ParticleEffect.sendToLocation(ParticleEffect.SMOKE, player.getLocation(),0.3f,0.2f,0.3f, (float)0.03, 70);
 		}
 		catch (Exception e)
 		{
@@ -125,7 +203,7 @@ public class Effects
 	{
 		try
 		{
-			ParticleEffect.sendToLocation(ParticleEffect.HEART, player.getLocation(),0f,1f,0f, (float)0.02, 10);
+			ParticleEffect.sendToLocation(ParticleEffect.HEART, player.getLocation().add(0,2.2,0),0f,0f,0f, (float)0.01, 3);
 		}
 		catch (Exception e)
 		{
@@ -186,6 +264,17 @@ public class Effects
 				e.printStackTrace();
 				PvpBalance.logger.info("Effect adminPlayer!");
 			}
+		}
+	}
+	public static void impactEffect(Location location){
+		try
+		{
+			ParticleEffect.sendToLocation(ParticleEffect.FLAME, location,0.3f,0.3f,0.3f, (float)0.3, 300);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PvpBalance.logger.info("Effect igniteFirePlayer!");
 		}
 	}
 }

@@ -4,6 +4,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import Event.PBEntityDamageEvent;
+
 public class PBEntityDamageEntityEvent extends PBEntityDamageEvent
 {
 	private static final HandlerList handlers = new HandlerList();

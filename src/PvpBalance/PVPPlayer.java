@@ -1,5 +1,4 @@
 package PvpBalance;
-
 import java.util.Date;
 
 import me.frodenkvist.scoreboardmanager.SMHandler;
@@ -7,33 +6,61 @@ import me.frodenkvist.scoreboardmanager.SMHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import DuelZone.Duel;
+import Event.CrazyRace;
 import Event.PBEntityRegainHealthEvent;
+import Event.SkyArrow;
 import Party.Invite;
 import Party.Party;
+import Skills.SuperSpeed;
+import Util.MYSQLManager;
 
 
 public class PVPPlayer
 {
 	private Player player;
+	private Player lastHitBy;
 	private double health;
+	private double stamina;
 	private double healthLastTick;
 	private double maxHealth;
+	private double maxStamina;
 	private double cooldown;
+	private double healthPercent;
+	private Arrow grappleArrow;
+	private Location grappleStart;
+	private Location grappleEnd;
+	private Player hitByGrapple;
+	private int comboReady;
 	private int hitCoolDown;
+	private int skillCoolDown;
 	private int combatCoolDown;
 	private int hunger;
+	private int stun;
 	private int lastDamage;
 	private int armorEventLastTick;
+	private int wasSprinting;
+	private int tackleTimer;
+	private boolean canUseGrappleShot;
+	private boolean isUsingGrappleShot;
+	private boolean canUsePileDrive;
 	private boolean inCombat;
 	private boolean isDead;
 	private boolean canRegen;
 	private boolean god;
 	private boolean pvpstats;
 	private boolean colorUp;
-	//private final double INVULNERABILITY_TIMER = 1D;
+	private boolean canUseSkill; 
+	private boolean firstToggle;
+	private boolean newbZone;
 	private long defencePotionTimer = 0L;
 	private long offencePotionTimer = 0L;
 	private long pvpTimer = 0L;
@@ -42,6 +69,20 @@ public class PVPPlayer
 	private Invite invite;
 	private Party ghostParty;
 	private boolean partyChat;
+	private boolean isStunned;
+	private boolean usedSpeedSkill;
+	public static Material check;
+	public static Material underfoot;
+	private String particleEffect = "";
+	private double particleHeight = 0.2;
+	private ParticleEffect effect = null;
+	private int particleCount = 0;
+	private double particleSpeed = 0;
+	public boolean flyZone;
+	private boolean duelContestant;
+	private boolean duelZone;
+	private boolean inEvent;
+	private boolean eventGrace;
 	
 	public PVPPlayer(Player player)
 	{
@@ -50,6 +91,9 @@ public class PVPPlayer
 		this.canRegen = true;
 		this.healthLastTick = 500;
 		this.maxHealth = 500;
+		this.maxStamina = 100;
+		this.stamina = 100;
+		this.skillCoolDown = 0;
 		this.cooldown = 0;
 		this.isDead = false;
 		this.hitCoolDown = 0;
@@ -58,9 +102,193 @@ public class PVPPlayer
 		this.combatCoolDown = 0;
 		this.armorEventLastTick = 0;
 		this.lastDamage = 0;
+		this.wasSprinting = 0;
+		this.usedSpeedSkill = false;
+		this.isStunned = false;
+		this.healthPercent = 100.0;
+		this.comboReady = 0;
 		colorUp = false;
+		this.flyZone = false;
+		this.duelContestant = false;
 	}
-
+	public int tackleTimer()
+	{
+		return this.tackleTimer;
+	}
+	public void setTackleTimer(int tackleTimer)
+	{
+		if(tackleTimer < 0)
+		{
+			this.tackleTimer = 0;
+		}
+		else
+		{
+			this.tackleTimer = tackleTimer;
+		}
+	}
+	public boolean isUsingGrappleShot()
+	{
+		return this.isUsingGrappleShot;
+	}
+	public void setIsUsingGrappleShot(boolean isUsingGrappleShot)
+	{
+		this.isUsingGrappleShot = isUsingGrappleShot;
+	}
+	public Player getPlayerHitByGrapple()
+	{
+		return this.hitByGrapple;
+	}
+	public void setGrapplePlayer(Player player)
+	{
+		this.hitByGrapple = player;
+	}
+	public Arrow getGrappleArrow()
+	{
+		return this.grappleArrow;
+	}
+	public void setGrappleArrow(Arrow grappleArrow)
+	{
+		this.grappleArrow = grappleArrow;
+	}
+	public void setCanUseGrappleShot(boolean canUseGrappleShot)
+	{
+		this.canUseGrappleShot = canUseGrappleShot;
+	}
+	public boolean canUseGrappleShot()
+	{
+		return this.canUseGrappleShot;
+	}
+	public void setIsNewbZone(boolean newbZone)
+	{
+		this.newbZone = newbZone;
+	}
+	public boolean isNewbZone()
+	{
+		return this.newbZone;
+	}
+	public int getCombatCooldown(){
+		return this.combatCoolDown;
+	}
+	public void setCombatCooldown(int combatCooldown){
+		this.combatCoolDown = combatCooldown;
+	}
+	public Location getGrappleStart()
+	{
+		return this.grappleStart;
+	}
+	public Location getGrappleEnd()
+	{
+		return this.grappleEnd;
+	}
+	public void setGrappleStart(Location grappleStart)
+	{
+		this.grappleStart = grappleStart;
+	}
+	public void setGrappleEnd(Location grappleEnd)
+	{
+		this.grappleEnd = grappleEnd;
+	}
+	public int getComboReady()
+	{
+		return this.comboReady;
+	}
+	public void setComboReady(int comboReady)
+	{
+		int modifiedComboReady = comboReady;
+		if(modifiedComboReady < 0){
+			modifiedComboReady = 0;
+		}
+		this.comboReady = modifiedComboReady;
+	}
+	public double getHealthPercent()
+	{
+		return this.healthPercent;
+	}
+	public void setHealthPercent(double percent)
+	{
+		this.health = this.health / percent;
+		this.healthPercent = percent;
+	}
+	public boolean getUsedSpeedSkill()
+	{
+		return this.usedSpeedSkill;
+	}
+	public void setUsedSpeedSkill(boolean usedSpeedSkill)
+	{
+		this.usedSpeedSkill = usedSpeedSkill;
+	}
+	public boolean wasFirstToggle()
+	{
+		return this.firstToggle;
+	}
+	public void setFirstToggle(boolean firstToggle)
+	{
+		this.firstToggle = firstToggle;
+	}
+	public int getWasSprinting()
+	{
+		return this.wasSprinting;
+	}
+	public void setWasSprinting(int wasSprinting)
+	{
+		this.wasSprinting = wasSprinting;
+	}
+	public int getStun()
+	{
+		return this.stun;
+	}
+	public void setStun(int stun)
+	{
+		this.stun = stun;
+	}
+	public boolean isStunned()
+	{
+		return this.isStunned;
+	}
+	public void setIsStunned(boolean isStunned)
+	{
+		this.isStunned = isStunned;
+	}
+	public double getStamina()
+	{
+		return this.stamina;
+	}
+	public double getMaxStamina()
+	{
+		return this.maxStamina;
+	}
+	public void setStamina(int stamina)
+	{
+		if(stamina < 0)
+		{
+			this.stamina = 0;
+		}
+		else if(this.getMaxStamina() < stamina)
+		{
+			this.stamina = this.getMaxStamina();
+		}
+		else
+		{
+			this.stamina = stamina;
+		}
+		
+	}
+	public void setMaxStamina(int maxStamina)
+	{
+		this.maxStamina = maxStamina;
+	}
+	public boolean canUseSkill()
+	{
+		return this.canUseSkill;
+	}
+	public int getSkillCooldown()
+	{
+		return this.skillCoolDown;
+	}
+	public void setSkillCooldown(int skillCoolDown)
+	{
+		this.skillCoolDown = skillCoolDown;
+	}
 	public Player getPlayer()
 	{
 		return this.player;
@@ -158,7 +386,10 @@ public class PVPPlayer
 		}
 		
 	}
-	
+	public void setCanUseSkill(boolean canUseSkill)
+	{
+		this.canUseSkill = canUseSkill;
+	}
 	public void setHitCoolDown(int hitCoolDown)
 	{
 		this.hitCoolDown = hitCoolDown;
@@ -181,9 +412,7 @@ public class PVPPlayer
 	
 	public void setMaxHealth(double maxHealth)
 	{
-		if(maxHealth == this.maxHealth)
-			return;
-		if(this.health == this.maxHealth && this.combatCoolDown < 1)
+		if(this.health == this.maxHealth && this.combatCoolDown < 1 && this.canRegen == true && this.inCombat == false)
 		{
 			this.maxHealth = maxHealth;
 			this.sethealth(this.maxHealth);
@@ -248,12 +477,18 @@ public class PVPPlayer
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
 			this.sethealth(health - dealtDamage);
-			if(healthLastTick > health)
-			{
-				if(this.combatCoolDown < 10)
-				{
-					this.combatCoolDown = this.combatCoolDown + 5;
+			if(this.health < 0){
+				if(this.isInEvent() == true){
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+						SkyArrow.simulateDeath(this.player);
+						return;
+					}
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+						CrazyRace.simulateDeath(this.player);
+						return;
+					}
 				}
+				this.health = 0;
 			}
 		}
 		else
@@ -265,10 +500,34 @@ public class PVPPlayer
 	
 	public boolean damage(int dealtDamage)
 	{
+		for(PotionEffect effect:this.getPlayer().getActivePotionEffects())
+		{
+			if(effect.getType() == PotionEffectType.DAMAGE_RESISTANCE)
+			{
+				int level = effect.getAmplifier();
+				dealtDamage = dealtDamage - level * 12;
+				if(dealtDamage < 0)
+				{
+					dealtDamage = 0;
+				}
+			}
+		}
 		if(this.player.getNoDamageTicks() <= 0)
 		{
 			this.lastDamage = dealtDamage;
 			this.sethealth(health - dealtDamage);
+			if(this.gethealth() < 0){
+				if(this.isInEvent() == true){
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+						SkyArrow.simulateDeath(this.player);
+						return false;
+					}
+					if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+						CrazyRace.simulateDeath(this.player);
+						return false;
+					}
+				}
+			}
 		}
 		else if(this.player.getNoDamageTicks() <= 10 && this.player.getNoDamageTicks() >= 1)
 		{
@@ -276,6 +535,18 @@ public class PVPPlayer
 			{
 				this.lastDamage = dealtDamage;
 				this.sethealth(health - (dealtDamage - this.lastDamage));
+				if(this.gethealth() < 0){
+					if(this.isInEvent() == true){
+						if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(SkyArrow.getEventName())){
+							SkyArrow.simulateDeath(this.player);
+							return false;
+						}
+						if(Event.EventRunner.getActiveEvent().equalsIgnoreCase(CrazyRace.getEventName())){
+							CrazyRace.simulateDeath(this.player);
+							return false;
+						}
+					}
+				}
 			}
 			else
 			{
@@ -284,14 +555,6 @@ public class PVPPlayer
 		}
 		if(player.getGameMode().equals(GameMode.SURVIVAL) && !this.god)
 		{
-			//this.sethealth(health - dealtDamage);
-			if(healthLastTick > health)
-			{
-				if(this.combatCoolDown < 10)
-				{
-					this.combatCoolDown += 5;
-				}
-			}
 		}
 		else
 		{
@@ -303,6 +566,134 @@ public class PVPPlayer
 	
 	public void tick()
 	{
+		if(player.isSneaking()){
+			this.canUseGrappleShot = false;
+			this.canUsePileDrive = false;
+			this.canUseSkill = false;
+		}
+		underfoot = this.player.getLocation().subtract(0,1,0).getBlock().getType();
+		check = this.player.getLocation().subtract(0,player.getLocation().getY(),0).add(0,1,0).getBlock().getType();
+		if(this.player.getActivePotionEffects().contains(PotionEffectType.FAST_DIGGING)){
+			this.player.removePotionEffect(PotionEffectType.FAST_DIGGING);
+		}
+		if(check == Material.GLASS && player.getWorld().getName().equals("world")){
+			if(this.isNewbZone() == false){
+				player.sendMessage(ChatColor.RED + "YOU ARE ENTERING A NEWBIE ZONE GEAR/DAMAGE RESTRICTED!");
+				this.setIsNewbZone(true);
+			}
+		}
+		else{
+			if(this.isNewbZone() == true){
+				this.setIsNewbZone(false);
+				player.sendMessage(ChatColor.RED + "YOU ARE LEAVING THE NEWBIE ZONE GEAR/DAMAGE UNLIMITED!");
+			}
+			
+		}
+		if(check == Material.NETHER_BRICK && player.getWorld().getName().equals("world")){
+			Duel.addContestant(player);
+		}
+		if(check == Material.GLOWSTONE && player.getWorld().getName().equals("world")){
+			if(this.isDuelZone() == false){
+				player.sendMessage(ChatColor.RED + "YOU HAVE ENTERED A DUEL ZONE, IF YOU LEAVE WHILE IN A DUEL YOU WILL DIE AND LOSE!");
+				this.setDuelZone(true);
+				if(player.hasPermission("essentials.socialspy") || player.isOp()){
+					player.sendMessage(ChatColor.GREEN + "ARENA ENTRY OVERRIDE YOUR LIFE HAS BEEN SPARED");
+				}
+			}
+			if(Duel.checkContestant(this.player) == false && player.isOp() == false){
+				this.kill();
+				return;
+			}
+		}
+		else{
+			if(this.isDuelZone() == true){
+				this.setDuelZone(false);
+				player.sendMessage(ChatColor.RED + "YOU ARE NO LONGER IN A DUEL ZONE");
+			}
+			
+		}
+		if(check == Material.ENDER_STONE && player.getWorld().getName().equals("world")){
+			if(this.flyZone == false){
+				this.flyZone = true;
+				player.sendMessage(ChatColor.RED + "YOU FEEL WEIGHTLESS!");
+				player.setAllowFlight(true);
+				player.setFlying(true);
+			}
+		}
+		else{
+			if(this.flyZone == true){
+				this.flyZone = false;
+				player.sendMessage(ChatColor.RED + "YOU NO LONGER FEEL WEIGHTLESS AND COME CRASHING DOWN!");
+			}
+			
+		}
+
+		if(underfoot == Material.BEDROCK){
+			Skills.SuperSpeed.pathspeedOn(player);
+		}
+		if(underfoot == Material.SPONGE && CrazyRace.checkParticipant(player.getName().toString()) && CrazyRace.grace < 1){
+			if(player.getWorld().getName().equalsIgnoreCase(CrazyRace.world.getName()))CrazyRace.setWinner(player);
+		}
+		if(this.tackleTimer > 0)
+		{
+			if(this.getPlayer().getPassenger() != null && this.getPlayer().getPassenger() instanceof Player)
+			{
+				PVPPlayer rider = PvpHandler.getPvpPlayer((Player)this.getPlayer().getPassenger());
+				rider.setStamina((int)rider.getStamina() - 10);
+				if(rider.getStamina() < 7)
+				{
+					this.getPlayer().getPassenger().eject();
+				}
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 500, 3));
+			}
+			else
+			{
+				this.setTackleTimer(0);
+			}
+		}
+		if(this.getComboReady() == 0 && this.canUsePileDrive() == true || this.getComboReady() == 0 && this.canUseGrappleShot == true)
+		{
+			if(this.canUseGrappleShot==true)
+			{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO GRAPPLE-SHOT!");
+				this.setCanUseGrappleShot(false);
+				this.setCanUsePileDrive(false);
+			}
+			if(this.canUsePileDrive==true)
+			{
+				this.setCanUsePileDrive(false);
+				this.setCanUseGrappleShot(false);
+				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "YOU NO LONGER FEEL READY TO PILEDRIVE!");
+			}
+			
+			
+		}
+		if(this.getComboReady() > 0 && this.comboReady < 9){
+			this.comboReady--;
+			if(this.getComboReady() >= 6){
+				this.setCanUsePileDrive(true);
+			}
+		}
+		this.checkForGrapple();
+		if(this.getComboReady() >= 10 && this.comboReady < 99)
+		{
+			this.setComboReady(this.getComboReady() - 10);
+		}
+		if(this.getComboReady() >= 100 && this.comboReady < 999)
+		{
+			this.setComboReady(this.getComboReady()- 100);
+		}
+		this.healthPercent = this.health / this.maxHealth;
+		if(player.getPlayer().getAllowFlight() == false && player.getWorld().getName().contains("world") && this.skillCoolDown == 0){
+			player.setAllowFlight(true);
+		}
+		if(this.flyZone == true){
+			player.setAllowFlight(true);
+		}
+		if(this.flyZone == false && player.isFlying() == true && player.getGameMode() == GameMode.SURVIVAL && player.getWorld().getName().contains("world")){
+			player.setAllowFlight(false);
+			player.setFlying(false);
+		}
 		if(this.player.getFoodLevel() < 1 && this.health > 100)
 		{
 			this.sethealth(health - 10);
@@ -335,10 +726,50 @@ public class PVPPlayer
 		{
 			this.hitCoolDown = 0;
 		}
+		if(this.skillCoolDown > 0)
+		{
+			--this.skillCoolDown;
+			if(this.canUseSkill == true){
+				this.setCanUseSkill(false);
+			}
+		}
+		else if(this.skillCoolDown == 0){
+			if(this.canUseSkill == false)
+			{
+				this.setCanUseSkill(true);
+			}
+		}
+		else if(this.skillCoolDown < 0)
+		{
+			this.skillCoolDown = 0;
+		}
+		if(this.wasSprinting > 0)
+		{
+			--this.wasSprinting;
+		}
+		else if(this.wasSprinting < 0)
+		{
+			this.wasSprinting = 0;
+		}
+		if(player.isSprinting() == true){
+			this.wasSprinting = 2;
+		}
+		if(this.usedSpeedSkill == true){
+			this.setStamina((int)stamina - 5);
+			if(this.stamina <= 4)
+			{
+				player.sendMessage(ChatColor.RED + "" + ChatColor.RED + "YOUR OUT OF STAMINA AND STOP SPRINTING!");
+				SuperSpeed.speedOff(player);
+			}
+		}
 		String message = ("SIDEBAR,Health," + ChatColor.BLUE + "Health:" + ChatColor.RESET + "," + (int)this.health);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message.getBytes());
-		String message2 = ("SIDEBAR,Health," + ChatColor.GREEN + "Till Regen:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
+		String message2 = ("SIDEBAR,Health," + ChatColor.YELLOW + "Stamina:" + ChatColor.RESET + "," + (int)this.stamina);
 		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message2.getBytes());
+		String message3 = ("SIDEBAR,Health," + ChatColor.RED + "Attackable:" + ChatColor.RESET + "," + ((int)this.combatCoolDown));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message3.getBytes());
+		String message4 = ("SIDEBAR,Health," + ChatColor.RED + "Till Skill:" + ChatColor.RESET + "," + ((int)this.skillCoolDown));
+		Bukkit.getMessenger().dispatchIncomingMessage(player, "Scoreboard", message4.getBytes());
 		if(player.getGameMode() == GameMode.CREATIVE)
 		{
 			this.health = this.maxHealth;
@@ -363,7 +794,6 @@ public class PVPPlayer
 		}
 		if(this.health <= 0 && this.isDead == false)
 		{
-
 			if(player.getFireTicks() > 0)
 			{
 				player.setFireTicks(0);
@@ -373,12 +803,13 @@ public class PVPPlayer
 			this.isDead = true;
 			this.combatCoolDown = 0;
 			this.hitCoolDown = 0;
+			return;
 		}
 		if(this.combatCoolDown > 0 || this.isDead == true || this.player.getFoodLevel() < 1)
 		{
 			this.canRegen = false;
 		}
-		else
+		else 
 		{
 			canRegen = true;
 		}
@@ -412,6 +843,9 @@ public class PVPPlayer
 					return;
 				this.sethealth(health + heal);
 			}
+		}
+		if(this.getStamina() < this.getMaxStamina()){
+			this.setStamina((int)this.getStamina() + 1);
 		}
 		if(health > maxHealth)
 		{
@@ -579,7 +1013,18 @@ public class PVPPlayer
 		target.sendMessage(ChatColor.AQUA + this.player.getName() + ChatColor.GOLD + " Has Invited You To His Party");
 		target.sendMessage(ChatColor.GOLD + "Type " + ChatColor.AQUA + "/party accept " + ChatColor.GOLD + " To Accept Or " + ChatColor.AQUA + "/party decline" + ChatColor.GOLD + " To Decline");
 	}
-	 
+	public void kill(){
+		if(player.getFireTicks() > 0)
+		{
+			player.setFireTicks(0);
+		}
+		player.getActivePotionEffects().removeAll(player.getActivePotionEffects());
+		this.player.setHealth(0f);
+		this.isDead = true;
+		this.combatCoolDown = 0;
+		this.hitCoolDown = 0;
+		return;
+	}
 	public void accept()
 	{
 		if (this.invite != null)
@@ -635,5 +1080,92 @@ public class PVPPlayer
 	public boolean usesPartyChat()
 	{
 		return this.partyChat;
+	}
+	public boolean canUsePileDrive() 
+	{
+		return canUsePileDrive;
+	}
+	public void setCanUsePileDrive(boolean canUsePileDrive)
+	{
+		this.canUsePileDrive = canUsePileDrive;
+	}
+	public void checkForGrapple()
+	{
+		if(this.isUsingGrappleShot == true)
+		{
+			if(this.getGrappleStart() != null && this.getGrappleEnd() != null && this.hitByGrapple == null)
+			{
+				Skills.GrappleShot.grappleShotBlockHit(getPlayer(), this.getGrappleEnd().getBlock(), this);
+				this.setCanUsePileDrive(false);
+			}
+			if(this.getGrappleStart() != null && this.hitByGrapple != null)
+			{
+				Skills.GrappleShot.grappleShotPlayerHit(this.hitByGrapple, this.getPlayer(), this);
+				this.setCanUsePileDrive(false);
+			}
+		}
+	}
+	public String getParticleEffect() {
+		return particleEffect;
+	}
+	public void setParticleEffect(String particleEffect) {
+		this.particleEffect = particleEffect;
+	}
+	public int getParticleCount() {
+		return particleCount;
+	}
+	public void setParticleCount(int particleCount) {
+		this.particleCount = particleCount;
+	}
+	public double getParticleSpeed() {
+		return particleSpeed;
+	}
+	public void setParticleSpeed(double particleSpeed) {
+		this.particleSpeed = particleSpeed;
+	}
+	public ParticleEffect getEffect() {
+		return effect;
+	}
+	public void setEffect(ParticleEffect effect) {
+		this.effect = effect;
+	}
+	public double getParticleHeight() {
+		return particleHeight;
+	}
+	public void setParticleHeight(double particleHeight) {
+		this.particleHeight = particleHeight;
+	}
+	public boolean isDuelContestant() {
+		return duelContestant;
+	}
+	public void setDuelContestant(boolean duelContestant) {
+		this.duelContestant = duelContestant;
+	}
+	public boolean isDuelZone() {
+		return duelZone;
+	}
+	public void setDuelZone(boolean duelZone) {
+		this.duelZone = duelZone;
+	}
+	public boolean isInEvent() {
+		return inEvent;
+	}
+	public void setInEvent(boolean inEvent) {
+		this.inEvent = inEvent;
+	}
+	public boolean isEventGrace() {
+		return eventGrace;
+	}
+	public void setEventGrace(boolean eventGrace) {
+		this.eventGrace = eventGrace;
+	}
+	public Player getLastHitBy() {
+		return lastHitBy;
+	}
+	public void setLastHitBy(Player lastHitBy) {
+		this.lastHitBy = lastHitBy;
+	}
+	public Material underFoot(){
+		return this.underfoot;
 	}
 }
